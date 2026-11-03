@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>YTMusic Lyrics Overlay</title>
+  <style>
+    :root {
+      --bg: #121217;
+      --card-bg: rgba(255, 255, 255, 0.05);
+      --accent: #ff0055;
+      --border: rgba(255, 255, 255, 0.1);
+      --text: #ffffff;
+      --text-muted: rgba(255, 255, 255, 0.65);
+    }
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+    body {
+      width: 320px;
+      padding: 16px;
+      background: var(--bg);
+      color: var(--text);
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+      font-size: 13px;
+    }
+    .header {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 14px;
+    }
+    .logo {
+      width: 28px;
+      height: 28px;
+      border-radius: 6px;
+    }
+    .title {
+      font-size: 14px;
+      font-weight: 600;
+    }
+    .btn {
+      width: 100%;
+      padding: 10px;
+      border: none;
+      border-radius: 8px;
+      font-weight: 600;
+      font-size: 13px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      transition: all 0.2s ease;
+      background: var(--accent);
+      color: #fff;
+      margin-bottom: 12px;
+      box-shadow: 0 4px 12px rgba(255, 0, 85, 0.3);
+    }
+    .btn:hover {
+      background: #ff226e;
+      transform: translateY(-1px);
+    }
+    .btn.secondary {
+      background: rgba(255, 255, 255, 0.1);
+      color: #fff;
+      box-shadow: none;
+      border: 1px solid var(--border);
+    }
+    .btn.secondary:hover {
+      background: rgba(255, 255, 255, 0.18);
+    }
+    .card {
+      background: var(--card-bg);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 12px;
+      margin-bottom: 12px;
+    }
+    .card-title {
+      font-size: 11px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      color: var(--accent);
+      margin-bottom: 6px;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+    .card-content {
+      font-size: 12px;
+      line-height: 1.5;
+      color: var(--text-muted);
+    }
+    .card-content kbd {
+      background: rgba(255, 255, 255, 0.15);
+      padding: 1px 5px;
+      border-radius: 3px;
+      color: #fff;
+    }
+    .status-dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: #00ff88;
+      box-shadow: 0 0 6px #00ff88;
+      display: inline-block;
+      margin-right: 6px;
+    }
+    .status-dot.offline {
+      background: #888;
+      box-shadow: none;
+    }
+    .status-line {
+      font-size: 12px;
+      color: var(--text-muted);
+      margin-bottom: 12px;
+      display: flex;
+      align-items: center;
+    }
+  </style>
+</head>
+<body>
+  <div class="header">
+    <img src="../icons/icon48.png" alt="Logo" class="logo">
+    <div class="title">YTMusic Lyrics Overlay</div>
+  </div>
+
+  <div class="status-line">
+    <span id="status-dot" class="status-dot offline"></span>
+    <span id="status-text">Detecting YouTube Music...</span>
+  </div>
+
+  <button id="toggle-btn" class="btn">
+    <span>🎵 Launch Lyrics Overlay (PiP)</span>
+  </button>
+
+  <div class="card">
+    <div class="card-title">📌 Across Virtual Desktops</div>
+    <div class="card-content">
+      To keep the floating lyrics window visible when switching virtual desktops:
+      <ol style="margin-left: 16px; margin-top: 4px;">
+        <li>Press <kbd>Win</kbd> + <kbd>Tab</kbd></li>
+        <li>Right-click <strong>YTMusic Lyrics</strong></li>
+        <li>Select <strong>Show on all desktops</strong></li>
+      </ol>
+    </div>
+  </div>
+
+  <div class="card" style="margin-bottom: 0;">
+    <div class="card-title">⚡ Quick Shortcut</div>
+    <div class="card-content">
+      Press <kbd>Alt</kbd> + <kbd>L</kbd> inside YouTube Music to toggle the floating lyrics instantly.
+    </div>
+  </div>
+
+  <script src="popup.js"></script>
+</body>
+</html>

@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>YTMusic Lyrics Overlay</title>
+</head>
+<body>
+  <div id="app-container">
+    <div id="bg-art-blur"></div>
+
+    <!-- Minimalist Clean Header -->
+    <header id="pip-header">
+      <div class="track-meta">
+        <img id="album-art" class="album-thumb" src="" alt="">
+        <div class="title-artist">
+          <div id="track-title" class="track-title">Waiting for track...</div>
+          <div id="track-artist" class="track-artist">YouTube Music</div>
+        </div>
+      </div>
+      <div class="header-actions">
+        <button id="settings-toggle-btn" class="icon-btn" title="Customize Opacity & Overlay Options">⚙️</button>
+      </div>
+    </header>
+
+    <!-- Slide-in Clean Settings Drawer -->
+    <div id="settings-drawer" class="drawer">
+      <div class="drawer-header">
+        <span>Overlay Settings</span>
+        <button id="drawer-close-btn" class="icon-btn">✕</button>
+      </div>
+
+      <div class="drawer-body">
+        <!-- Background Opacity Slider (Ghost overlay to solid) -->
+        <div class="setting-group">
+          <div class="setting-label">
+            <span>Background Transparency</span>
+            <span id="opacity-val-label" class="val-badge">75%</span>
+          </div>
+          <input type="range" id="opacity-slider" min="5" max="100" value="75" class="clean-slider">
+          <div class="sub-hint">Slide down to make text float directly over your screen/desktop</div>
+        </div>
+
+        <!-- Font Size Slider -->
+        <div class="setting-group">
+          <div class="setting-label">
+            <span>Text Size</span>
+            <span id="font-val-label" class="val-badge">20px</span>
+          </div>
+          <input type="range" id="font-slider" min="14" max="36" value="20" class="clean-slider">
+        </div>
+
+        <!-- Display Style Modes -->
+        <div class="setting-group">
+          <div class="setting-label">Display Style</div>
+          <div class="mode-chips">
+            <button class="chip-btn active" data-mode="normal">🪟 Normal</button>
+            <button class="chip-btn" data-mode="theater">📺 Fullscreen Overlay</button>
+            <button class="chip-btn" data-mode="ticker">💬 Subtitle HUD</button>
+          </div>
+        </div>
+
+        <!-- Text Alignment -->
+        <div class="setting-group">
+          <div class="setting-label">Text Alignment</div>
+          <div class="mode-chips">
+            <button id="align-center-btn" class="chip-btn active">Center</button>
+            <button id="align-left-btn" class="chip-btn">Left</button>
+          </div>
+        </div>
+
+        <!-- Manual Song Search for Hindi / Regional Tracks -->
+        <div class="setting-group">
+          <div class="setting-label">Search / Fix Song Title</div>
+          <div class="search-box">
+            <input type="text" id="manual-query-input" placeholder="e.g. Kesariya or Beggin...">
+            <button id="manual-search-btn" class="chip-btn active">Find</button>
+          </div>
+          <div class="sub-hint">Useful for Bollywood/regional songs with long titles</div>
+        </div>
+
+        <!-- Virtual Desktop Pin Instructions -->
+        <div class="setting-group pin-box">
+          <div style="font-weight: 600; color: #ff0055; margin-bottom: 4px;">📌 Keep across all Virtual Desktops:</div>
+          <div style="font-size: 11px; opacity: 0.85; line-height: 1.4;">
+            Press <kbd>Win</kbd> + <kbd>Tab</kbd> → Right-click this window → <strong>"Show this window on all desktops"</strong>.
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Main Clean Lyrics Container -->
+    <main id="lyrics-container">
+      <div class="status-state">
+        <div class="pulse-icon">🎵</div>
+        <div>Playing on YouTube Music...</div>
+      </div>
+    </main>
+
+    <!-- Minimalist Bottom Controls -->
+    <footer id="pip-footer">
+      <div class="progress-bar-bg" id="progress-bar-bg">
+        <div class="progress-bar-fill" id="progress-bar-fill"></div>
+      </div>
+
+      <div class="footer-row">
+        <div class="playback-btns">
+          <button id="prev-btn" class="ctrl-btn" title="Previous">⏮</button>
+          <button id="play-pause-btn" class="play-btn" title="Play / Pause">▶</button>
+          <button id="next-btn" class="ctrl-btn" title="Next">⏭</button>
+        </div>
+
+        <div class="time-and-source">
+          <span id="current-time-label">0:00</span>
+          <span class="divider">/</span>
+          <span id="duration-label">0:00</span>
+          <span id="source-badge" class="source-tag">Auto-Sync</span>
+        </div>
+      </div>
+    </footer>
+  </div>
+</body>
+</html>

@@ -1,0 +1,476 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ChromaScope Test Playground</title>
+    <style>
+        :root {
+            --grad-sunset: linear-gradient(135deg, #FF512F 0%, #DD2476 100%);
+            --grad-ocean: linear-gradient(135deg, #2E3192 0%, #1BFFFF 100%);
+            --grad-aurora: linear-gradient(135deg, #00C9FF 0%, #92FE9D 100%);
+            --grad-conic: conic-gradient(from 180deg at 50% 50%, #FF0080, #7928CA, #0070F3, #00DFD8, #7928CA, #FF0080);
+        }
+
+        body {
+            margin: 0;
+            padding: 40px;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+            background: #0B0F19;
+            color: #F3F4F6;
+        }
+
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+        }
+
+        header {
+            margin-bottom: 24px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            padding-bottom: 18px;
+        }
+
+        h1 {
+            font-size: 28px;
+            margin: 0 0 8px 0;
+            background: linear-gradient(90deg, #00EBFF, #B388FF);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        p {
+            color: #94A3B8;
+            margin: 0;
+            font-size: 15px;
+        }
+
+        .instructions {
+            background: rgba(0, 235, 255, 0.06);
+            border: 1px solid rgba(0, 235, 255, 0.25);
+            border-radius: 12px;
+            padding: 16px 20px;
+            font-size: 13.5px;
+            line-height: 1.6;
+            color: #E2E8F0;
+            margin-bottom: 30px;
+        }
+
+        .instructions ol {
+            margin: 8px 0 0 20px;
+            padding: 0;
+        }
+
+        .instructions li {
+            margin-bottom: 8px;
+        }
+
+        kbd {
+            background: rgba(255, 255, 255, 0.15);
+            color: #38BDF8;
+            padding: 2px 7px;
+            border-radius: 4px;
+            font-family: ui-monospace, SFMono-Regular, Consolas, monospace;
+            font-size: 11.5px;
+            font-weight: 600;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        h2 {
+            margin: 28px 0 14px 0;
+            font-size: 17px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            color: #E2E8F0;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+
+        .card {
+            background: rgba(255, 255, 255, 0.04);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 12px;
+            padding: 16px;
+        }
+
+        .card h3 {
+            margin: 0 0 12px 0;
+            font-size: 13px;
+            color: #CBD5E1;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .preview-box {
+            height: 130px;
+            border-radius: 8px;
+            box-shadow: inset 0 0 10px rgba(0, 0, 0, 0.4);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            color: #FFF;
+            text-shadow: 0 2px 4px rgba(0, 0, 0, 0.5);
+        }
+
+        .swatch-row {
+            display: flex;
+            gap: 8px;
+            margin-top: 10px;
+        }
+
+        .swatch {
+            flex: 1;
+            height: 42px;
+            border-radius: 6px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 11px;
+            font-weight: 600;
+            color: #FFF;
+            text-shadow: 0 1px 2px rgba(0, 0, 0, 0.7);
+        }
+
+        /* --- Interactive Hover Elements Lab --- */
+        .hover-elements-row {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+            gap: 16px;
+            margin-bottom: 24px;
+        }
+
+        .hover-btn {
+            padding: 14px 20px;
+            border-radius: 10px;
+            border: none;
+            font-size: 14px;
+            font-weight: 700;
+            color: #FFFFFF;
+            cursor: pointer;
+            text-align: center;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+        }
+
+        .btn-blue {
+            background-color: #2563EB; /* Science Blue */
+        }
+        .btn-blue:hover {
+            background-color: #1D4ED8; /* Cobalt */
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(29, 78, 216, 0.5);
+        }
+
+        .btn-emerald {
+            background-color: #10B981; /* Emerald */
+        }
+        .btn-emerald:hover {
+            background-color: #047857; /* Spanish Green / Dark Emerald */
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(4, 120, 87, 0.5);
+        }
+
+        .btn-coral {
+            background-color: #F97316; /* Orange */
+        }
+        .btn-coral:hover {
+            background-color: #DC2626; /* Red Devil */
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(220, 38, 38, 0.5);
+        }
+
+        .btn-purple {
+            background-color: #8B5CF6; /* Violet */
+        }
+        .btn-purple:hover {
+            background-color: #4C1D95; /* Deep Purple */
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(76, 29, 149, 0.6);
+        }
+
+        .hover-card-interactive {
+            background-color: #1E293B;
+            border: 2px solid rgba(255, 255, 255, 0.1);
+            border-radius: 12px;
+            padding: 20px;
+            cursor: pointer;
+            transition: all 0.35s ease;
+        }
+
+        .hover-card-interactive:hover {
+            background-color: #312E81; /* Deep Indigo on Hover */
+            border-color: #818CF8;
+            box-shadow: 0 10px 30px rgba(49, 46, 129, 0.6);
+        }
+
+        .hover-card-interactive h4 {
+            margin: 0 0 6px 0;
+            color: #F8FAFC;
+            font-size: 16px;
+        }
+
+        .hover-card-interactive p {
+            font-size: 13px;
+            color: #94A3B8;
+        }
+
+        .hover-card-interactive:hover p {
+            color: #C7D2FE;
+        }
+
+        /* App List Component matching user's real-world screenshot scenario */
+        .app-list-container {
+            background: #FFFFFF;
+            border: 1px solid #E2E8F0;
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.25);
+            max-width: 420px;
+            margin-top: 16px;
+        }
+
+        .app-list-header {
+            padding: 12px 18px;
+            background: #F8FAFC;
+            border-bottom: 1px solid #E2E8F0;
+            font-size: 13px;
+            font-weight: 700;
+            color: #475569;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .app-list-item {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 12px 18px;
+            border-bottom: 1px solid #F1F5F9;
+            background-color: #FFFFFF;
+            color: #334155;
+            font-size: 14px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: background-color 0.2s ease, color 0.2s ease;
+        }
+
+        .app-list-item:last-child {
+            border-bottom: none;
+        }
+
+        /* The exact hover color #EFEFEF ("Gallery") from user screenshot */
+        .app-list-item:hover {
+            background-color: #EFEFEF !important;
+            color: #0F172A;
+        }
+
+        .app-icon {
+            width: 22px;
+            height: 22px;
+            border-radius: 4px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 13px;
+        }
+
+        /* 4-Color Showcase Button (Red BG + White Text -> Gray BG + Black Text) */
+        .hover-showcase-btn {
+            background-color: #EF4444;
+            color: #FFFFFF;
+            font-size: 15px;
+            font-weight: 700;
+            padding: 14px 24px;
+            border-radius: 8px;
+            border: 2px solid transparent;
+            cursor: pointer;
+            transition: background-color 0.25s ease, color 0.25s ease;
+            box-shadow: 0 4px 14px rgba(239, 68, 68, 0.4);
+            display: inline-block;
+        }
+
+        .hover-showcase-btn:hover {
+            background-color: #4B5563 !important;
+            color: #000000 !important;
+            border-color: #9CA3AF !important;
+            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.5) !important;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>ChromaScope Test Playground</h1>
+            <p>Test pixel picking, live element hover inspection, gradient detection, and chromesthesia tones.</p>
+        </header>
+
+        <div class="instructions">
+            <strong>🎯 Key Features & Testing Instructions:</strong>
+            <ol>
+                <li><strong>Open Extension Shortcut</strong>: Press <kbd>Ctrl+Shift+X</kbd> anywhere in Edge to instantly open the ChromaScope popup!</li>
+                <li><strong>Live Page Loupe & Hover Inspector</strong>: Press <kbd>Alt+Shift+C</kbd> to launch the in-page magnified loupe overlay.</li>
+                <li><strong>Quick Screen EyeDropper</strong>: Press <kbd>Alt+Shift+P</kbd> to pick any pixel anywhere on your screen.</li>
+                <li><strong>Testing Hover Color Inspection</strong>:
+                    Hover your mouse over the interactive buttons below:
+                    <ul>
+                        <li>Notice how the loupe magnifies the live rendered pixel as it changes color on hover!</li>
+                        <li>Press <kbd>H</kbd> while hovering: this locks the <strong>Hover State Comparison</strong> in the HUD, showing both the <strong>Normal (Resting) Color</strong> and <strong>Hover Color</strong> side-by-side with lightness delta and transition timing!</li>
+                    </ul>
+                </li>
+                <li><strong>Chromesthesia Sound Synthesizer</strong>: Pick a pixel or click the <strong>♫ Play Tone</strong> button in the popup to hear the harmonic musical frequency of the color!</li>
+            </ol>
+        </div>
+
+        <h2>⚡ Elements That Change Color on Hover (Hover Inspection Lab)</h2>
+        <p style="margin-bottom: 14px; font-size: 13.5px;">Hover over each element and press <kbd>H</kbd> to lock and compare all 4 colors (Normal BG/Text vs Hover BG/Text):</p>
+
+        <!-- 4-Color Dual-State Showcase Card -->
+        <div style="background: rgba(239, 68, 68, 0.08); border: 1px solid rgba(239, 68, 68, 0.35); border-radius: 12px; padding: 20px; margin-bottom: 24px;">
+            <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 10px;">
+                <div style="font-size: 14px; font-weight: 700; color: #FCA5A5; text-transform: uppercase; letter-spacing: 0.5px;">
+                    🎯 4-Color Dual-State Inspector Showcase
+                </div>
+                <span style="font-size: 11px; background: rgba(239, 68, 68, 0.2); color: #F87171; padding: 2px 8px; border-radius: 10px; font-weight: 600;">
+                    4 Colors in 1 View
+                </span>
+            </div>
+            <p style="font-size: 13.5px; color: #CBD5E1; margin: 0 0 16px 0; line-height: 1.5;">
+                • <strong>Normal State</strong>: Background = <span style="color: #EF4444; font-weight: 700;">#EF4444</span> (Red) • Text = <span style="color: #FFFFFF; font-weight: 700;">#FFFFFF</span> (White)<br>
+                • <strong>Hover State</strong>: Background = <span style="color: #9CA3AF; font-weight: 700;">#4B5563</span> (Gray) • Text = <span style="color: #60A5FA; font-weight: 700;">#000000</span> (Black)
+            </p>
+            <button class="hover-showcase-btn">
+                Hover Me: Red BG + White Text → Gray BG + Black Text
+            </button>
+        </div>
+
+        <div class="hover-elements-row">
+            <button class="hover-btn btn-blue">
+                Hover Me: Blue → Cobalt
+            </button>
+            <button class="hover-btn btn-emerald">
+                Hover Me: Emerald → Dark Pine
+            </button>
+            <button class="hover-btn btn-coral">
+                Hover Me: Orange → Red Alert
+            </button>
+            <button class="hover-btn btn-purple">
+                Hover Me: Violet → Midnight Plum
+            </button>
+        </div>
+
+        <div class="hover-card-interactive">
+            <h4>Interactive Card (Background Shift)</h4>
+            <p>Resting: #1E293B (Dark Slate) → Hover: #312E81 (Deep Indigo). Notice the smooth 350ms CSS color transition.</p>
+        </div>
+
+        <!-- Realistic Application List matching user's exact screenshot -->
+        <h3 style="margin-top: 24px; font-size: 15px; color: #E2E8F0;">📋 Real-World List Inspection (Reproducing Screenshot Scenario)</h3>
+        <p style="font-size: 13px; color: #94A3B8; margin-bottom: 12px;">Resting: #FFFFFF (White) → Hover: #EFEFEF ("Gallery" - exact color from your screenshot). Move loupe over these rows:</p>
+        <div class="app-list-container">
+            <div class="app-list-header">Active Applications</div>
+            <div class="app-list-item">
+                <span class="app-icon" style="background: #E0F2FE;">🌐</span>
+                <span>Microsoft Edge</span>
+            </div>
+            <div class="app-list-item">
+                <span class="app-icon" style="background: #EDE9FE;">⚡</span>
+                <span>Antigravity</span>
+            </div>
+            <div class="app-list-item">
+                <span class="app-icon" style="background: #E0E7FF;">👥</span>
+                <span>MS Teams</span>
+            </div>
+            <div class="app-list-item">
+                <span class="app-icon" style="background: #FEF3C7;">📁</span>
+                <span>Windows Explorer</span>
+            </div>
+            <div class="app-list-item">
+                <span class="app-icon" style="background: #DCFCE7;">💻</span>
+                <span>Windows Command Prompt</span>
+            </div>
+            <div class="app-list-item">
+                <span class="app-icon" style="background: #FCE7F3;">🔍</span>
+                <span>Search Application</span>
+            </div>
+        </div>
+
+        <h2>🌈 Gradients for Spectrum & Nuance Testing</h2>
+        <div class="grid">
+            <div class="card">
+                <h3>Sunset Glow (Linear 135deg)</h3>
+                <div class="preview-box" style="background: var(--grad-sunset);">
+                    Hover across transition
+                </div>
+                <div class="swatch-row">
+                    <div class="swatch" style="background: #FF512F;">#FF512F</div>
+                    <div class="swatch" style="background: #DD2476;">#DD2476</div>
+                </div>
+            </div>
+
+            <div class="card">
+                <h3>Deep Ocean (Linear 135deg)</h3>
+                <div class="preview-box" style="background: var(--grad-ocean);">
+                    Hover across transition
+                </div>
+                <div class="swatch-row">
+                    <div class="swatch" style="background: #2E3192;">#2E3192</div>
+                    <div class="swatch" style="background: #1BFFFF; color: #000; text-shadow: none;">#1BFFFF</div>
+                </div>
+            </div>
+
+            <div class="card">
+                <h3>Northern Lights Aurora</h3>
+                <div class="preview-box" style="background: var(--grad-aurora); color: #000; text-shadow: none;">
+                    Soft Cyan to Emerald
+                </div>
+                <div class="swatch-row">
+                    <div class="swatch" style="background: #00C9FF; color: #000; text-shadow: none;">#00C9FF</div>
+                    <div class="swatch" style="background: #92FE9D; color: #000; text-shadow: none;">#92FE9D</div>
+                </div>
+            </div>
+
+            <div class="card">
+                <h3>Conic Angular Rainbow</h3>
+                <div class="preview-box" style="background: var(--grad-conic);">
+                    Conic Multi-stop
+                </div>
+                <div class="swatch-row">
+                    <div class="swatch" style="background: #FF0080;">#FF0080</div>
+                    <div class="swatch" style="background: #7928CA;">#7928CA</div>
+                    <div class="swatch" style="background: #0070F3;">#0070F3</div>
+                </div>
+            </div>
+        </div>
+
+        <h2>🎨 Curated Named Colors</h2>
+        <div class="grid">
+            <div class="card">
+                <h3>Deep & Velvety Shades</h3>
+                <div class="swatch-row">
+                    <div class="swatch" style="background: #120A8F;">Ultramarine</div>
+                    <div class="swatch" style="background: #800020;">Burgundy</div>
+                    <div class="swatch" style="background: #003153;">Prussian Blue</div>
+                </div>
+            </div>
+
+            <div class="card">
+                <h3>Vibrant & Electric Tones</h3>
+                <div class="swatch-row">
+                    <div class="swatch" style="background: #FF5733;">Outrageous Orange</div>
+                    <div class="swatch" style="background: #00FA9A; color: #000; text-shadow: none;">Spring Green</div>
+                    <div class="swatch" style="background: #8B00FF;">Electric Violet</div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

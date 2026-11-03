@@ -1,0 +1,184 @@
+/* DashMorph Content Styles */
+
+/* Rearrange Mode Base */
+body.dashmorph-mode-active {
+  /* Prevent accidental text selections while rearranging */
+  user-select: none !important;
+}
+
+/* Container Highlights in Edit Mode */
+.dashmorph-container-active {
+  position: relative !important;
+  transition: outline 0.2s ease, background-color 0.2s ease;
+}
+
+/* Card Active in Edit Mode */
+.dashmorph-card-active {
+  position: relative !important;
+  transition: transform 0.2s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.2s ease, opacity 0.2s ease;
+}
+
+.dashmorph-card-active:hover {
+  outline: 2px dashed rgba(99, 102, 241, 0.5) !important;
+  outline-offset: 2px;
+}
+
+/* Card Drag Handle Overlay Bar */
+.dashmorph-card-handle {
+  display: flex !important;
+  align-items: center !important;
+  justify-content: space-between !important;
+  background: linear-gradient(135deg, #1e1b4b 0%, #312e81 100%) !important;
+  color: #ffffff !important;
+  padding: 6px 12px !important;
+  border-radius: 8px 8px 0 0 !important;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif !important;
+  font-size: 11px !important;
+  font-weight: 600 !important;
+  cursor: grab !important;
+  user-select: none !important;
+  margin-bottom: 6px !important;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2) !important;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.15) !important;
+  z-index: 1000 !important;
+}
+
+.dashmorph-card-handle:active {
+  cursor: grabbing !important;
+}
+
+.dashmorph-handle-grip {
+  display: flex !important;
+  align-items: center !important;
+  gap: 6px !important;
+  flex: 1 !important;
+  overflow: hidden !important;
+}
+
+.dashmorph-handle-grip svg {
+  flex-shrink: 0 !important;
+  opacity: 0.8 !important;
+}
+
+.dashmorph-handle-label {
+  white-space: nowrap !important;
+  overflow: hidden !important;
+  text-overflow: ellipsis !important;
+  color: #e0e7ff !important;
+  letter-spacing: -0.01em !important;
+}
+
+.dashmorph-handle-actions {
+  display: flex !important;
+  align-items: center !important;
+  gap: 4px !important;
+}
+
+.dashmorph-handle-btn {
+  background: rgba(255, 255, 255, 0.12) !important;
+  border: none !important;
+  color: #e0e7ff !important;
+  width: 20px !important;
+  height: 20px !important;
+  border-radius: 4px !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  cursor: pointer !important;
+  padding: 0 !important;
+  transition: all 0.15s ease !important;
+}
+
+.dashmorph-handle-btn:hover {
+  background: rgba(255, 255, 255, 0.25) !important;
+  color: #ffffff !important;
+}
+
+.dashmorph-btn-hide:hover {
+  background: rgba(239, 68, 68, 0.8) !important;
+  color: #ffffff !important;
+}
+
+/* Dragging State on Source Card */
+.dashmorph-card-dragging {
+  opacity: 0.25 !important;
+  outline: 2px dashed #6366f1 !important;
+  transform: scale(0.98) !important;
+}
+
+/* Floating Ghost Clone */
+.dashmorph-drag-ghost {
+  position: fixed !important;
+  pointer-events: none !important;
+  z-index: 2147483640 !important;
+  opacity: 0.94 !important;
+  box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.4), 0 0 0 2px #6366f1 !important;
+  border-radius: 12px !important;
+  overflow: hidden !important;
+  transition: none !important;
+}
+
+/* Drop Slot Target Indicator */
+.dashmorph-drop-slot {
+  box-sizing: border-box !important;
+  display: flex !important;
+  flex-direction: column !important;
+  align-items: center !important;
+  justify-content: center !important;
+  background: rgba(99, 102, 241, 0.08) !important;
+  border: 2px dashed #6366f1 !important;
+  border-radius: 12px !important;
+  margin: 6px 0 !important;
+  padding: 12px !important;
+  min-height: 70px !important;
+  position: relative !important;
+  animation: dmDropPulse 1.5s infinite ease-in-out !important;
+  pointer-events: none !important;
+}
+
+@keyframes dmDropPulse {
+  0% { background: rgba(99, 102, 241, 0.06); border-color: rgba(99, 102, 241, 0.5); }
+  50% { background: rgba(99, 102, 241, 0.15); border-color: rgba(99, 102, 241, 0.9); }
+  100% { background: rgba(99, 102, 241, 0.06); border-color: rgba(99, 102, 241, 0.5); }
+}
+
+.dashmorph-drop-text {
+  font-family: -apple-system, BlinkMacSystemFont, sans-serif !important;
+  font-size: 12px !important;
+  font-weight: 600 !important;
+  color: #6366f1 !important;
+  text-transform: uppercase !important;
+  letter-spacing: 0.05em !important;
+}
+
+/* Drop Pop Animation */
+.dashmorph-drop-pop {
+  animation: dmPop 0.35s cubic-bezier(0.175, 0.885, 0.32, 1.275) !important;
+}
+
+@keyframes dmPop {
+  0% { transform: scale(0.96); }
+  60% { transform: scale(1.02); }
+  100% { transform: scale(1); }
+}
+
+/* Card Collapsed State */
+.dashmorph-card-collapsed > *:not(.dashmorph-card-handle) {
+  display: none !important;
+}
+.dashmorph-card-collapsed {
+  min-height: unset !important;
+  height: auto !important;
+}
+
+/* Picker Mode */
+body.dashmorph-picker-cursor,
+body.dashmorph-picker-cursor * {
+  cursor: crosshair !important;
+}
+
+.dashmorph-picker-highlight {
+  outline: 3px solid #06b6d4 !important;
+  outline-offset: 3px !important;
+  box-shadow: 0 0 16px rgba(6, 182, 212, 0.6) !important;
+}

@@ -1,0 +1,27 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 128 128" width="128" height="128">
+  <defs>
+    <linearGradient id="chromaGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#FF3366" />
+      <stop offset="25%" stop-color="#FF9933" />
+      <stop offset="50%" stop-color="#33CC66" />
+      <stop offset="75%" stop-color="#00CCFF" />
+      <stop offset="100%" stop-color="#9933FF" />
+    </linearGradient>
+    <radialGradient id="lensGrad" cx="50%" cy="50%" r="50%">
+      <stop offset="0%" stop-color="#24314E" />
+      <stop offset="100%" stop-color="#0F1420" />
+    </radialGradient>
+  </defs>
+  <!-- Outer Chromatic Ring -->
+  <circle cx="64" cy="64" r="56" fill="none" stroke="url(#chromaGrad)" stroke-width="12" />
+  <!-- Inner Lens Core -->
+  <circle cx="64" cy="64" r="48" fill="url(#lensGrad)" stroke="#FFFFFF" stroke-opacity="0.15" stroke-width="1.5" />
+  <!-- Loupe Reticle -->
+  <circle cx="64" cy="64" r="20" fill="none" stroke="#00EBFF" stroke-width="3" />
+  <circle cx="64" cy="64" r="5" fill="#FFFFFF" />
+  <!-- Reticle Crosshairs -->
+  <line x1="64" y1="36" x2="64" y2="48" stroke="#00EBFF" stroke-width="2.5" stroke-linecap="round" />
+  <line x1="64" y1="80" x2="64" y2="92" stroke="#00EBFF" stroke-width="2.5" stroke-linecap="round" />
+  <line x1="36" y1="64" x2="48" y2="64" stroke="#00EBFF" stroke-width="2.5" stroke-linecap="round" />
+  <line x1="80" y1="64" x2="92" y2="64" stroke="#00EBFF" stroke-width="2.5" stroke-linecap="round" />
+</svg>

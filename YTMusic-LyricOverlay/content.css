@@ -1,0 +1,110 @@
+/* content.css - YouTube Music Player Bar Integration */
+
+#ytm-lyrics-overlay-btn {
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  color: #aaa;
+  margin: 0 4px;
+  padding: 8px;
+  transition: all 0.2s cubic-bezier(0.2, 0.8, 0.2, 1);
+  position: relative;
+  vertical-align: middle;
+}
+
+#ytm-lyrics-overlay-btn:hover {
+  color: #fff;
+  background: rgba(255, 255, 255, 0.1);
+  transform: scale(1.08);
+}
+
+#ytm-lyrics-overlay-btn.active {
+  color: #ff0055;
+  background: rgba(255, 0, 85, 0.15);
+}
+
+#ytm-lyrics-overlay-btn svg {
+  width: 20px;
+  height: 20px;
+  fill: currentColor;
+}
+
+/* Tooltip */
+#ytm-lyrics-overlay-btn::after {
+  content: "Lyrics Overlay (PiP)";
+  position: absolute;
+  bottom: 50px;
+  left: 50%;
+  transform: translateX(-50%);
+  background: rgba(28, 28, 35, 0.95);
+  color: #fff;
+  font-size: 11px;
+  font-weight: 500;
+  padding: 5px 8px;
+  border-radius: 4px;
+  white-space: nowrap;
+  pointer-events: none;
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity 0.2s ease, transform 0.2s ease;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.4);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  z-index: 9999;
+}
+
+#ytm-lyrics-overlay-btn:hover::after {
+  opacity: 1;
+  visibility: visible;
+  transform: translateX(-50%) translateY(-2px);
+}
+
+/* Toast Notification for gesture guidance */
+.ytm-lyrics-toast {
+  position: fixed;
+  bottom: 90px;
+  right: 24px;
+  background: rgba(24, 24, 32, 0.95);
+  backdrop-filter: blur(12px);
+  border: 1px solid rgba(255, 0, 85, 0.4);
+  color: #fff;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  font-size: 13px;
+  padding: 12px 18px;
+  border-radius: 8px;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.6);
+  z-index: 10000;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  animation: toastFadeIn 0.3s cubic-bezier(0.2, 0.8, 0.2, 1);
+}
+
+.ytm-lyrics-toast kbd {
+  background: rgba(255, 255, 255, 0.2);
+  padding: 2px 6px;
+  border-radius: 4px;
+  font-size: 11px;
+}
+
+@keyframes toastFadeIn {
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes btnPulse {
+  0% { transform: scale(1); box-shadow: 0 0 0 rgba(255, 0, 85, 0.7); }
+  50% { transform: scale(1.2); box-shadow: 0 0 16px rgba(255, 0, 85, 0.9); }
+  100% { transform: scale(1); box-shadow: 0 0 0 rgba(255, 0, 85, 0); }
+}
+
+.btn-pulse-alert {
+  animation: btnPulse 0.8s ease 3;
+  color: #ff0055 !important;
+}
+

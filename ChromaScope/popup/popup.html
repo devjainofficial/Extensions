@@ -1,0 +1,319 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ChromaScope</title>
+    <link rel="stylesheet" href="popup.css">
+</head>
+<body>
+    <div class="chroma-app">
+        <!-- Header -->
+        <header class="cs-header">
+            <div class="cs-brand">
+                <img src="../icons/icon32.png" alt="ChromaScope Logo" class="cs-logo">
+                <div class="cs-brand-meta">
+                    <h1 class="cs-title">ChromaScope</h1>
+                    <span class="cs-subtitle">Precision Pixel & Gradient Inspector</span>
+                </div>
+            </div>
+            <div class="cs-header-actions">
+                <button id="btn-theme-toggle" class="cs-icon-btn" title="Toggle Dark/Light Theme">
+                    <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path></svg>
+                </button>
+            </div>
+        </header>
+
+        <!-- Primary Action Trigger Row -->
+        <div class="cs-action-row">
+            <button id="btn-native-pick" class="cs-btn cs-btn-primary" title="Shortcut: Alt+Shift+P">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2">
+                    <path d="m14 7 3 3L8 19l-4 1 1-4L14 7z"></path>
+                    <path d="m17 4 3 3"></path>
+                </svg>
+                <span>Pick Screen Pixel</span>
+            </button>
+
+            <button id="btn-page-inspect" class="cs-btn cs-btn-secondary" title="Activate magnified loupe & hover inspector (Alt+Shift+C)">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2">
+                    <circle cx="11" cy="11" r="8"></circle>
+                    <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+                    <line x1="11" y1="8" x2="11" y2="14"></line>
+                    <line x1="8" y1="11" x2="14" y2="11"></line>
+                </svg>
+                <span>Page Loupe</span>
+            </button>
+        </div>
+
+        <!-- Color Hero Banner -->
+        <div class="cs-hero-card" id="cs-hero-card">
+            <div class="cs-hero-swatch-wrap">
+                <div class="cs-hero-swatch" id="hero-swatch">
+                    <div class="cs-swatch-glare"></div>
+                </div>
+                <input type="color" id="hero-native-color-input" title="Choose custom color" class="cs-native-picker">
+            </div>
+
+            <div class="cs-hero-details">
+                <div class="cs-hero-identity">
+                    <div class="cs-hero-title-row">
+                        <span class="cs-hero-name" id="hero-name">Select a Color</span>
+                        <span class="cs-hero-match-pill" id="hero-match">100%</span>
+                    </div>
+                    <div class="cs-hero-family-row">
+                        <span class="cs-hero-family" id="hero-family">Pick any pixel on screen</span>
+                        <!-- Chromesthesia Audio Player -->
+                        <button class="cs-tone-btn" id="btn-play-tone" title="Listen to this color's harmonic frequency">
+                            <span class="cs-tone-icon">♫</span>
+                            <span id="tone-freq-label">418 Hz</span>
+                        </button>
+                    </div>
+                </div>
+
+                <div class="cs-hero-hex-bar" id="hero-hex-bar" title="Click to copy HEX">
+                    <span class="cs-hero-hex" id="hero-hex">#4F46E5</span>
+                    <button class="cs-copy-badge" id="btn-copy-hex">
+                        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>
+                        <span>Copy</span>
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Formats Row -->
+        <div class="cs-formats-strip">
+            <div class="cs-format-chip" id="chip-rgb" title="Click to copy RGB">
+                <span class="cs-chip-lbl">RGB</span>
+                <span class="cs-chip-val" id="val-rgb">rgb(79, 70, 229)</span>
+            </div>
+            <div class="cs-format-chip" id="chip-hsl" title="Click to copy HSL">
+                <span class="cs-chip-lbl">HSL</span>
+                <span class="cs-chip-val" id="val-hsl">hsl(243, 75%, 59%)</span>
+            </div>
+            <div class="cs-format-chip" id="chip-lab" title="Click to copy CIELAB">
+                <span class="cs-chip-lbl">LAB</span>
+                <span class="cs-chip-val" id="val-lab">lab(38% 36 -67)</span>
+            </div>
+        </div>
+
+        <!-- Navigation Tabs -->
+        <nav class="cs-tabs">
+            <button class="cs-tab-btn active" data-tab="tab-nuance">Gradient</button>
+            <button class="cs-tab-btn" data-tab="tab-harmonies">Harmonies</button>
+            <button class="cs-tab-btn" data-tab="tab-vision">Vision & Sim</button>
+            <button class="cs-tab-btn" data-tab="tab-dev">Dev & Code</button>
+            <button class="cs-tab-btn" data-tab="tab-history">History</button>
+        </nav>
+
+        <!-- Tab Contents -->
+        <main class="cs-tab-container">
+
+            <!-- TAB 1: Gradient & Nuance -->
+            <section class="cs-tab-panel active" id="tab-nuance">
+                <!-- Tonal & Nuance Breakdown -->
+                <div class="cs-section-card">
+                    <h2 class="cs-card-title">
+                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon></svg>
+                        <span>Gradient Shade & Nuance Profile</span>
+                    </h2>
+                    
+                    <div class="cs-nuance-props">
+                        <div class="cs-prop-item">
+                            <span class="cs-prop-name">Tonal Classification</span>
+                            <span class="cs-prop-val" id="nuance-tone">Core Vibrant Tone</span>
+                        </div>
+                        <div class="cs-prop-item">
+                            <span class="cs-prop-name">Temperature & Undertone</span>
+                            <span class="cs-prop-val" id="nuance-temp">Cool Nordic</span>
+                        </div>
+                        <div class="cs-prop-item">
+                            <span class="cs-prop-name">Saturation Density</span>
+                            <span class="cs-prop-val" id="nuance-sat">Vivid / Neon</span>
+                        </div>
+                        <div class="cs-prop-item">
+                            <span class="cs-prop-name">Perceptual Luminance</span>
+                            <span class="cs-prop-val" id="nuance-lum">38.4%</span>
+                        </div>
+                    </div>
+
+                    <div class="cs-nuance-narrative" id="nuance-narrative">
+                        Analyzing tonal and temperature positioning within gradient spaces...
+                    </div>
+                </div>
+
+                <!-- Gradient Multi-Stop Transition Builder -->
+                <div class="cs-section-card">
+                    <div class="cs-card-header-split">
+                        <h2 class="cs-card-title">
+                            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><rect x="2" y="3" width="20" height="14" rx="2" ry="2"></rect><line x1="8" y1="21" x2="16" y2="21"></line><line x1="12" y1="17" x2="12" y2="21"></line></svg>
+                            <span>Gradient Spectrum & Named Stops</span>
+                        </h2>
+                        <button class="cs-text-btn" id="btn-copy-css-grad">Copy CSS</button>
+                    </div>
+
+                    <div class="cs-gradient-bar" id="gradient-bar-preview"></div>
+                    <div class="cs-stops-list" id="gradient-stops-list"></div>
+                </div>
+
+                <!-- Color Psychology & Symbolism -->
+                <div class="cs-section-card">
+                    <h2 class="cs-card-title">
+                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="12" cy="12" r="10"></circle><path d="M12 16v-4"></path><path d="M12 8h.01"></path></svg>
+                        <span>Psychological Archetype & Resonance</span>
+                    </h2>
+                    <div class="cs-psychology-box">
+                        <div class="cs-psych-header">
+                            <span class="cs-psych-archetype" id="psych-archetype">The Anchor</span>
+                            <span class="cs-psych-resonance" id="psych-resonance">Trust, Depth, Wisdom</span>
+                        </div>
+                        <div class="cs-psych-desc" id="psych-desc">Loading psychological analysis...</div>
+                        <div class="cs-psych-usage" id="psych-usage">Recommended in core UI navigation.</div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- TAB 2: Harmonies & Tonal Scales -->
+            <section class="cs-tab-panel" id="tab-harmonies">
+                <!-- Color Harmonies -->
+                <div class="cs-section-card">
+                    <h2 class="cs-card-title">Harmonic Color Coordinates</h2>
+                    <div class="cs-harmonies-grid" id="harmonies-grid"></div>
+                </div>
+
+                <!-- 7-Step Tonal Scale -->
+                <div class="cs-section-card">
+                    <h2 class="cs-card-title">Tonal Lightness Scale (Shadow to Tint)</h2>
+                    <div class="cs-tonal-scale-strip" id="tonal-scale-strip"></div>
+                </div>
+            </section>
+
+            <!-- TAB 3: Vision & Color Blindness Simulation -->
+            <section class="cs-tab-panel" id="tab-vision">
+                <!-- WCAG Contrast Ratios -->
+                <div class="cs-section-card">
+                    <h2 class="cs-card-title">WCAG 2.1 Contrast Ratios</h2>
+                    <div class="cs-a11y-samples">
+                        <div class="cs-a11y-box cs-on-white" id="box-on-white">
+                            <span class="cs-a11y-sample-text">Aa</span>
+                            <div class="cs-a11y-info">
+                                <span class="cs-a11y-ratio" id="ratio-white">4.5:1</span>
+                                <span class="cs-a11y-sub">On Pure White</span>
+                            </div>
+                            <div class="cs-a11y-badges" id="badges-white">
+                                <span class="cs-badge cs-pass">AA</span>
+                            </div>
+                        </div>
+
+                        <div class="cs-a11y-box cs-on-black" id="box-on-black">
+                            <span class="cs-a11y-sample-text">Aa</span>
+                            <div class="cs-a11y-info">
+                                <span class="cs-a11y-ratio" id="ratio-black">8.2:1</span>
+                                <span class="cs-a11y-sub">On Pure Black</span>
+                            </div>
+                            <div class="cs-a11y-badges" id="badges-black">
+                                <span class="cs-badge cs-pass">AAA</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="cs-a11y-recommendation">
+                        <span class="cs-rec-label">Recommended Text:</span>
+                        <span class="cs-rec-value" id="rec-text-color">White (#FFFFFF)</span>
+                    </div>
+                </div>
+
+                <!-- Color Blindness Simulation (Surprise Element) -->
+                <div class="cs-section-card">
+                    <h2 class="cs-card-title">
+                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path><circle cx="12" cy="12" r="3"></circle></svg>
+                        <span>Color Blindness Simulation (Vision Deficiency)</span>
+                    </h2>
+                    <div class="cs-blindness-grid" id="blindness-grid">
+                        <!-- Populated by JS -->
+                    </div>
+                </div>
+            </section>
+
+            <!-- TAB 4: Dev & Code Generation (Surprise Element) -->
+            <section class="cs-tab-panel" id="tab-dev">
+                <!-- Tailwind CSS -->
+                <div class="cs-section-card">
+                    <div class="cs-card-header-split">
+                        <h2 class="cs-card-title">Tailwind CSS v3 / v4</h2>
+                        <span class="cs-code-badge" id="tw-token-pill">indigo-600</span>
+                    </div>
+                    <div class="cs-code-row" id="tw-bg-row" title="Click to copy">
+                        <span class="cs-code-label">Background Class</span>
+                        <span class="cs-code-val" id="tw-bg-class">bg-indigo-600</span>
+                    </div>
+                    <div class="cs-code-row" id="tw-text-row" title="Click to copy">
+                        <span class="cs-code-label">Text Class</span>
+                        <span class="cs-code-val" id="tw-text-class">text-indigo-600</span>
+                    </div>
+                    <div class="cs-code-row" id="tw-arb-row" title="Click to copy">
+                        <span class="cs-code-label">Arbitrary Value</span>
+                        <span class="cs-code-val" id="tw-arb-val">bg-[#4F46E5]</span>
+                    </div>
+                </div>
+
+                <!-- Web & Mobile Framework Tokens -->
+                <div class="cs-section-card">
+                    <h2 class="cs-card-title">Multi-Platform Code Snippets</h2>
+                    <div class="cs-code-snippets">
+                        <div class="cs-code-row" id="code-css-var" title="Click to copy">
+                            <span class="cs-code-label">CSS Variable</span>
+                            <span class="cs-code-val" id="code-css-val">--color-primary: #4F46E5;</span>
+                        </div>
+                        <div class="cs-code-row" id="code-swift" title="Click to copy">
+                            <span class="cs-code-label">SwiftUI</span>
+                            <span class="cs-code-val" id="code-swift-val">Color(red: 0.31, green: 0.27, blue: 0.90)</span>
+                        </div>
+                        <div class="cs-code-row" id="code-flutter" title="Click to copy">
+                            <span class="cs-code-label">Flutter</span>
+                            <span class="cs-code-val" id="code-flutter-val">Color(0xFF4F46E5)</span>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- TAB 5: History & Export -->
+            <section class="cs-tab-panel" id="tab-history">
+                <div class="cs-section-card">
+                    <div class="cs-card-header-split">
+                        <h2 class="cs-card-title">Recent Inspections</h2>
+                        <button class="cs-text-btn cs-danger-btn" id="btn-clear-history">Clear</button>
+                    </div>
+
+                    <div class="cs-history-list" id="history-list">
+                        <div class="cs-empty-state">No colors inspected yet. Click "Pick Screen Pixel" or "Page Loupe" to begin!</div>
+                    </div>
+                </div>
+
+                <div class="cs-section-card">
+                    <h2 class="cs-card-title">Export Palette</h2>
+                    <div class="cs-export-btn-group">
+                        <button class="cs-btn cs-btn-sm" id="btn-export-css">Export CSS</button>
+                        <button class="cs-btn cs-btn-sm" id="btn-export-json">Export JSON</button>
+                        <button class="cs-btn cs-btn-sm" id="btn-export-txt">Export Hex List</button>
+                    </div>
+                </div>
+            </section>
+        </main>
+
+        <!-- Footer Shortcuts Reference -->
+        <footer class="cs-footer-shortcuts">
+            <span class="cs-sc-pill"><kbd>Ctrl+Shift+X</kbd> Open Popup</span>
+            <span class="cs-sc-pill"><kbd>Alt+Shift+C</kbd> Loupe & Hover</span>
+            <span class="cs-sc-pill"><kbd>Alt+Shift+P</kbd> Quick Pick</span>
+        </footer>
+
+        <!-- Toast Feedback -->
+        <div class="cs-popup-toast" id="popup-toast"></div>
+    </div>
+
+    <!-- Scripts -->
+    <script src="../scripts/color-names.js"></script>
+    <script src="../scripts/color-engine.js"></script>
+    <script src="popup.js"></script>
+</body>
+</html>
