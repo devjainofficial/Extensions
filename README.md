@@ -9,7 +9,6 @@ A curated collection of modern, production-ready Chromium browser extensions (Go
 | Extension | Description | Manifest | Tech Stack |
 | :--- | :--- | :--- | :--- |
 | [**ChromaScope**](./ChromaScope) | Precision pixel loupe & gradient color inspector with perceptual color naming and contrast tools. | V3 | JavaScript, HTML5 Canvas, EyeDropper API, CSS3 |
-| [**DashMorph**](./DashMorph) | Real-time drag-and-drop dashboard card rearranger with persistent custom layout storage. | V3 | Vanilla JS, Shadow DOM HUD, HTML5 Drag & Drop, chrome.storage |
 | [**YTMusic-LyricOverlay**](./YTMusic-LyricOverlay) | Synchronized floating karaoke lyrics overlay and Document Picture-in-Picture window for YouTube Music. | V3 | Vanilla JS, Document PiP API, LRC Parser, CSS Backdrop Filter |
 
 ---
@@ -21,14 +20,7 @@ A curated collection of modern, production-ready Chromium browser extensions (Go
 - Palette generator, contrast ratio checker, and history exporter.
 - Keyboard shortcuts for rapid designer/developer workflows.
 
-### ⚡ 2. DashMorph
-**Dashboard & Card Rearranger with Persistent Layouts**
-- Fluid drag-and-drop rearrangement of dashboard cards, widgets, and metric panels.
-- Dual-storage persistence (`localStorage` + `chrome.storage.local`) that remembers your preferred layout upon reload.
-- Shadow DOM HUD prevents CSS conflicts with host websites.
-- MutationObserver-powered detection compatible with React, Vue, Vite, and Angular SPAs.
-
-### 🎵 3. YTMusic-LyricOverlay
+### 🎵 2. YTMusic-LyricOverlay
 **Picture-in-Picture & Floating Synchronized Lyrics for YouTube Music**
 - Synchronized karaoke-style lyric highlight and auto-scroll powered by Document Picture-in-Picture.
 - Title normalization supporting Bollywood, Hindi, Punjabi, and international songs.
@@ -52,7 +44,7 @@ To install and test any of these extensions locally:
    - **Brave**: `brave://extensions`
 3. Enable **Developer mode** toggle in the top-right corner.
 4. Click **Load unpacked** (or **Load unpacked extension**).
-5. Select the folder of the specific extension you want to run (e.g., `ChromaScope`, `DashMorph`, or `YTMusic-LyricOverlay`).
+5. Select the folder of the specific extension you want to run (e.g., `ChromaScope` or `YTMusic-LyricOverlay`).
 
 ---
 
