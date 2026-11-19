@@ -1,21 +1,27 @@
 #!/system/bin/sh
-# SmartTV Orbit - Cloud TV Agent Daemon
+# SmartTV Orbit - Android TV Daemon
+# Listens for Cloud Commands & Manages Smart Power Wake Routines
 
 CURL="/data/local/tmp/curl"
-CURL_OPTS="-s -k --resolve ntfy.sh:443:159.203.148.75"
+CURL_OPTS="-s --resolve ntfy.sh:443:159.203.148.75 -k"
 CMD_TOPIC="https://ntfy.sh/orbit_devja_tv_cmd/raw"
 STATUS_TOPIC="https://ntfy.sh/orbit_devja_tv_status"
 
-echo "[Orbit Agent] Starting TV Orbit Daemon..."
-
-# State tracking
-PREV_WAKE=""
+# Default Routine States & Time Windows (in HHMM integer format)
 PARAS_ENABLED="1"
-JINVANI_ENABLED="1"
+PARAS_START=500
+PARAS_END=700
 
-# Background Worker 1: TV Power / Wake & Scheduled Routine Detector
+JINVANI_ENABLED="1"
+JINVANI_START=700
+JINVANI_END=900
+
+echo "[Orbit Agent] Daemon started on $(date)"
+echo "[Orbit Agent] Initialized with Paras: $PARAS_START-$PARAS_END, Jinvani: $JINVANI_START-$JINVANI_END"
+
+# Worker 1: TV Wake Monitor (Detects screen ON from standby)
 monitor_wake() {
-    echo "[Orbit Agent] Wake monitor started."
+    PREV_WAKE="Awake"
     while true; do
         WAKE=$(dumpsys power 2>/dev/null | grep "mWakefulness=" | head -n 1 | cut -d= -f2)
         
@@ -29,16 +35,16 @@ monitor_wake() {
             
             echo "[Orbit Agent] Current TV time: $HOUR:$MIN ($HM)"
             
-            # Morning 5:00 AM - 6:59 AM -> Paras TV
-            if [ "$PARAS_ENABLED" = "1" ] && [ "$HM" -ge 500 ] && [ "$HM" -lt 700 ]; then
+            # Morning Paras TV Routine Check
+            if [ "$PARAS_ENABLED" = "1" ] && [ "$HM" -ge "$PARAS_START" ] && [ "$HM" -lt "$PARAS_END" ]; then
                 echo "[Orbit Routine] Launching Morning Paras TV Live..."
                 sleep 2
                 am start -a android.intent.action.VIEW -d "https://www.youtube.com/results?search_query=Paras+TV+live" -p com.google.android.youtube.tv
                 sleep 3
                 input keyevent 23
             
-            # Morning 7:00 AM - 8:59 AM -> Jinvani Channel
-            elif [ "$JINVANI_ENABLED" = "1" ] && [ "$HM" -ge 700 ] && [ "$HM" -lt 900 ]; then
+            # Morning Jinvani Channel Routine Check
+            elif [ "$JINVANI_ENABLED" = "1" ] && [ "$HM" -ge "$JINVANI_START" ] && [ "$HM" -lt "$JINVANI_END" ]; then
                 echo "[Orbit Routine] Launching Morning Jinvani Channel Live..."
                 sleep 2
                 am start -a android.intent.action.VIEW -d "https://www.youtube.com/results?search_query=Jinvani+channel+live" -p com.google.android.youtube.tv
@@ -88,6 +94,12 @@ while true; do
                 PKG="${LINE#LAUNCH_APP:}"
                 monkey -p "$PKG" -c android.intent.category.LAUNCHER 1
                 ;;
+            CRICKET:*|HOTSTAR_CRICKET:*)
+                echo "[Orbit Cloud] Launching Hotstar Live Cricket..."
+                am start -a android.intent.action.VIEW -d "hotstar://sports" in.startv.hotstar || \
+                am start -a android.intent.action.VIEW -d "https://www.hotstar.com/in/sports/cricket" in.startv.hotstar || \
+                monkey -p in.startv.hotstar -c android.intent.category.LAUNCHER 1
+                ;;
             ROUTINE_TOGGLE:*)
                 DATA="${LINE#ROUTINE_TOGGLE:}"
                 RNAME="${DATA%%:*}"
@@ -99,9 +111,28 @@ while true; do
                 fi
                 echo "[Orbit Routine] Toggled $RNAME to $RSTATE"
                 ;;
+            ROUTINE_CONFIG:*)
+                DATA="${LINE#ROUTINE_CONFIG:}"
+                RNAME=$(echo "$DATA" | cut -d: -f1)
+                RSTART=$(echo "$DATA" | cut -d: -f2)
+                REND=$(echo "$DATA" | cut -d: -f3)
+                if [ "$RNAME" = "paras" ]; then
+                    PARAS_START="$RSTART"
+                    PARAS_END="$REND"
+                elif [ "$RNAME" = "jinvani" ]; then
+                    JINVANI_START="$RSTART"
+                    JINVANI_END="$REND"
+                fi
+                echo "[Orbit Routine] Updated $RNAME time: $RSTART to $REND"
+                ;;
             SCREEN:*)
-                echo "[Orbit Cloud] Capturing screenshot..."
+                echo "[Orbit Cloud] Capturing screenshot and uploading..."
                 screencap -p /data/local/tmp/screen.png
+                $CURL $CURL_OPTS -H "Filename: screen.png" -T /data/local/tmp/screen.png "$STATUS_TOPIC"
+                ;;
+            SCRIPT:*)
+                SCRIPT="${LINE#SCRIPT:}"
+                sh -c "$SCRIPT" &
                 ;;
             *)
                 echo "[Orbit Cloud] Unknown command: $LINE"

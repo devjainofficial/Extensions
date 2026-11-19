@@ -4,7 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
   <title>SmartTV Orbit | Cloud Remote</title>
-  <meta name="theme-color" content="#16161a" id="meta-theme-color">
+  <meta name="theme-color" content="#141418" id="meta-theme-color">
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
   <link rel="manifest" href="manifest.json">
@@ -79,9 +79,6 @@
     .accent-color {
       color: var(--accent-color) !important;
     }
-    .accent-bg {
-      background-color: var(--accent-color) !important;
-    }
   </style>
 </head>
 <body class="min-h-screen flex flex-col justify-between pb-24">
@@ -100,7 +97,7 @@
       <i class="fa-solid fa-caret-down text-[10px] text-slate-400"></i>
     </div>
 
-    <!-- Right Controls: Keyboard & Theme -->
+    <!-- Right Controls: Theme & Keyboard -->
     <div class="flex items-center gap-2">
       <button onclick="openThemeModal()" title="Customize Color Theme" class="w-11 h-11 rounded-full bg-[#272730] border border-white/10 flex items-center justify-center text-amber-300 shadow-lg active:scale-90 transition">
         <i class="fa-solid fa-palette text-sm"></i>
@@ -114,7 +111,7 @@
   <!-- ==================== MAIN CONTENT AREA ==================== -->
   <main class="flex-1 px-4 py-2 max-w-md mx-auto w-full flex flex-col justify-center">
 
-    <!-- ==================== VIEW 1: REMOTE CONTROLLER (ROKU STYLE) ==================== -->
+    <!-- ==================== VIEW 1: REMOTE CONTROLLER ==================== -->
     <section id="view-remote" class="space-y-4">
 
       <!-- FATHER'S DEVOTIONAL CHANNELS WITH REAL LOGOS -->
@@ -240,7 +237,7 @@
 
       </div>
 
-      <!-- BRANDED APP LAUNCHER PILLS -->
+      <!-- BRANDED APP LAUNCHER PILLS: YOUTUBE, JIOHOTSTAR, LIVE CRICKET -->
       <div class="space-y-2 max-w-xs mx-auto w-full pt-1">
         <div class="grid grid-cols-3 gap-2">
           <!-- YouTube / SmartTube -->
@@ -249,15 +246,16 @@
             <span class="tracking-tight text-[11px]">YouTube</span>
           </button>
 
-          <!-- Netflix -->
-          <button onclick="sendCommand('launch_app', 'com.netflix.ninja')" class="bg-white text-[#E50914] font-black tracking-wider text-[11px] py-2.5 px-2 rounded-2xl flex items-center justify-center shadow-md active:scale-95 transition">
-            NETFLIX
+          <!-- JioHotstar (Replaced Netflix) -->
+          <button onclick="launchHotstar()" class="bg-gradient-to-r from-[#031536] to-[#0a275e] text-white border border-[#1b438f]/60 font-bold text-xs py-2.5 px-2 rounded-2xl flex items-center justify-center gap-1.5 shadow-md active:scale-95 transition">
+            <span class="text-sky-400 text-sm font-black">★</span>
+            <span class="tracking-tight text-[11px] font-bold">Hotstar</span>
           </button>
 
-          <!-- VLC Player -->
-          <button onclick="sendCommand('launch_app', 'org.videolan.vlc')" class="bg-[#272730] text-amber-400 font-bold text-xs py-2.5 px-2 rounded-2xl flex items-center justify-center gap-1.5 border border-white/10 shadow-md active:scale-95 transition">
-            <i class="fa-solid fa-cone text-amber-400 text-xs"></i>
-            <span class="text-[11px] text-white">VLC</span>
+          <!-- Live Cricket on JioHotstar (Replaced VLC) -->
+          <button onclick="launchCricketLive()" class="bg-gradient-to-r from-[#092e1e] to-[#0d4a30] text-emerald-300 border border-emerald-500/40 font-bold text-xs py-2.5 px-2 rounded-2xl flex items-center justify-center gap-1.5 shadow-md active:scale-95 transition">
+            <span class="text-sm">🏏</span>
+            <span class="text-[11px] text-white font-bold tracking-tight">Cricket</span>
           </button>
         </div>
       </div>
@@ -276,54 +274,10 @@
         </button>
       </div>
 
-      <!-- ROUTINE 1: PARAS TV -->
-      <div class="glass-card rounded-2xl p-4 border-l-4 border-l-[#0c3b82] shadow-md space-y-2">
-        <div class="flex items-center justify-between">
-          <div class="flex items-center gap-2.5">
-            <img src="img/paras_tv.jpg" alt="Paras TV" class="w-8 h-8 rounded-lg object-cover">
-            <div>
-              <h3 class="text-xs font-bold text-white">Morning Paras TV Routine</h3>
-              <span class="text-[11px] text-amber-400 font-medium">5:00 AM – 6:59 AM</span>
-            </div>
-          </div>
-          <label class="relative inline-flex items-center cursor-pointer">
-            <input type="checkbox" id="routine-paras-toggle" checked onchange="toggleRoutine('paras', this.checked)" class="sr-only peer">
-            <div class="w-9 h-5 bg-[#272730] peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-slate-300 after:border after:rounded-full after:h-4 after:w-4 after:transition-all peer-checked:bg-amber-500"></div>
-          </label>
-        </div>
-        <p class="text-[11px] text-slate-300 pl-10">When TV wakes up in this time window, it automatically opens Paras TV Live Stream.</p>
-        <div class="pl-10 flex gap-2 pt-1">
-          <button onclick="testRoutine('paras')" class="text-[11px] font-semibold text-amber-400 hover:text-amber-300 flex items-center gap-1 bg-amber-950/60 border border-amber-800 px-2.5 py-1 rounded-lg">
-            <i class="fa-solid fa-play text-[10px]"></i> Test Now
-          </button>
-        </div>
+      <!-- DYNAMIC ROUTINES CONTAINER (EDITABLE) -->
+      <div id="routines-list-container" class="space-y-3">
+        <!-- Rendered dynamically by JavaScript -->
       </div>
-
-      <!-- ROUTINE 2: JINVANI CHANNEL -->
-      <div class="glass-card rounded-2xl p-4 border-l-4 border-l-[#801421] shadow-md space-y-2">
-        <div class="flex items-center justify-between">
-          <div class="flex items-center gap-2.5">
-            <img src="img/jinvani.jpg" alt="Jinvani" class="w-9 h-8 rounded-lg object-cover">
-            <div>
-              <h3 class="text-xs font-bold text-white">Morning Jinvani Channel Routine</h3>
-              <span class="text-[11px] text-orange-400 font-medium">7:00 AM – 8:59 AM</span>
-            </div>
-          </div>
-          <label class="relative inline-flex items-center cursor-pointer">
-            <input type="checkbox" id="routine-jinvani-toggle" checked onchange="toggleRoutine('jinvani', this.checked)" class="sr-only peer">
-            <div class="w-9 h-5 bg-[#272730] peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-slate-300 after:border after:rounded-full after:h-4 after:w-4 after:transition-all peer-checked:bg-orange-500"></div>
-          </label>
-        </div>
-        <p class="text-[11px] text-slate-300 pl-10">When TV wakes up between 7 AM and 9 AM, it automatically switches to Jinvani Channel Live.</p>
-        <div class="pl-10 flex gap-2 pt-1">
-          <button onclick="testRoutine('jinvani')" class="text-[11px] font-semibold text-orange-400 hover:text-orange-300 flex items-center gap-1 bg-orange-950/60 border border-orange-800 px-2.5 py-1 rounded-lg">
-            <i class="fa-solid fa-play text-[10px]"></i> Test Now
-          </button>
-        </div>
-      </div>
-
-      <!-- USER CUSTOM ROUTINES -->
-      <div id="custom-routines-container" class="space-y-3"></div>
     </section>
 
     <!-- ==================== VIEW 3: APPS & CAST ==================== -->
@@ -338,21 +292,32 @@
         </div>
       </div>
 
-      <!-- TV SCREEN CAPTURE PREVIEW -->
+      <!-- LIVE SCREENSHOT VIEWER -->
       <div class="glass-card rounded-2xl p-4 shadow-md space-y-3">
         <div class="flex items-center justify-between">
           <span class="text-xs font-semibold text-slate-200 flex items-center gap-2">
             <i class="fa-solid fa-eye accent-color"></i> TV Screen Preview
           </span>
-          <button onclick="requestScreenshot()" class="bg-[#272730] hover:bg-black/60 border border-white/10 accent-color text-xs font-medium px-3 py-1 rounded-lg flex items-center gap-1.5">
-            <i class="fa-solid fa-camera"></i> Capture
+          <button onclick="requestScreenshot()" class="bg-[#272730] hover:bg-black/60 border border-white/10 accent-color text-xs font-medium px-3 py-1 rounded-lg flex items-center gap-1.5 active:scale-95 transition">
+            <i class="fa-solid fa-camera"></i> Capture Screen
           </button>
         </div>
         <div id="screen-preview-box" class="w-full aspect-video bg-black/60 rounded-xl flex items-center justify-center border border-white/10 overflow-hidden relative">
-          <span class="text-xs text-slate-500 flex items-center gap-2">
-            <i class="fa-solid fa-image"></i> Tap "Capture" to preview TV screen
-          </span>
+          <div id="screen-placeholder" class="text-xs text-slate-500 flex flex-col items-center gap-1.5 text-center p-4">
+            <i class="fa-solid fa-image text-2xl text-slate-600"></i>
+            <span>Tap "Capture Screen" to view what is playing on the TV</span>
+          </div>
+          <div id="screen-loading" class="text-xs text-purple-400 hidden flex flex-col items-center gap-2">
+            <i class="fa-solid fa-circle-notch fa-spin text-2xl"></i>
+            <span>Capturing TV screen over cloud...</span>
+          </div>
           <img id="screen-img" class="w-full h-full object-contain hidden" alt="TV Preview">
+        </div>
+        <div id="screen-meta" class="text-[10px] text-slate-400 flex justify-between items-center hidden">
+          <span id="screen-time">Updated just now</span>
+          <button onclick="openScreenFullscreen()" class="accent-color hover:underline flex items-center gap-1">
+            <i class="fa-solid fa-expand"></i> Full Screen
+          </button>
         </div>
       </div>
     </section>
@@ -393,6 +358,92 @@
       <span class="text-[10px] font-semibold">Custom</span>
     </button>
   </nav>
+
+  <!-- ==================== MODAL: EDIT ROUTINE ==================== -->
+  <div id="modal-edit-routine" class="fixed inset-0 z-50 bg-black/80 backdrop-blur-sm hidden items-center justify-center p-4">
+    <div class="glass-card rounded-3xl p-5 w-full max-w-sm space-y-4 border border-white/10 shadow-2xl">
+      <div class="flex items-center justify-between border-b border-white/10 pb-3">
+        <h3 class="text-sm font-bold text-white flex items-center gap-2">
+          <i class="fa-solid fa-pen-to-square accent-color"></i> Edit Automation Routine
+        </h3>
+        <button onclick="closeModal('modal-edit-routine')" class="text-slate-400 hover:text-white">
+          <i class="fa-solid fa-xmark text-base"></i>
+        </button>
+      </div>
+
+      <input type="hidden" id="edit-routine-id">
+
+      <div class="space-y-3 text-xs">
+        <div>
+          <label class="text-slate-400 block mb-1 font-medium">Routine Name</label>
+          <input type="text" id="edit-routine-name" class="w-full bg-black/40 border border-white/10 rounded-xl px-3 py-2 text-white font-medium focus:outline-none">
+        </div>
+
+        <div class="grid grid-cols-2 gap-2">
+          <div>
+            <label class="text-slate-400 block mb-1 font-medium">Start Time</label>
+            <input type="time" id="edit-routine-start" class="w-full bg-black/40 border border-white/10 rounded-xl px-3 py-2 text-white font-medium focus:outline-none">
+          </div>
+          <div>
+            <label class="text-slate-400 block mb-1 font-medium">End Time</label>
+            <input type="time" id="edit-routine-end" class="w-full bg-black/40 border border-white/10 rounded-xl px-3 py-2 text-white font-medium focus:outline-none">
+          </div>
+        </div>
+
+        <div>
+          <label class="text-slate-400 block mb-1 font-medium">YouTube Live Channel Search Query</label>
+          <input type="text" id="edit-routine-val" class="w-full bg-black/40 border border-white/10 rounded-xl px-3 py-2 text-white focus:outline-none">
+        </div>
+      </div>
+
+      <div class="flex gap-2 pt-2">
+        <button onclick="closeModal('modal-edit-routine')" class="flex-1 py-2.5 bg-[#272730] text-slate-300 font-semibold text-xs rounded-xl hover:bg-black/60 border border-white/10">Cancel</button>
+        <button onclick="saveEditedRoutine()" class="flex-1 py-2.5 bg-purple-600 hover:bg-purple-500 text-white font-semibold text-xs rounded-xl shadow-md">Save Changes</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ==================== MODAL: ADD NEW ROUTINE ==================== -->
+  <div id="modal-routine" class="fixed inset-0 z-50 bg-black/80 backdrop-blur-sm hidden items-center justify-center p-4">
+    <div class="glass-card rounded-3xl p-5 w-full max-w-sm space-y-4 border border-white/10 shadow-2xl">
+      <div class="flex items-center justify-between border-b border-white/10 pb-3">
+        <h3 class="text-sm font-bold text-white flex items-center gap-2">
+          <i class="fa-solid fa-clock accent-color"></i> Add New Routine
+        </h3>
+        <button onclick="closeModal('modal-routine')" class="text-slate-400 hover:text-white">
+          <i class="fa-solid fa-xmark"></i>
+        </button>
+      </div>
+
+      <div class="space-y-3 text-xs">
+        <div>
+          <label class="text-slate-400 block mb-1">Routine Name</label>
+          <input type="text" id="m-routine-name" placeholder="e.g. Evening Devotional Songs" class="w-full bg-black/40 border border-white/10 rounded-xl px-3 py-2 text-white">
+        </div>
+
+        <div class="grid grid-cols-2 gap-2">
+          <div>
+            <label class="text-slate-400 block mb-1">Start Time</label>
+            <input type="time" id="m-routine-start" value="18:00" class="w-full bg-black/40 border border-white/10 rounded-xl px-3 py-2 text-white">
+          </div>
+          <div>
+            <label class="text-slate-400 block mb-1">End Time</label>
+            <input type="time" id="m-routine-end" value="20:00" class="w-full bg-black/40 border border-white/10 rounded-xl px-3 py-2 text-white">
+          </div>
+        </div>
+
+        <div>
+          <label class="text-slate-400 block mb-1">Channel Query or Stream URL</label>
+          <input type="text" id="m-routine-val" placeholder="e.g. Jain Bhajan Live" class="w-full bg-black/40 border border-white/10 rounded-xl px-3 py-2 text-white">
+        </div>
+      </div>
+
+      <div class="flex gap-2 pt-2">
+        <button onclick="closeModal('modal-routine')" class="flex-1 py-2.5 bg-[#272730] text-slate-300 font-semibold text-xs rounded-xl hover:bg-black/60 border border-white/10">Cancel</button>
+        <button onclick="saveNewRoutine()" class="flex-1 py-2.5 bg-purple-600 text-white font-semibold text-xs rounded-xl shadow-md">Add Routine</button>
+      </div>
+    </div>
+  </div>
 
   <!-- ==================== MODAL: THEME & COLOR SELECTOR ==================== -->
   <div id="modal-theme" class="fixed inset-0 z-50 bg-black/80 backdrop-blur-sm hidden items-center justify-center p-4">
@@ -472,7 +523,7 @@
         <div class="p-3 bg-black/30 rounded-xl border border-white/10 space-y-1">
           <div class="font-semibold text-slate-300">Cloud Broker (ntfy.sh)</div>
           <div class="text-[10px] text-slate-400 font-mono">Topic: orbit_devja_tv_cmd</div>
-          <div class="text-[10px] text-emerald-400 font-medium">Status: Connected (Ready for Remote Commands)</div>
+          <div class="text-[10px] text-emerald-400 font-medium">Status: Connected (WAN Remote Active)</div>
         </div>
 
         <div class="p-3 bg-black/30 rounded-xl border border-white/10 space-y-1">
@@ -485,57 +536,6 @@
         <button onclick="closeModal('modal-settings')" class="w-full py-2.5 bg-[#272730] hover:bg-black/60 text-white font-semibold text-xs rounded-xl border border-white/10">
           Close
         </button>
-      </div>
-    </div>
-  </div>
-
-  <!-- MODAL: ADD CUSTOM ROUTINE -->
-  <div id="modal-routine" class="fixed inset-0 z-50 bg-black/80 backdrop-blur-sm hidden items-center justify-center p-4">
-    <div class="glass-card rounded-3xl p-5 w-full max-w-sm space-y-4 border border-white/10 shadow-2xl">
-      <div class="flex items-center justify-between border-b border-white/10 pb-3">
-        <h3 class="text-sm font-bold text-white flex items-center gap-2">
-          <i class="fa-solid fa-clock accent-color"></i> New Routine
-        </h3>
-        <button onclick="closeModal('modal-routine')" class="text-slate-400 hover:text-white">
-          <i class="fa-solid fa-xmark"></i>
-        </button>
-      </div>
-
-      <div class="space-y-3 text-xs">
-        <div>
-          <label class="text-slate-400 block mb-1">Routine Name</label>
-          <input type="text" id="m-routine-name" placeholder="e.g. Evening Devotional Songs" class="w-full bg-black/40 border border-white/10 rounded-xl px-3 py-2 text-white">
-        </div>
-
-        <div class="grid grid-cols-2 gap-2">
-          <div>
-            <label class="text-slate-400 block mb-1">Start Time</label>
-            <input type="time" id="m-routine-start" value="18:00" class="w-full bg-black/40 border border-white/10 rounded-xl px-3 py-2 text-white">
-          </div>
-          <div>
-            <label class="text-slate-400 block mb-1">End Time</label>
-            <input type="time" id="m-routine-end" value="20:00" class="w-full bg-black/40 border border-white/10 rounded-xl px-3 py-2 text-white">
-          </div>
-        </div>
-
-        <div>
-          <label class="text-slate-400 block mb-1">Action Type</label>
-          <select id="m-routine-type" class="w-full bg-black/40 border border-white/10 rounded-xl px-3 py-2 text-white">
-            <option value="youtube_search">YouTube Live Search Query</option>
-            <option value="url">Direct Stream / Video URL</option>
-            <option value="app">Launch App</option>
-          </select>
-        </div>
-
-        <div>
-          <label class="text-slate-400 block mb-1">Search Query or URL</label>
-          <input type="text" id="m-routine-val" placeholder="e.g. Jain Aarti live" class="w-full bg-black/40 border border-white/10 rounded-xl px-3 py-2 text-white">
-        </div>
-      </div>
-
-      <div class="flex gap-2 pt-2">
-        <button onclick="closeModal('modal-routine')" class="flex-1 py-2.5 bg-[#272730] text-slate-300 font-semibold text-xs rounded-xl hover:bg-black/60 border border-white/10">Cancel</button>
-        <button onclick="saveNewRoutine()" class="flex-1 py-2.5 bg-purple-600 text-white font-semibold text-xs rounded-xl shadow-md">Save Routine</button>
       </div>
     </div>
   </div>
@@ -587,7 +587,7 @@
     const CLOUD_TOPIC_STATUS = 'orbit_devja_tv_status';
     const NTFY_BASE = 'https://ntfy.sh';
 
-    // THEMES (INCL. USER'S ROKU PURPLE, PARAS SAPPHIRE, JINVANI MAROON)
+    // THEMES
     const THEMES = {
       roku: {
         id: 'roku',
@@ -770,9 +770,305 @@
       document.getElementById('modal-settings').classList.add('flex');
     }
 
-    let routines = JSON.parse(localStorage.getItem('orbit_routines') || '[]');
-    let customActions = JSON.parse(localStorage.getItem('orbit_custom_actions') || '[]');
+    // ==================== EDITABLE ROUTINES ====================
+    const DEFAULT_ROUTINES = [
+      {
+        id: 'paras',
+        name: 'Morning Paras TV Routine',
+        start: '05:00',
+        end: '06:59',
+        type: 'youtube_search',
+        val: 'Paras TV live',
+        img: 'img/paras_tv.jpg',
+        border: '#0c3b82',
+        desc: 'When TV wakes up in this time window, it automatically opens Paras TV Live Stream.',
+        enabled: true
+      },
+      {
+        id: 'jinvani',
+        name: 'Morning Jinvani Channel Routine',
+        start: '07:00',
+        end: '08:59',
+        type: 'youtube_search',
+        val: 'Jinvani channel live',
+        img: 'img/jinvani.jpg',
+        border: '#801421',
+        desc: 'When TV wakes up between 7 AM and 9 AM, it automatically switches to Jinvani Channel Live.',
+        enabled: true
+      }
+    ];
 
+    let routines = JSON.parse(localStorage.getItem('orbit_routines_v3') || 'null');
+    if (!routines || routines.length === 0) {
+      routines = DEFAULT_ROUTINES;
+      localStorage.setItem('orbit_routines_v3', JSON.stringify(routines));
+    }
+
+    function formatTimeDisplay(timeStr) {
+      if (!timeStr) return '';
+      const [h, m] = timeStr.split(':').map(Number);
+      const ampm = h >= 12 ? 'PM' : 'AM';
+      const formattedH = h % 12 || 12;
+      return `${formattedH}:${m < 10 ? '0' + m : m} ${ampm}`;
+    }
+
+    function renderRoutines() {
+      const container = document.getElementById('routines-list-container');
+      if (!container) return;
+      container.innerHTML = '';
+
+      routines.forEach(r => {
+        const card = document.createElement('div');
+        card.className = `glass-card rounded-2xl p-4 shadow-md space-y-2 border-l-4`;
+        card.style.borderLeftColor = r.border || '#7c3aed';
+
+        const imgHtml = r.img 
+          ? `<img src="${r.img}" alt="${r.name}" class="w-9 h-9 rounded-xl object-cover shadow-sm">`
+          : `<div class="w-9 h-9 rounded-xl bg-purple-500/20 text-purple-400 flex items-center justify-center font-bold text-sm"><i class="fa-solid fa-clock"></i></div>`;
+
+        card.innerHTML = `
+          <div class="flex items-center justify-between">
+            <div class="flex items-center gap-2.5">
+              ${imgHtml}
+              <div>
+                <h3 class="text-xs font-bold text-white">${r.name}</h3>
+                <span class="text-[11px] text-amber-400 font-medium">${formatTimeDisplay(r.start)} – ${formatTimeDisplay(r.end)}</span>
+              </div>
+            </div>
+            <label class="relative inline-flex items-center cursor-pointer">
+              <input type="checkbox" id="toggle-${r.id}" ${r.enabled ? 'checked' : ''} onchange="toggleRoutine('${r.id}', this.checked)" class="sr-only peer">
+              <div class="w-9 h-5 bg-[#272730] peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-slate-300 after:border after:rounded-full after:h-4 after:w-4 after:transition-all peer-checked:bg-amber-500"></div>
+            </label>
+          </div>
+          <p class="text-[11px] text-slate-300 pl-11">${r.desc || `Auto plays: ${r.val}`}</p>
+          <div class="pl-11 flex gap-2 pt-1 items-center">
+            <button onclick="testRoutine('${r.id}')" class="text-[11px] font-semibold text-amber-400 hover:text-amber-300 flex items-center gap-1 bg-amber-950/60 border border-amber-800 px-2.5 py-1 rounded-lg active:scale-95 transition">
+              <i class="fa-solid fa-play text-[10px]"></i> Test Now
+            </button>
+            <button onclick="openEditRoutineModal('${r.id}')" class="text-[11px] font-semibold text-slate-200 hover:text-white flex items-center gap-1.5 bg-white/10 hover:bg-white/15 border border-white/10 px-2.5 py-1 rounded-lg active:scale-95 transition">
+              <i class="fa-solid fa-pen-to-square text-[10px]"></i> Edit
+            </button>
+            ${r.id !== 'paras' && r.id !== 'jinvani' ? `
+              <button onclick="deleteRoutine('${r.id}')" class="text-[11px] font-semibold text-red-400 hover:text-red-300 flex items-center gap-1 bg-red-950/40 border border-red-900/60 px-2 py-1 rounded-lg ml-auto active:scale-95 transition">
+                <i class="fa-solid fa-trash text-[10px]"></i>
+              </button>
+            ` : ''}
+          </div>
+        `;
+        container.appendChild(card);
+      });
+    }
+
+    function openEditRoutineModal(routineId) {
+      const routine = routines.find(r => r.id === routineId);
+      if (!routine) return;
+
+      document.getElementById('edit-routine-id').value = routine.id;
+      document.getElementById('edit-routine-name').value = routine.name;
+      document.getElementById('edit-routine-start').value = routine.start || '05:00';
+      document.getElementById('edit-routine-end').value = routine.end || '06:59';
+      document.getElementById('edit-routine-val').value = routine.val || '';
+
+      document.getElementById('modal-edit-routine').classList.remove('hidden');
+      document.getElementById('modal-edit-routine').classList.add('flex');
+    }
+
+    function saveEditedRoutine() {
+      const id = document.getElementById('edit-routine-id').value;
+      const name = document.getElementById('edit-routine-name').value.trim();
+      const start = document.getElementById('edit-routine-start').value;
+      const end = document.getElementById('edit-routine-end').value;
+      const val = document.getElementById('edit-routine-val').value.trim();
+
+      if (!name || !start || !end) {
+        alert('Please fill in routine name, start and end time.');
+        return;
+      }
+
+      const routine = routines.find(r => r.id === id);
+      if (routine) {
+        routine.name = name;
+        routine.start = start;
+        routine.end = end;
+        routine.val = val;
+        routine.desc = `When TV wakes up between ${formatTimeDisplay(start)} and ${formatTimeDisplay(end)}, it launches ${val}.`;
+        
+        localStorage.setItem('orbit_routines_v3', JSON.stringify(routines));
+        renderRoutines();
+
+        // Convert start and end times to HHMM integers for TV Daemon
+        const [sh, sm] = start.split(':').map(Number);
+        const [eh, em] = end.split(':').map(Number);
+        const startHM = sh * 100 + sm;
+        const endHM = eh * 100 + em;
+
+        // Send sync command to TV daemon
+        sendCommand('ROUTINE_CONFIG', `${id}:${startHM}:${endHM}`);
+        flashStatus('Routine Updated');
+      }
+
+      closeModal('modal-edit-routine');
+    }
+
+    function toggleRoutine(routineName, isEnabled) {
+      const routine = routines.find(r => r.id === routineName);
+      if (routine) {
+        routine.enabled = isEnabled;
+        localStorage.setItem('orbit_routines_v3', JSON.stringify(routines));
+      }
+      sendCommand('ROUTINE_TOGGLE', `${routineName}:${isEnabled ? '1' : '0'}`);
+      flashStatus(isEnabled ? 'Routine Enabled' : 'Routine Disabled');
+    }
+
+    function testRoutine(routineName) {
+      const routine = routines.find(r => r.id === routineName);
+      if (routine && routine.val) {
+        sendCommand('URL', `https://www.youtube.com/results?search_query=${encodeURIComponent(routine.val)}`);
+      } else {
+        sendQuickChannel(routineName);
+      }
+      flashStatus(`Testing ${routineName}...`);
+    }
+
+    function saveNewRoutine() {
+      const name = document.getElementById('m-routine-name').value.trim();
+      const start = document.getElementById('m-routine-start').value;
+      const end = document.getElementById('m-routine-end').value;
+      const val = document.getElementById('m-routine-val').value.trim();
+
+      if (!name || !val) {
+        alert('Please provide a name and channel value.');
+        return;
+      }
+
+      const newId = 'custom_' + Date.now();
+      const newRoutine = {
+        id: newId,
+        name,
+        start,
+        end,
+        type: 'youtube_search',
+        val,
+        desc: `When TV wakes up between ${formatTimeDisplay(start)} and ${formatTimeDisplay(end)}, it launches ${val}.`,
+        enabled: true,
+        border: '#a855f7'
+      };
+
+      routines.push(newRoutine);
+      localStorage.setItem('orbit_routines_v3', JSON.stringify(routines));
+      renderRoutines();
+
+      const [sh, sm] = start.split(':').map(Number);
+      const [eh, em] = end.split(':').map(Number);
+      const startHM = sh * 100 + sm;
+      const endHM = eh * 100 + em;
+      sendCommand('ROUTINE_CONFIG', `${newId}:${startHM}:${endHM}`);
+
+      closeModal('modal-routine');
+      flashStatus('New Routine Added');
+    }
+
+    function deleteRoutine(id) {
+      routines = routines.filter(r => r.id !== id);
+      localStorage.setItem('orbit_routines_v3', JSON.stringify(routines));
+      renderRoutines();
+      flashStatus('Routine Removed');
+    }
+
+    // ==================== FAST LAUNCHERS ====================
+    function launchHotstar() {
+      // Primary intent for JioHotstar
+      sendCommand('LAUNCH_APP', 'in.startv.hotstar');
+      flashStatus('Launching JioHotstar...');
+    }
+
+    function launchCricketLive() {
+      // Deep-link to Hotstar Live Sports & Cricket
+      sendCommand('CRICKET', 'live');
+      flashStatus('Opening Live Cricket Match...');
+    }
+
+    function sendQuickChannel(channel) {
+      if (channel === 'paras') {
+        const p = routines.find(r => r.id === 'paras');
+        const q = p ? p.val : 'Paras TV live';
+        sendCommand('URL', `https://www.youtube.com/results?search_query=${encodeURIComponent(q)}`);
+      } else if (channel === 'jinvani') {
+        const j = routines.find(r => r.id === 'jinvani');
+        const q = j ? j.val : 'Jinvani channel live';
+        sendCommand('URL', `https://www.youtube.com/results?search_query=${encodeURIComponent(q)}`);
+      }
+    }
+
+    // ==================== SCREEN CAPTURE ====================
+    let isCapturingScreen = false;
+
+    function requestScreenshot() {
+      if (isCapturingScreen) return;
+      isCapturingScreen = true;
+
+      document.getElementById('screen-placeholder').classList.add('hidden');
+      document.getElementById('screen-img').classList.add('hidden');
+      document.getElementById('screen-loading').classList.remove('hidden');
+      document.getElementById('screen-meta').classList.add('hidden');
+
+      sendCommand('SCREEN', 'now');
+      flashStatus('Capturing Screen...');
+
+      // Polling fallback to check if screenshot was uploaded
+      setTimeout(async () => {
+        try {
+          const res = await fetch(`${NTFY_BASE}/${CLOUD_TOPIC_STATUS}/json?poll=1`);
+          if (res.ok) {
+            const lines = (await res.text()).trim().split('\n');
+            for (let i = lines.length - 1; i >= 0; i--) {
+              try {
+                const item = JSON.parse(lines[i]);
+                if (item.attachment && item.attachment.url) {
+                  displayCapturedScreen(item.attachment.url);
+                  return;
+                }
+              } catch (e) {}
+            }
+          }
+        } catch (e) {}
+
+        // If not retrieved via attachment, reset loader state
+        setTimeout(() => {
+          if (isCapturingScreen) {
+            isCapturingScreen = false;
+            document.getElementById('screen-loading').classList.add('hidden');
+            const img = document.getElementById('screen-img');
+            if (img.src && !img.src.endsWith('/')) {
+              img.classList.remove('hidden');
+            } else {
+              document.getElementById('screen-placeholder').classList.remove('hidden');
+            }
+          }
+        }, 3000);
+      }, 2500);
+    }
+
+    function displayCapturedScreen(url) {
+      isCapturingScreen = false;
+      const img = document.getElementById('screen-img');
+      img.src = `${url}?t=${Date.now()}`;
+      img.onload = () => {
+        document.getElementById('screen-loading').classList.add('hidden');
+        document.getElementById('screen-placeholder').classList.add('hidden');
+        img.classList.remove('hidden');
+        document.getElementById('screen-meta').classList.remove('hidden');
+        document.getElementById('screen-time').textContent = `Captured: ${new Date().toLocaleTimeString()}`;
+      };
+    }
+
+    function openScreenFullscreen() {
+      const img = document.getElementById('screen-img');
+      if (img.src) window.open(img.src, '_blank');
+    }
+
+    // ==================== CORE NETWORKING ====================
+    let customActions = JSON.parse(localStorage.getItem('orbit_custom_actions') || '[]');
     if (customActions.length === 0) {
       customActions = [
         { title: 'Sleep in 30 Min', type: 'script', val: 'sleep_30m', icon: 'fa-moon' },
@@ -785,12 +1081,11 @@
 
     document.addEventListener('DOMContentLoaded', () => {
       applyTheme(currentTheme);
-      renderCustomRoutines();
+      renderRoutines();
       renderCustomActions();
       initCloudStatusListener();
     });
 
-    // Tab Switching
     function switchTab(tabId) {
       ['remote', 'routines', 'apps', 'custom'].forEach(t => {
         const view = document.getElementById(`view-${t}`);
@@ -807,7 +1102,6 @@
       });
     }
 
-    // Send Command via Cloud Relay
     async function sendCommand(type, payload) {
       if (navigator.vibrate) navigator.vibrate(30);
       const command = `${type.toUpperCase()}:${payload}`;
@@ -831,16 +1125,6 @@
       }
     }
 
-    // Quick Channel Launcher
-    function sendQuickChannel(channel) {
-      if (channel === 'paras') {
-        sendCommand('URL', 'https://www.youtube.com/results?search_query=Paras+TV+live');
-      } else if (channel === 'jinvani') {
-        sendCommand('URL', 'https://www.youtube.com/results?search_query=Jinvani+channel+live');
-      }
-    }
-
-    // Keyboard text input
     function sendTypedText() {
       const input = document.getElementById('type-input');
       const text = input.value.trim();
@@ -850,28 +1134,12 @@
       closeModal('modal-keyboard');
     }
 
-    // Cast URL
     function castUrlToTV() {
       const input = document.getElementById('cast-url-input');
       const url = input.value.trim();
       if (!url) return;
       sendCommand('URL', url);
       input.value = '';
-    }
-
-    // Screenshot Request
-    function requestScreenshot() {
-      sendCommand('SCREEN', 'now');
-      flashStatus('Capturing Screen...');
-    }
-
-    // Routines Management
-    function toggleRoutine(routineName, isEnabled) {
-      sendCommand('ROUTINE_TOGGLE', `${routineName}:${isEnabled ? '1' : '0'}`);
-    }
-
-    function testRoutine(routineName) {
-      sendQuickChannel(routineName);
     }
 
     function openNewRoutineModal() {
@@ -887,61 +1155,6 @@
     function closeModal(modalId) {
       document.getElementById(modalId).classList.add('hidden');
       document.getElementById(modalId).classList.remove('flex');
-    }
-
-    function saveNewRoutine() {
-      const name = document.getElementById('m-routine-name').value.trim();
-      const start = document.getElementById('m-routine-start').value;
-      const end = document.getElementById('m-routine-end').value;
-      const type = document.getElementById('m-routine-type').value;
-      const val = document.getElementById('m-routine-val').value.trim();
-
-      if (!name || !val) {
-        alert('Please provide a name and action value.');
-        return;
-      }
-
-      const newRoutine = { id: Date.now(), name, start, end, type, val, enabled: true };
-      routines.push(newRoutine);
-      localStorage.setItem('orbit_routines', JSON.stringify(routines));
-      sendCommand('SYNC_ROUTINES', JSON.stringify(routines));
-      renderCustomRoutines();
-      closeModal('modal-routine');
-    }
-
-    function renderCustomRoutines() {
-      const container = document.getElementById('custom-routines-container');
-      if (!container) return;
-      container.innerHTML = '';
-
-      routines.forEach(r => {
-        const card = document.createElement('div');
-        card.className = 'glass-card rounded-2xl p-4 border-l-4 border-l-purple-500 shadow-md space-y-2';
-        card.innerHTML = `
-          <div class="flex items-center justify-between">
-            <div class="flex items-center gap-2">
-              <span class="w-8 h-8 rounded-lg bg-purple-500/20 text-purple-400 flex items-center justify-center text-sm font-bold">
-                <i class="fa-solid fa-bell"></i>
-              </span>
-              <div>
-                <h3 class="text-xs font-bold text-white">${r.name}</h3>
-                <span class="text-[11px] accent-color font-medium">${r.start} – ${r.end}</span>
-              </div>
-            </div>
-            <button onclick="deleteRoutine(${r.id})" class="text-slate-500 hover:text-red-400 p-1">
-              <i class="fa-solid fa-trash text-xs"></i>
-            </button>
-          </div>
-          <p class="text-[11px] text-slate-300 pl-10">Trigger: ${r.type} (${r.val})</p>
-        `;
-        container.appendChild(card);
-      });
-    }
-
-    function deleteRoutine(id) {
-      routines = routines.filter(r => r.id !== id);
-      localStorage.setItem('orbit_routines', JSON.stringify(routines));
-      renderCustomRoutines();
     }
 
     function saveNewAction() {
@@ -987,7 +1200,6 @@
       });
     }
 
-    // Cloud Status Listener (Realtime status from TV)
     function initCloudStatusListener() {
       try {
         const evtSource = new EventSource(`${NTFY_BASE}/${CLOUD_TOPIC_STATUS}/sse`);
@@ -995,11 +1207,8 @@
           try {
             const data = JSON.parse(e.data);
             if (data.event === 'message') {
-              const msg = JSON.parse(data.message);
-              if (msg.screenshot) {
-                const img = document.getElementById('screen-img');
-                img.src = msg.screenshot;
-                img.classList.remove('hidden');
+              if (data.attachment && data.attachment.url) {
+                displayCapturedScreen(data.attachment.url);
               }
             }
           } catch (err) {}
