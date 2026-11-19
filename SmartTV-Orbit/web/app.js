@@ -78,9 +78,9 @@ async function sendCommand(type, payload) {
 // Quick Channel Launcher
 function sendQuickChannel(channel) {
   if (channel === 'paras') {
-    sendCommand('URL', 'https://www.youtube.com/results?search_query=Paras+TV+live');
+    sendCommand('URL', 'https://www.youtube.com/@parasnetwork/live');
   } else if (channel === 'jinvani') {
-    sendCommand('URL', 'https://www.youtube.com/results?search_query=Jinvani+channel+live');
+    sendCommand('URL', 'https://www.youtube.com/@jinvanichannelofficial/live');
   }
 }
 

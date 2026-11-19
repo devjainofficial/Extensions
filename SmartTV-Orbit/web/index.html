@@ -1229,13 +1229,11 @@
 
     function sendQuickChannel(channel) {
       if (channel === 'paras') {
-        const p = routines.find(r => r.id === 'paras');
-        const q = p ? p.val : 'Paras TV live';
-        sendCommand('URL', `https://www.youtube.com/results?search_query=${encodeURIComponent(q)}`);
+        sendCommand('URL', 'https://www.youtube.com/@parasnetwork/live');
+        flashStatus('Opening Paras TV Live...');
       } else if (channel === 'jinvani') {
-        const j = routines.find(r => r.id === 'jinvani');
-        const q = j ? j.val : 'Jinvani channel live';
-        sendCommand('URL', `https://www.youtube.com/results?search_query=${encodeURIComponent(q)}`);
+        sendCommand('URL', 'https://www.youtube.com/@jinvanichannelofficial/live');
+        flashStatus('Opening Jinvani Channel Live...');
       }
     }
 

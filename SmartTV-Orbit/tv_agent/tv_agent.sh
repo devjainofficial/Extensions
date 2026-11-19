@@ -27,15 +27,14 @@ echo "[Orbit Agent] Initialized: PARAS_ALL_DAY=$PARAS_ALL_DAY, Paras: $PARAS_STA
 
 # Worker 1: TV Wake Monitor (Detects screen ON from standby)
 monitor_wake() {
-    PREV_WAKE=$(dumpsys power 2>/dev/null | grep "mWakefulness=" | head -n 1 | cut -d= -f2)
-    [ -z "$PREV_WAKE" ] && PREV_WAKE="Awake"
-    echo "[Orbit Agent] Wake monitor started (initial state: $PREV_WAKE)"
+    PREV_WAKE=""
+    echo "[Orbit Agent] Wake monitor started (initial state: checking...)"
     
     while true; do
         WAKE=$(dumpsys power 2>/dev/null | grep "mWakefulness=" | head -n 1 | cut -d= -f2)
         TCL_POWER=$(getprop sys.tcl.tv.power_status 2>/dev/null)
         
-        # Check if TV transitioned from non-Awake to Awake
+        # Check if TV transitioned from non-Awake to Awake (or just started while Awake)
         if [ "$PREV_WAKE" != "Awake" ] && [ "$WAKE" = "Awake" ]; then
             echo "[Orbit Agent] TV Turned ON (Transition: $PREV_WAKE -> Awake | TCL: $TCL_POWER)"
             
@@ -54,32 +53,18 @@ monitor_wake() {
                 fi
             fi
 
-            # 1. Universal All-Day Paras TV Wake Routine (Anytime the TV turns on)
-            if [ "$PARAS_ALL_DAY" = "1" ] && [ "$PARAS_ENABLED" = "1" ]; then
-                echo "[Orbit Routine] Launching Default Paras TV Live (Anytime wake)..."
-                sleep 3
-                am start -a android.intent.action.VIEW -d "https://www.youtube.com/results?search_query=Paras+TV+live" -p com.google.android.youtube.tv < /dev/null
-                sleep 4
-                input keyevent 23 < /dev/null
-                input keyevent 66 < /dev/null
+            # Channel Routine Selection:
+            # 1. Morning Jinvani Channel Routine Check (7:00 AM - 9:00 AM)
+            if [ "$JINVANI_ENABLED" = "1" ] && [ "$HM" -ge "$JINVANI_START" ] && [ "$HM" -lt "$JINVANI_END" ]; then
+                echo "[Orbit Routine] Launching Morning Jinvani Channel Live ($JINVANI_START-$JINVANI_END)..."
+                sleep 2
+                am start -a android.intent.action.VIEW -d "https://www.youtube.com/@jinvanichannelofficial/live" -p com.google.android.youtube.tv < /dev/null
             
-            # 2. Morning Paras TV Routine Check (Time-windowed mode)
-            elif [ "$PARAS_ENABLED" = "1" ] && [ "$HM" -ge "$PARAS_START" ] && [ "$HM" -lt "$PARAS_END" ]; then
-                echo "[Orbit Routine] Launching Morning Paras TV Live..."
-                sleep 3
-                am start -a android.intent.action.VIEW -d "https://www.youtube.com/results?search_query=Paras+TV+live" -p com.google.android.youtube.tv < /dev/null
-                sleep 4
-                input keyevent 23 < /dev/null
-                input keyevent 66 < /dev/null
-            
-            # 3. Morning Jinvani Channel Routine Check
-            elif [ "$JINVANI_ENABLED" = "1" ] && [ "$HM" -ge "$JINVANI_START" ] && [ "$HM" -lt "$JINVANI_END" ]; then
-                echo "[Orbit Routine] Launching Morning Jinvani Channel Live..."
-                sleep 3
-                am start -a android.intent.action.VIEW -d "https://www.youtube.com/results?search_query=Jinvani+channel+live" -p com.google.android.youtube.tv < /dev/null
-                sleep 4
-                input keyevent 23 < /dev/null
-                input keyevent 66 < /dev/null
+            # 2. Universal / Morning Paras TV Live Stream
+            elif [ "$PARAS_ENABLED" = "1" ]; then
+                echo "[Orbit Routine] Launching Default Paras TV Live (Direct stream)..."
+                sleep 2
+                am start -a android.intent.action.VIEW -d "https://www.youtube.com/@parasnetwork/live" -p com.google.android.youtube.tv < /dev/null
             fi
         fi
         
@@ -116,10 +101,16 @@ while true; do
                 ;;
             URL:*)
                 URL="${LINE#URL:}"
+                echo "[Orbit Cloud] Opening URL: $URL"
                 am start -a android.intent.action.VIEW -d "$URL" -p com.google.android.youtube.tv < /dev/null
-                sleep 4
-                input keyevent 23 < /dev/null
-                input keyevent 66 < /dev/null
+                case "$URL" in
+                    *search_query=*)
+                        sleep 3.5
+                        input keyevent 20 < /dev/null
+                        sleep 0.8
+                        input keyevent 23 < /dev/null
+                        ;;
+                esac
                 ;;
             LAUNCH_APP:*)
                 PKG="${LINE#LAUNCH_APP:}"
