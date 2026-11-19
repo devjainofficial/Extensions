@@ -97,8 +97,11 @@
       <i class="fa-solid fa-caret-down text-[10px] text-slate-400"></i>
     </div>
 
-    <!-- Right Controls: Theme & Keyboard -->
+    <!-- Right Controls: TV Alert, Theme & Keyboard -->
     <div class="flex items-center gap-2">
+      <button onclick="openAlertModal()" title="Send TV Message / Alert" class="w-11 h-11 rounded-full bg-[#272730] border border-white/10 flex items-center justify-center text-purple-400 shadow-lg active:scale-90 transition">
+        <i class="fa-solid fa-bell text-sm"></i>
+      </button>
       <button onclick="openThemeModal()" title="Customize Color Theme" class="w-11 h-11 rounded-full bg-[#272730] border border-white/10 flex items-center justify-center text-amber-300 shadow-lg active:scale-90 transition">
         <i class="fa-solid fa-palette text-sm"></i>
       </button>
@@ -295,6 +298,29 @@
         <p class="text-[11px] text-slate-300 pl-11">When enabled, turning ON the TV at ANY time of day or night automatically opens Paras TV Live.</p>
       </div>
 
+      <!-- AUTOMATIC NIGHT VOLUME GUARD (FEATURE 3) -->
+      <div class="glass-card rounded-2xl p-4 border-l-4 border-l-indigo-500 shadow-md space-y-2">
+        <div class="flex items-center justify-between">
+          <div class="flex items-center gap-2.5">
+            <div class="w-9 h-9 rounded-xl bg-indigo-500/20 text-indigo-400 flex items-center justify-center text-base shadow-sm">
+              <i class="fa-solid fa-moon"></i>
+            </div>
+            <div>
+              <div class="flex items-center gap-1.5">
+                <h3 class="text-xs font-bold text-white">Night Volume Guard</h3>
+                <span class="text-[9px] bg-indigo-500/20 text-indigo-300 font-bold px-1.5 py-0.5 rounded">9:30 PM – 6:00 AM</span>
+              </div>
+              <span class="text-[11px] text-indigo-300 font-medium">Automatic soft volume protection</span>
+            </div>
+          </div>
+          <label class="relative inline-flex items-center cursor-pointer">
+            <input type="checkbox" id="night-guard-toggle" checked onchange="toggleNightGuard(this.checked)" class="sr-only peer">
+            <div class="w-9 h-5 bg-[#272730] peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-slate-300 after:border after:rounded-full after:h-4 after:w-4 after:transition-all peer-checked:bg-indigo-500"></div>
+          </label>
+        </div>
+        <p class="text-[11px] text-slate-300 pl-11">Prevents loud blasts late at night. When TV turns on between 9:30 PM and 6:00 AM, volume is automatically capped at a gentle 18%.</p>
+      </div>
+
       <div class="pt-1">
         <span class="text-[11px] font-semibold text-slate-400 uppercase tracking-wider block">Scheduled Automations</span>
       </div>
@@ -321,6 +347,54 @@
           <button onclick="castUrlToTV()" class="bg-purple-600 hover:bg-purple-500 text-white text-xs font-semibold px-4 rounded-xl flex items-center justify-center gap-1 shadow-md active:scale-95 transition">
             <i class="fa-solid fa-play"></i> Cast
           </button>
+        </div>
+      </div>
+
+      <!-- OUT-OF-STATE / REMOTE CASTING GUIDE -->
+      <div class="glass-card rounded-2xl p-4 shadow-md space-y-3">
+        <div class="flex items-center justify-between">
+          <h3 class="text-xs font-bold text-white flex items-center gap-2">
+            <i class="fa-solid fa-globe text-purple-400"></i> Out-of-State / Remote Casting
+          </h3>
+          <span class="text-[10px] text-purple-300 font-semibold bg-purple-950/60 border border-purple-800/80 px-2 py-0.5 rounded-full">
+            Any Network / 4G/5G
+          </span>
+        </div>
+        <p class="text-[11px] text-slate-300">How to cast video or mirror your screen from another city/state when not on home Wi-Fi:</p>
+
+        <div class="space-y-2.5">
+          <!-- Method 1: Orbit Cloud Caster -->
+          <div class="p-2.5 rounded-xl bg-black/30 border border-purple-500/20 flex items-start gap-2.5">
+            <div class="w-7 h-7 rounded-lg bg-purple-500/20 text-purple-300 flex items-center justify-center text-xs mt-0.5 shadow-inner">
+              <i class="fa-solid fa-cloud-arrow-up"></i>
+            </div>
+            <div class="flex-1 text-[11px]">
+              <div class="font-bold text-white">1. Instant Cloud Video Caster (Built-in)</div>
+              <div class="text-slate-300 text-[10px]">Use the <b class="text-purple-300">Play Video or Stream</b> box above! Copy any YouTube video or live satsang link on your phone anywhere in the world and tap <b class="text-purple-300">Cast</b>. It plays instantly on the TV over cloud!</div>
+            </div>
+          </div>
+
+          <!-- Method 2: YouTube Watch on TV Code -->
+          <div class="p-2.5 rounded-xl bg-black/30 border border-red-500/20 flex items-start gap-2.5">
+            <div class="w-7 h-7 rounded-lg bg-red-500/20 text-red-400 flex items-center justify-center text-xs mt-0.5 shadow-inner">
+              <i class="fa-brands fa-youtube"></i>
+            </div>
+            <div class="flex-1 text-[11px]">
+              <div class="font-bold text-white">2. YouTube "Watch on TV" Code (WAN Cast)</div>
+              <div class="text-slate-300 text-[10px]">On TV YouTube app &rarr; <b class="text-white">Settings &rarr; Link with TV Code</b>. Enter the 12-digit code in your phone's YouTube app once. After that, your father's TV permanently shows up on your phone's Cast button from anywhere!</div>
+            </div>
+          </div>
+
+          <!-- Method 3: Remote Screen Mirroring -->
+          <div class="p-2.5 rounded-xl bg-black/30 border border-sky-500/20 flex items-start gap-2.5">
+            <div class="w-7 h-7 rounded-lg bg-sky-500/20 text-sky-400 flex items-center justify-center text-xs mt-0.5 shadow-inner">
+              <i class="fa-solid fa-network-wired"></i>
+            </div>
+            <div class="flex-1 text-[11px]">
+              <div class="font-bold text-white">3. Out-of-State Laptop Screen Mirroring</div>
+              <div class="text-slate-300 text-[10px]">To mirror your full laptop/phone screen across states, use <b class="text-sky-300">Tailscale Mesh VPN</b> (makes phone & TV behave as if on the same living room Wi-Fi) or <b class="text-sky-300">RustDesk</b> for instant remote desktop display.</div>
+            </div>
+          </div>
         </div>
       </div>
 
@@ -662,6 +736,51 @@
     </div>
   </div>
 
+  <!-- ==================== MODAL: FAMILY TV ALERT / MESSAGE (FEATURE 4) ==================== -->
+  <div id="modal-alert" class="fixed inset-0 z-50 bg-black/80 backdrop-blur-sm hidden items-center justify-center p-4">
+    <div class="glass-card rounded-3xl p-5 w-full max-w-sm space-y-4 border border-white/10 shadow-2xl">
+      <div class="flex items-center justify-between border-b border-white/10 pb-3">
+        <h3 class="text-sm font-bold text-white flex items-center gap-2">
+          <i class="fa-solid fa-bell text-purple-400"></i> Send Message to TV
+        </h3>
+        <button onclick="closeModal('modal-alert')" class="text-slate-400 hover:text-white">
+          <i class="fa-solid fa-xmark text-base"></i>
+        </button>
+      </div>
+
+      <p class="text-[11px] text-slate-300">Pops up a full-screen alert on the TV with sound. Perfect when father is watching TV:</p>
+
+      <!-- Quick Preset Messages -->
+      <div class="space-y-1.5">
+        <span class="text-[10px] font-semibold text-slate-400 uppercase tracking-wider">Quick Messages</span>
+        <div class="grid grid-cols-2 gap-2">
+          <button onclick="sendQuickAlert('🍲 Papa, Dinner is ready!')" class="p-2.5 rounded-xl bg-black/40 border border-white/10 hover:border-purple-400/50 text-left text-xs text-white transition active:scale-95 flex items-center gap-2">
+            <span>🍲</span> <span class="truncate">Dinner is ready!</span>
+          </button>
+          <button onclick="sendQuickAlert('💊 Papa, please take medicine!')" class="p-2.5 rounded-xl bg-black/40 border border-white/10 hover:border-purple-400/50 text-left text-xs text-white transition active:scale-95 flex items-center gap-2">
+            <span>💊</span> <span class="truncate">Take medicine!</span>
+          </button>
+          <button onclick="sendQuickAlert('📞 Call Dev on phone when free')" class="p-2.5 rounded-xl bg-black/40 border border-white/10 hover:border-purple-400/50 text-left text-xs text-white transition active:scale-95 flex items-center gap-2">
+            <span>📞</span> <span class="truncate">Call on phone</span>
+          </button>
+          <button onclick="sendQuickAlert('🚪 Please check the main door')" class="p-2.5 rounded-xl bg-black/40 border border-white/10 hover:border-purple-400/50 text-left text-xs text-white transition active:scale-95 flex items-center gap-2">
+            <span>🚪</span> <span class="truncate">Check the door</span>
+          </button>
+        </div>
+      </div>
+
+      <!-- Custom Message Input -->
+      <div class="space-y-2 pt-1">
+        <span class="text-[10px] font-semibold text-slate-400 uppercase tracking-wider">Custom Message</span>
+        <textarea id="custom-alert-input" rows="2" placeholder="Type custom message to show on TV..." class="w-full bg-black/50 border border-white/15 rounded-xl px-3 py-2 text-xs text-white focus:outline-none resize-none"></textarea>
+        
+        <button onclick="sendCustomAlert()" class="w-full py-2.5 bg-purple-600 hover:bg-purple-500 text-white font-semibold text-xs rounded-xl shadow-md flex items-center justify-center gap-2 active:scale-95 transition">
+          <i class="fa-solid fa-paper-plane text-xs"></i> Show on TV Screen
+        </button>
+      </div>
+    </div>
+  </div>
+
   <script>
     // SmartTV Orbit - Cloud Web Remote & Automation Hub
     const CLOUD_TOPIC_CMD = 'orbit_devja_tv_cmd';
@@ -859,6 +978,40 @@
       localStorage.setItem('orbit_paras_allday', isEnabled ? '1' : '0');
       sendCommand('PARAS_ALL_DAY', isEnabled ? '1' : '0');
       flashStatus(isEnabled ? 'Default Paras TV: Active 24/7' : 'Default Paras TV: Off');
+    }
+
+    // Feature 3: Night Volume Guard
+    let nightGuard = localStorage.getItem('orbit_night_guard') !== '0'; // default true (9:30 PM - 6:00 AM)
+    function toggleNightGuard(isEnabled) {
+      nightGuard = isEnabled;
+      localStorage.setItem('orbit_night_guard', isEnabled ? '1' : '0');
+      sendCommand('NIGHT_GUARD', isEnabled ? '1' : '0');
+      flashStatus(isEnabled ? 'Night Volume Guard: ON' : 'Night Volume Guard: OFF');
+    }
+
+    // Feature 4: Family TV Alert
+    function openAlertModal() {
+      document.getElementById('modal-alert').classList.remove('hidden');
+      document.getElementById('modal-alert').classList.add('flex');
+    }
+
+    function sendQuickAlert(text) {
+      sendCommand('NOTIFY', text);
+      closeModal('modal-alert');
+      flashStatus('Alert Sent to TV');
+    }
+
+    function sendCustomAlert() {
+      const input = document.getElementById('custom-alert-input');
+      const text = input.value.trim();
+      if (!text) {
+        alert('Please enter a message to show on TV.');
+        return;
+      }
+      sendCommand('NOTIFY', text);
+      input.value = '';
+      closeModal('modal-alert');
+      flashStatus('Alert Sent to TV');
     }
 
     const DEFAULT_ROUTINES = [
@@ -1205,6 +1358,9 @@
       
       const pToggle = document.getElementById('paras-allday-toggle');
       if (pToggle) pToggle.checked = parasAllDay;
+
+      const nToggle = document.getElementById('night-guard-toggle');
+      if (nToggle) nToggle.checked = nightGuard;
     });
 
     function switchTab(tabId) {

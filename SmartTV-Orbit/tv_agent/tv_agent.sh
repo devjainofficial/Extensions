@@ -17,8 +17,11 @@ JINVANI_ENABLED="1"
 JINVANI_START=700
 JINVANI_END=900
 
+# Feature 3: Night Volume Guard (9:30 PM - 6:00 AM)
+NIGHT_GUARD="1"
+
 echo "[Orbit Agent] Daemon started on $(date)"
-echo "[Orbit Agent] Initialized: PARAS_ALL_DAY=$PARAS_ALL_DAY, Paras: $PARAS_START-$PARAS_END, Jinvani: $JINVANI_START-$JINVANI_END"
+echo "[Orbit Agent] Initialized: PARAS_ALL_DAY=$PARAS_ALL_DAY, Paras: $PARAS_START-$PARAS_END, Jinvani: $JINVANI_START-$JINVANI_END, NightGuard=$NIGHT_GUARD"
 
 # Worker 1: TV Wake Monitor (Detects screen ON from standby)
 monitor_wake() {
@@ -36,6 +39,14 @@ monitor_wake() {
             
             echo "[Orbit Agent] Current TV time: $HOUR:$MIN ($HM)"
             
+            # Feature 3: Night Volume Guard check on wake (9:30 PM = 2130, 6:00 AM = 600)
+            if [ "$NIGHT_GUARD" = "1" ]; then
+                if [ "$HM" -ge 2130 ] || [ "$HM" -lt 600 ]; then
+                    echo "[Orbit Routine] Night Volume Guard active ($HOUR:$MIN) - Setting gentle volume 18%..."
+                    cmd media_session volume --set 4
+                fi
+            fi
+
             # 1. Universal All-Day Paras TV Wake Routine (Anytime the TV turns on)
             if [ "$PARAS_ALL_DAY" = "1" ] && [ "$PARAS_ENABLED" = "1" ]; then
                 echo "[Orbit Routine] Launching Default Paras TV Live (Anytime wake)..."
@@ -108,6 +119,26 @@ while true; do
                 am start -a android.intent.action.VIEW -d "hotstar://sports" in.startv.hotstar || \
                 am start -a android.intent.action.VIEW -d "https://www.hotstar.com/in/sports/cricket" in.startv.hotstar || \
                 monkey -p in.startv.hotstar -c android.intent.category.LAUNCHER 1
+                ;;
+            NIGHT_GUARD:*)
+                STATE="${LINE#NIGHT_GUARD:}"
+                NIGHT_GUARD="$STATE"
+                echo "[Orbit Routine] Night Guard set to $NIGHT_GUARD"
+                if [ "$NIGHT_GUARD" = "1" ]; then
+                    HOUR=$(date +%H)
+                    MIN=$(date +%M)
+                    HM=$((HOUR * 100 + MIN))
+                    if [ "$HM" -ge 2130 ] || [ "$HM" -lt 600 ]; then
+                        cmd media_session volume --set 4
+                    fi
+                fi
+                ;;
+            NOTIFY:*)
+                MSG="${LINE#NOTIFY:}"
+                echo "[Orbit Cloud] Showing on-screen notification: $MSG"
+                ENCODED_MSG=$(echo "$MSG" | sed 's/ /%20/g')
+                am start -a android.intent.action.VIEW -d "https://tv.gujaratididi.com/alert.html?msg=$ENCODED_MSG"
+                ( sleep 10 && input keyevent 4 ) &
                 ;;
             PARAS_ALL_DAY:*)
                 STATE="${LINE#PARAS_ALL_DAY:}"
