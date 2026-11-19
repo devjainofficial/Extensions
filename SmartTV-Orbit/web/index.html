@@ -121,7 +121,7 @@
           <img src="img/paras_tv.jpg" alt="Paras TV" class="w-9 h-9 rounded-xl object-cover border border-amber-400/40 shadow-sm">
           <div class="text-left flex-1 min-w-0">
             <div class="text-xs font-bold leading-tight truncate">Paras TV</div>
-            <div class="text-[9px] text-amber-200/90 font-medium">5 AM Live</div>
+            <div class="text-[9px] text-amber-200/90 font-medium">Anytime Live</div>
           </div>
           <span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse mr-1"></span>
         </button>
@@ -131,7 +131,7 @@
           <img src="img/jinvani.jpg" alt="Jinvani" class="w-10 h-9 rounded-xl object-cover border border-orange-400/40 shadow-sm">
           <div class="text-left flex-1 min-w-0">
             <div class="text-xs font-bold leading-tight truncate">Jinvani</div>
-            <div class="text-[9px] text-orange-200/90 font-medium">7 AM Live</div>
+            <div class="text-[9px] text-orange-200/90 font-medium">Morning Live</div>
           </div>
           <span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse mr-1"></span>
         </button>
@@ -263,7 +263,7 @@
     </section>
 
     <!-- ==================== VIEW 2: ROUTINES & SCHEDULES ==================== -->
-    <section id="view-routines" class="space-y-4 hidden max-w-sm mx-auto w-full">
+    <section id="view-routines" class="space-y-3.5 hidden max-w-sm mx-auto w-full">
       <div class="flex items-center justify-between">
         <div>
           <h2 class="text-sm font-bold text-white">Father's Automations</h2>
@@ -274,6 +274,31 @@
         </button>
       </div>
 
+      <!-- MASTER 24/7 ANYTIME WAKE ROUTINE: PARAS TV -->
+      <div class="glass-card rounded-2xl p-4 border-l-4 border-l-amber-500 shadow-md space-y-2">
+        <div class="flex items-center justify-between">
+          <div class="flex items-center gap-2.5">
+            <img src="img/paras_tv.jpg" alt="Paras TV" class="w-9 h-9 rounded-xl object-cover border border-amber-400/40 shadow-sm">
+            <div>
+              <div class="flex items-center gap-1.5">
+                <h3 class="text-xs font-bold text-white">Default Wake Channel</h3>
+                <span class="text-[9px] bg-amber-500/20 text-amber-300 font-bold px-1.5 py-0.5 rounded">24/7 ANYTIME</span>
+              </div>
+              <span class="text-[11px] text-amber-400 font-medium">Always open Paras TV on TV start</span>
+            </div>
+          </div>
+          <label class="relative inline-flex items-center cursor-pointer">
+            <input type="checkbox" id="paras-allday-toggle" checked onchange="toggleParasAllDay(this.checked)" class="sr-only peer">
+            <div class="w-9 h-5 bg-[#272730] peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-slate-300 after:border after:rounded-full after:h-4 after:w-4 after:transition-all peer-checked:bg-amber-500"></div>
+          </label>
+        </div>
+        <p class="text-[11px] text-slate-300 pl-11">When enabled, turning ON the TV at ANY time of day or night automatically opens Paras TV Live.</p>
+      </div>
+
+      <div class="pt-1">
+        <span class="text-[11px] font-semibold text-slate-400 uppercase tracking-wider block">Scheduled Automations</span>
+      </div>
+
       <!-- DYNAMIC ROUTINES CONTAINER (EDITABLE) -->
       <div id="routines-list-container" class="space-y-3">
         <!-- Rendered dynamically by JavaScript -->
@@ -282,13 +307,68 @@
 
     <!-- ==================== VIEW 3: APPS & CAST ==================== -->
     <section id="view-apps" class="space-y-4 hidden max-w-sm mx-auto w-full">
-      <div class="glass-card rounded-2xl p-3 shadow-md">
-        <span class="text-[11px] font-semibold text-slate-400 uppercase tracking-wider block mb-2">Play YouTube Video or Stream</span>
-        <div class="flex gap-2">
-          <input type="url" id="cast-url-input" placeholder="Paste YouTube link here..." class="flex-1 bg-black/40 border border-white/10 rounded-xl px-3 py-2 text-xs text-white focus:outline-none">
-          <button onclick="castUrlToTV()" class="bg-purple-600 hover:bg-purple-500 text-white text-xs font-semibold px-4 rounded-xl flex items-center justify-center gap-1 shadow-md">
-            <i class="fa-solid fa-play"></i> Play
+      
+      <!-- FAST URL & CLIPBOARD CASTER -->
+      <div class="glass-card rounded-2xl p-3.5 shadow-md space-y-2">
+        <div class="flex items-center justify-between">
+          <span class="text-[11px] font-semibold text-slate-300 uppercase tracking-wider">Play Video or Stream on TV</span>
+          <button onclick="pasteAndCast()" class="text-[10px] accent-color hover:underline flex items-center gap-1 font-medium">
+            <i class="fa-solid fa-paste"></i> Paste & Cast
           </button>
+        </div>
+        <div class="flex gap-2">
+          <input type="url" id="cast-url-input" placeholder="Paste YouTube link or stream URL..." class="flex-1 bg-black/40 border border-white/10 rounded-xl px-3 py-2 text-xs text-white focus:outline-none">
+          <button onclick="castUrlToTV()" class="bg-purple-600 hover:bg-purple-500 text-white text-xs font-semibold px-4 rounded-xl flex items-center justify-center gap-1 shadow-md active:scale-95 transition">
+            <i class="fa-solid fa-play"></i> Cast
+          </button>
+        </div>
+      </div>
+
+      <!-- DIRECT DEVICE SCREEN MIRRORING ASSISTANT -->
+      <div class="glass-card rounded-2xl p-4 shadow-md space-y-3">
+        <div class="flex items-center justify-between">
+          <h3 class="text-xs font-bold text-white flex items-center gap-2">
+            <i class="fa-solid fa-display text-sky-400"></i> Direct Screen Mirroring
+          </h3>
+          <span class="text-[10px] text-emerald-400 font-semibold bg-emerald-950/60 border border-emerald-800/80 px-2 py-0.5 rounded-full">
+            No Apps Needed
+          </span>
+        </div>
+        <p class="text-[11px] text-slate-300">Mirror your phone or laptop screen with zero lag to your TCL Google TV:</p>
+
+        <div class="space-y-2">
+          <!-- Android Phone -->
+          <div class="p-2.5 rounded-xl bg-black/30 border border-white/5 flex items-start gap-2.5">
+            <div class="w-7 h-7 rounded-lg bg-emerald-500/20 text-emerald-400 flex items-center justify-center text-xs mt-0.5 shadow-inner">
+              <i class="fa-brands fa-android"></i>
+            </div>
+            <div class="flex-1 text-[11px]">
+              <div class="font-bold text-white">Android Phone (Samsung, OnePlus, etc.)</div>
+              <div class="text-slate-400 text-[10px]">Pull down top Quick Settings &rarr; Tap <b class="text-slate-200">Smart View</b> or <b class="text-slate-200">Screen Cast</b> &rarr; Select <b class="text-emerald-300">TCL TV</b>.</div>
+            </div>
+          </div>
+
+          <!-- Windows Laptop -->
+          <div class="p-2.5 rounded-xl bg-black/30 border border-white/5 flex items-start gap-2.5">
+            <div class="w-7 h-7 rounded-lg bg-blue-500/20 text-blue-400 flex items-center justify-center text-xs mt-0.5 shadow-inner">
+              <i class="fa-brands fa-windows"></i>
+            </div>
+            <div class="flex-1 text-[11px]">
+              <div class="font-bold text-white">Windows Laptop</div>
+              <div class="text-slate-400 text-[10px]">Press keyboard shortcut <kbd class="px-1.5 py-0.5 rounded bg-slate-800 text-white font-mono text-[9px] border border-white/20">Win + K</kbd> &rarr; Select your <b class="text-blue-300">TCL TV</b> to mirror display & audio.</div>
+            </div>
+          </div>
+
+          <!-- iPhone / Mac -->
+          <div class="p-2.5 rounded-xl bg-black/30 border border-white/5 flex items-start gap-2.5">
+            <div class="w-7 h-7 rounded-lg bg-slate-500/20 text-slate-300 flex items-center justify-center text-xs mt-0.5 shadow-inner">
+              <i class="fa-brands fa-apple"></i>
+            </div>
+            <div class="flex-1 text-[11px]">
+              <div class="font-bold text-white">iPhone / iPad / Mac</div>
+              <div class="text-slate-400 text-[10px]">Swipe Control Center &rarr; Tap <b class="text-slate-200">Screen Mirroring</b> &rarr; Tap <b class="text-slate-200">TCL TV</b>.</div>
+            </div>
+          </div>
         </div>
       </div>
 
@@ -327,7 +407,7 @@
       <div class="flex items-center justify-between">
         <div>
           <h2 class="text-sm font-bold text-white">Custom Extensions</h2>
-          <p class="text-[11px] text-slate-400">Add scripts, quick keys, or custom commands</p>
+          <p class="text-[11px] text-slate-400">Sleep timers, devotional playlists & HDMI switchers</p>
         </div>
         <button onclick="openNewActionModal()" class="bg-purple-600 hover:bg-purple-500 text-white text-xs font-semibold px-3 py-1.5 rounded-xl flex items-center gap-1.5 shadow-md">
           <i class="fa-solid fa-plus"></i> Add Button
@@ -561,7 +641,8 @@
         <div>
           <label class="text-slate-400 block mb-1">Command Type</label>
           <select id="m-action-type" class="w-full bg-black/40 border border-white/10 rounded-xl px-3 py-2 text-white">
-            <option value="key">Keycode (e.g. 26=Power, 164=Mute)</option>
+            <option value="key">Keycode (e.g. 26=Power, 164=Mute, 243=HDMI)</option>
+            <option value="sleep">Sleep Timer (Minutes)</option>
             <option value="url">Open Stream / Web URL</option>
             <option value="app">Launch App Package</option>
             <option value="script">Custom Shell Script</option>
@@ -569,8 +650,8 @@
         </div>
 
         <div>
-          <label class="text-slate-400 block mb-1">Payload / Command String</label>
-          <input type="text" id="m-action-val" placeholder="e.g. 26 or https://..." class="w-full bg-black/40 border border-white/10 rounded-xl px-3 py-2 text-white">
+          <label class="text-slate-400 block mb-1">Payload / Minutes / URL</label>
+          <input type="text" id="m-action-val" placeholder="e.g. 30 (for sleep) or URL" class="w-full bg-black/40 border border-white/10 rounded-xl px-3 py-2 text-white">
         </div>
       </div>
 
@@ -770,7 +851,16 @@
       document.getElementById('modal-settings').classList.add('flex');
     }
 
-    // ==================== EDITABLE ROUTINES ====================
+    // ==================== EDITABLE ROUTINES & 24/7 DEFAULT ====================
+    let parasAllDay = localStorage.getItem('orbit_paras_allday') !== '0'; // default true (Anytime)
+
+    function toggleParasAllDay(isEnabled) {
+      parasAllDay = isEnabled;
+      localStorage.setItem('orbit_paras_allday', isEnabled ? '1' : '0');
+      sendCommand('PARAS_ALL_DAY', isEnabled ? '1' : '0');
+      flashStatus(isEnabled ? 'Default Paras TV: Active 24/7' : 'Default Paras TV: Off');
+    }
+
     const DEFAULT_ROUTINES = [
       {
         id: 'paras',
@@ -896,13 +986,11 @@
         localStorage.setItem('orbit_routines_v3', JSON.stringify(routines));
         renderRoutines();
 
-        // Convert start and end times to HHMM integers for TV Daemon
         const [sh, sm] = start.split(':').map(Number);
         const [eh, em] = end.split(':').map(Number);
         const startHM = sh * 100 + sm;
         const endHM = eh * 100 + em;
 
-        // Send sync command to TV daemon
         sendCommand('ROUTINE_CONFIG', `${id}:${startHM}:${endHM}`);
         flashStatus('Routine Updated');
       }
@@ -977,13 +1065,11 @@
 
     // ==================== FAST LAUNCHERS ====================
     function launchHotstar() {
-      // Primary intent for JioHotstar
       sendCommand('LAUNCH_APP', 'in.startv.hotstar');
       flashStatus('Launching JioHotstar...');
     }
 
     function launchCricketLive() {
-      // Deep-link to Hotstar Live Sports & Cricket
       sendCommand('CRICKET', 'live');
       flashStatus('Opening Live Cricket Match...');
     }
@@ -998,6 +1084,38 @@
         const q = j ? j.val : 'Jinvani channel live';
         sendCommand('URL', `https://www.youtube.com/results?search_query=${encodeURIComponent(q)}`);
       }
+    }
+
+    // ==================== CLIPBOARD & MEDIA CASTING ====================
+    async function pasteAndCast() {
+      try {
+        const text = await navigator.clipboard.readText();
+        if (text && (text.startsWith('http://') || text.startsWith('https://'))) {
+          document.getElementById('cast-url-input').value = text;
+          castUrlToTV();
+        } else {
+          const manual = prompt('Enter or paste video URL to cast on TV:', text || '');
+          if (manual) {
+            document.getElementById('cast-url-input').value = manual;
+            castUrlToTV();
+          }
+        }
+      } catch (e) {
+        const manual = prompt('Enter or paste video URL to cast on TV:');
+        if (manual) {
+          document.getElementById('cast-url-input').value = manual;
+          castUrlToTV();
+        }
+      }
+    }
+
+    function castUrlToTV() {
+      const input = document.getElementById('cast-url-input');
+      const url = input.value.trim();
+      if (!url) return;
+      sendCommand('URL', url);
+      input.value = '';
+      flashStatus('Casting to TV...');
     }
 
     // ==================== SCREEN CAPTURE ====================
@@ -1015,7 +1133,6 @@
       sendCommand('SCREEN', 'now');
       flashStatus('Capturing Screen...');
 
-      // Polling fallback to check if screenshot was uploaded
       setTimeout(async () => {
         try {
           const res = await fetch(`${NTFY_BASE}/${CLOUD_TOPIC_STATUS}/json?poll=1`);
@@ -1033,7 +1150,6 @@
           }
         } catch (e) {}
 
-        // If not retrieved via attachment, reset loader state
         setTimeout(() => {
           if (isCapturingScreen) {
             isCapturingScreen = false;
@@ -1067,16 +1183,18 @@
       if (img.src) window.open(img.src, '_blank');
     }
 
-    // ==================== CORE NETWORKING ====================
-    let customActions = JSON.parse(localStorage.getItem('orbit_custom_actions') || '[]');
-    if (customActions.length === 0) {
+    // ==================== CORE ACTIONS ENGINE ====================
+    let customActions = JSON.parse(localStorage.getItem('orbit_custom_actions_v2') || 'null');
+    if (!customActions || customActions.length === 0) {
       customActions = [
-        { title: 'Sleep in 30 Min', type: 'script', val: 'sleep_30m', icon: 'fa-moon' },
-        { title: 'Night Volume 20%', type: 'key', val: 'VOL:20', icon: 'fa-volume-low' },
-        { title: 'Jain Stavan Live', type: 'url', val: 'https://www.youtube.com/results?search_query=Jain+Stavan+live', icon: 'fa-music' },
-        { title: 'HDMI 1 Input', type: 'key', val: '243', icon: 'fa-plug' }
+        { title: 'Sleep in 30 Min', type: 'sleep', val: '30', icon: 'fa-moon' },
+        { title: 'Sleep in 60 Min', type: 'sleep', val: '60', icon: 'fa-bed' },
+        { title: 'Navkar Mantra 24/7', type: 'url', val: 'https://www.youtube.com/results?search_query=Navkar+Mantra+live+24+hours', icon: 'fa-om' },
+        { title: 'Bhaktamar Stotra Live', type: 'url', val: 'https://www.youtube.com/results?search_query=Bhaktamar+Stotra+live', icon: 'fa-sun' },
+        { title: 'Night Volume 18%', type: 'key', val: 'VOL:18', icon: 'fa-volume-low' },
+        { title: 'HDMI 1 (Cable / DTH)', type: 'key', val: '243', icon: 'fa-plug' }
       ];
-      localStorage.setItem('orbit_custom_actions', JSON.stringify(customActions));
+      localStorage.setItem('orbit_custom_actions_v2', JSON.stringify(customActions));
     }
 
     document.addEventListener('DOMContentLoaded', () => {
@@ -1084,6 +1202,9 @@
       renderRoutines();
       renderCustomActions();
       initCloudStatusListener();
+      
+      const pToggle = document.getElementById('paras-allday-toggle');
+      if (pToggle) pToggle.checked = parasAllDay;
     });
 
     function switchTab(tabId) {
@@ -1134,14 +1255,6 @@
       closeModal('modal-keyboard');
     }
 
-    function castUrlToTV() {
-      const input = document.getElementById('cast-url-input');
-      const url = input.value.trim();
-      if (!url) return;
-      sendCommand('URL', url);
-      input.value = '';
-    }
-
     function openNewRoutineModal() {
       document.getElementById('modal-routine').classList.remove('hidden');
       document.getElementById('modal-routine').classList.add('flex');
@@ -1168,7 +1281,7 @@
       }
 
       customActions.push({ title, type, val, icon: 'fa-bolt' });
-      localStorage.setItem('orbit_custom_actions', JSON.stringify(customActions));
+      localStorage.setItem('orbit_custom_actions_v2', JSON.stringify(customActions));
       renderCustomActions();
       closeModal('modal-action');
     }
@@ -1183,6 +1296,7 @@
         btn.className = 'tactile-btn p-3.5 rounded-2xl flex items-center gap-2.5 text-left border border-white/10 shadow-md h-auto';
         btn.onclick = () => {
           if (a.type === 'key') sendCommand('KEY', a.val);
+          else if (a.type === 'sleep') sendCommand('SLEEP_TIMER', a.val);
           else if (a.type === 'url') sendCommand('URL', a.val);
           else if (a.type === 'app') sendCommand('LAUNCH_APP', a.val);
           else if (a.type === 'script') sendCommand('SCRIPT', a.val);

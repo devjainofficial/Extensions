@@ -7,7 +7,8 @@ CURL_OPTS="-s --resolve ntfy.sh:443:159.203.148.75 -k"
 CMD_TOPIC="https://ntfy.sh/orbit_devja_tv_cmd/raw"
 STATUS_TOPIC="https://ntfy.sh/orbit_devja_tv_status"
 
-# Default Routine States & Time Windows (in HHMM integer format)
+# Default Routine States: PARAS_ALL_DAY enabled by default (anytime wake)
+PARAS_ALL_DAY="1"
 PARAS_ENABLED="1"
 PARAS_START=500
 PARAS_END=700
@@ -17,7 +18,7 @@ JINVANI_START=700
 JINVANI_END=900
 
 echo "[Orbit Agent] Daemon started on $(date)"
-echo "[Orbit Agent] Initialized with Paras: $PARAS_START-$PARAS_END, Jinvani: $JINVANI_START-$JINVANI_END"
+echo "[Orbit Agent] Initialized: PARAS_ALL_DAY=$PARAS_ALL_DAY, Paras: $PARAS_START-$PARAS_END, Jinvani: $JINVANI_START-$JINVANI_END"
 
 # Worker 1: TV Wake Monitor (Detects screen ON from standby)
 monitor_wake() {
@@ -35,15 +36,23 @@ monitor_wake() {
             
             echo "[Orbit Agent] Current TV time: $HOUR:$MIN ($HM)"
             
-            # Morning Paras TV Routine Check
-            if [ "$PARAS_ENABLED" = "1" ] && [ "$HM" -ge "$PARAS_START" ] && [ "$HM" -lt "$PARAS_END" ]; then
+            # 1. Universal All-Day Paras TV Wake Routine (Anytime the TV turns on)
+            if [ "$PARAS_ALL_DAY" = "1" ] && [ "$PARAS_ENABLED" = "1" ]; then
+                echo "[Orbit Routine] Launching Default Paras TV Live (Anytime wake)..."
+                sleep 2
+                am start -a android.intent.action.VIEW -d "https://www.youtube.com/results?search_query=Paras+TV+live" -p com.google.android.youtube.tv
+                sleep 3
+                input keyevent 23
+            
+            # 2. Morning Paras TV Routine Check (Time-windowed mode)
+            elif [ "$PARAS_ENABLED" = "1" ] && [ "$HM" -ge "$PARAS_START" ] && [ "$HM" -lt "$PARAS_END" ]; then
                 echo "[Orbit Routine] Launching Morning Paras TV Live..."
                 sleep 2
                 am start -a android.intent.action.VIEW -d "https://www.youtube.com/results?search_query=Paras+TV+live" -p com.google.android.youtube.tv
                 sleep 3
                 input keyevent 23
             
-            # Morning Jinvani Channel Routine Check
+            # 3. Morning Jinvani Channel Routine Check
             elif [ "$JINVANI_ENABLED" = "1" ] && [ "$HM" -ge "$JINVANI_START" ] && [ "$HM" -lt "$JINVANI_END" ]; then
                 echo "[Orbit Routine] Launching Morning Jinvani Channel Live..."
                 sleep 2
@@ -100,6 +109,11 @@ while true; do
                 am start -a android.intent.action.VIEW -d "https://www.hotstar.com/in/sports/cricket" in.startv.hotstar || \
                 monkey -p in.startv.hotstar -c android.intent.category.LAUNCHER 1
                 ;;
+            PARAS_ALL_DAY:*)
+                STATE="${LINE#PARAS_ALL_DAY:}"
+                PARAS_ALL_DAY="$STATE"
+                echo "[Orbit Routine] Paras All-Day Default set to $PARAS_ALL_DAY"
+                ;;
             ROUTINE_TOGGLE:*)
                 DATA="${LINE#ROUTINE_TOGGLE:}"
                 RNAME="${DATA%%:*}"
@@ -124,6 +138,11 @@ while true; do
                     JINVANI_END="$REND"
                 fi
                 echo "[Orbit Routine] Updated $RNAME time: $RSTART to $REND"
+                ;;
+            SLEEP_TIMER:*)
+                MINS="${LINE#SLEEP_TIMER:}"
+                echo "[Orbit Cloud] Setting sleep timer for $MINS minutes..."
+                ( sleep $((MINS * 60)) && input keyevent 26 && echo "[Orbit Cloud] Sleep timer turned off TV" ) &
                 ;;
             SCREEN:*)
                 echo "[Orbit Cloud] Capturing screenshot and uploading..."
