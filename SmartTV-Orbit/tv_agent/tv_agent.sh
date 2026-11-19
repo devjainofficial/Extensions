@@ -2,6 +2,8 @@
 # SmartTV Orbit - Android TV Daemon
 # Listens for Cloud Commands & Manages Smart Power Wake Routines
 
+trap '' HUP INT TERM
+
 CURL="/data/local/tmp/curl"
 CURL_OPTS="-s --resolve ntfy.sh:443:159.203.148.75 -k"
 CMD_TOPIC="https://ntfy.sh/orbit_devja_tv_cmd/raw"
@@ -25,12 +27,17 @@ echo "[Orbit Agent] Initialized: PARAS_ALL_DAY=$PARAS_ALL_DAY, Paras: $PARAS_STA
 
 # Worker 1: TV Wake Monitor (Detects screen ON from standby)
 monitor_wake() {
-    PREV_WAKE="Awake"
+    PREV_WAKE=$(dumpsys power 2>/dev/null | grep "mWakefulness=" | head -n 1 | cut -d= -f2)
+    [ -z "$PREV_WAKE" ] && PREV_WAKE="Awake"
+    echo "[Orbit Agent] Wake monitor started (initial state: $PREV_WAKE)"
+    
     while true; do
         WAKE=$(dumpsys power 2>/dev/null | grep "mWakefulness=" | head -n 1 | cut -d= -f2)
+        TCL_POWER=$(getprop sys.tcl.tv.power_status 2>/dev/null)
         
+        # Check if TV transitioned from non-Awake to Awake
         if [ "$PREV_WAKE" != "Awake" ] && [ "$WAKE" = "Awake" ]; then
-            echo "[Orbit Agent] TV Turned ON (Transition: $PREV_WAKE -> Awake)"
+            echo "[Orbit Agent] TV Turned ON (Transition: $PREV_WAKE -> Awake | TCL: $TCL_POWER)"
             
             # Check current time
             HOUR=$(date +%H)
@@ -43,33 +50,36 @@ monitor_wake() {
             if [ "$NIGHT_GUARD" = "1" ]; then
                 if [ "$HM" -ge 2130 ] || [ "$HM" -lt 600 ]; then
                     echo "[Orbit Routine] Night Volume Guard active ($HOUR:$MIN) - Setting gentle volume 18%..."
-                    cmd media_session volume --set 4
+                    cmd media_session volume --set 4 < /dev/null
                 fi
             fi
 
             # 1. Universal All-Day Paras TV Wake Routine (Anytime the TV turns on)
             if [ "$PARAS_ALL_DAY" = "1" ] && [ "$PARAS_ENABLED" = "1" ]; then
                 echo "[Orbit Routine] Launching Default Paras TV Live (Anytime wake)..."
-                sleep 2
-                am start -a android.intent.action.VIEW -d "https://www.youtube.com/results?search_query=Paras+TV+live" -p com.google.android.youtube.tv
                 sleep 3
-                input keyevent 23
+                am start -a android.intent.action.VIEW -d "https://www.youtube.com/results?search_query=Paras+TV+live" -p com.google.android.youtube.tv < /dev/null
+                sleep 4
+                input keyevent 23 < /dev/null
+                input keyevent 66 < /dev/null
             
             # 2. Morning Paras TV Routine Check (Time-windowed mode)
             elif [ "$PARAS_ENABLED" = "1" ] && [ "$HM" -ge "$PARAS_START" ] && [ "$HM" -lt "$PARAS_END" ]; then
                 echo "[Orbit Routine] Launching Morning Paras TV Live..."
-                sleep 2
-                am start -a android.intent.action.VIEW -d "https://www.youtube.com/results?search_query=Paras+TV+live" -p com.google.android.youtube.tv
                 sleep 3
-                input keyevent 23
+                am start -a android.intent.action.VIEW -d "https://www.youtube.com/results?search_query=Paras+TV+live" -p com.google.android.youtube.tv < /dev/null
+                sleep 4
+                input keyevent 23 < /dev/null
+                input keyevent 66 < /dev/null
             
             # 3. Morning Jinvani Channel Routine Check
             elif [ "$JINVANI_ENABLED" = "1" ] && [ "$HM" -ge "$JINVANI_START" ] && [ "$HM" -lt "$JINVANI_END" ]; then
                 echo "[Orbit Routine] Launching Morning Jinvani Channel Live..."
-                sleep 2
-                am start -a android.intent.action.VIEW -d "https://www.youtube.com/results?search_query=Jinvani+channel+live" -p com.google.android.youtube.tv
                 sleep 3
-                input keyevent 23
+                am start -a android.intent.action.VIEW -d "https://www.youtube.com/results?search_query=Jinvani+channel+live" -p com.google.android.youtube.tv < /dev/null
+                sleep 4
+                input keyevent 23 < /dev/null
+                input keyevent 66 < /dev/null
             fi
         fi
         
@@ -94,31 +104,32 @@ while true; do
         case "$LINE" in
             KEY:*)
                 KEY_CODE="${LINE#KEY:}"
-                input keyevent "$KEY_CODE"
+                input keyevent "$KEY_CODE" < /dev/null
                 ;;
             VOL:*)
                 VOL_LEVEL="${LINE#VOL:}"
-                cmd media_session volume --set "$VOL_LEVEL"
+                cmd media_session volume --set "$VOL_LEVEL" < /dev/null
                 ;;
             TYPE:*)
                 TEXT="${LINE#TYPE:}"
-                input text "$TEXT"
+                input text "$TEXT" < /dev/null
                 ;;
             URL:*)
                 URL="${LINE#URL:}"
-                am start -a android.intent.action.VIEW -d "$URL" -p com.google.android.youtube.tv
-                sleep 3
-                input keyevent 23
+                am start -a android.intent.action.VIEW -d "$URL" -p com.google.android.youtube.tv < /dev/null
+                sleep 4
+                input keyevent 23 < /dev/null
+                input keyevent 66 < /dev/null
                 ;;
             LAUNCH_APP:*)
                 PKG="${LINE#LAUNCH_APP:}"
-                monkey -p "$PKG" -c android.intent.category.LAUNCHER 1
+                monkey -p "$PKG" -c android.intent.category.LAUNCHER 1 < /dev/null
                 ;;
             CRICKET:*|HOTSTAR_CRICKET:*)
                 echo "[Orbit Cloud] Launching Hotstar Live Cricket..."
-                am start -a android.intent.action.VIEW -d "hotstar://sports" in.startv.hotstar || \
-                am start -a android.intent.action.VIEW -d "https://www.hotstar.com/in/sports/cricket" in.startv.hotstar || \
-                monkey -p in.startv.hotstar -c android.intent.category.LAUNCHER 1
+                am start -a android.intent.action.VIEW -d "hotstar://sports" in.startv.hotstar < /dev/null || \
+                am start -a android.intent.action.VIEW -d "https://www.hotstar.com/in/sports/cricket" in.startv.hotstar < /dev/null || \
+                monkey -p in.startv.hotstar -c android.intent.category.LAUNCHER 1 < /dev/null
                 ;;
             NIGHT_GUARD:*)
                 STATE="${LINE#NIGHT_GUARD:}"
@@ -129,7 +140,7 @@ while true; do
                     MIN=$(date +%M)
                     HM=$((HOUR * 100 + MIN))
                     if [ "$HM" -ge 2130 ] || [ "$HM" -lt 600 ]; then
-                        cmd media_session volume --set 4
+                        cmd media_session volume --set 4 < /dev/null
                     fi
                 fi
                 ;;
@@ -137,8 +148,8 @@ while true; do
                 MSG="${LINE#NOTIFY:}"
                 echo "[Orbit Cloud] Showing on-screen notification: $MSG"
                 ENCODED_MSG=$(echo "$MSG" | sed 's/ /%20/g')
-                am start -a android.intent.action.VIEW -d "https://tv.gujaratididi.com/alert.html?msg=$ENCODED_MSG"
-                ( sleep 10 && input keyevent 4 ) &
+                am start -a android.intent.action.VIEW -d "https://tv.gujaratididi.com/alert.html?msg=$ENCODED_MSG" < /dev/null
+                ( sleep 10 && input keyevent 4 < /dev/null ) &
                 ;;
             PARAS_ALL_DAY:*)
                 STATE="${LINE#PARAS_ALL_DAY:}"
@@ -173,16 +184,16 @@ while true; do
             SLEEP_TIMER:*)
                 MINS="${LINE#SLEEP_TIMER:}"
                 echo "[Orbit Cloud] Setting sleep timer for $MINS minutes..."
-                ( sleep $((MINS * 60)) && input keyevent 26 && echo "[Orbit Cloud] Sleep timer turned off TV" ) &
+                ( sleep $((MINS * 60)) && input keyevent 26 < /dev/null && echo "[Orbit Cloud] Sleep timer turned off TV" ) &
                 ;;
             SCREEN:*)
                 echo "[Orbit Cloud] Capturing screenshot and uploading..."
-                screencap -p /data/local/tmp/screen.png
-                $CURL $CURL_OPTS -H "Filename: screen.png" -T /data/local/tmp/screen.png "$STATUS_TOPIC"
+                screencap -p /data/local/tmp/screen.png < /dev/null
+                $CURL $CURL_OPTS -H "Filename: screen.png" -T /data/local/tmp/screen.png "$STATUS_TOPIC" < /dev/null
                 ;;
             SCRIPT:*)
                 SCRIPT="${LINE#SCRIPT:}"
-                sh -c "$SCRIPT" &
+                sh -c "$SCRIPT" < /dev/null &
                 ;;
             *)
                 echo "[Orbit Cloud] Unknown command: $LINE"
