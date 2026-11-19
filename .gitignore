@@ -28,3 +28,9 @@ desktop.ini
 *.njsproj
 *.sln
 *.sw?
+
+# Binaries & Downloads
+*.exe
+*.apk
+curl-*
+termux_*
