@@ -276,14 +276,14 @@
       </button>
 
       <!-- Center Status & Wi-Fi HUD -->
-      <div onclick="requestTVStatus()" title="Tap to refresh connection details" class="flex-1 mx-2.5 min-w-0 cursor-pointer text-left active:opacity-75 transition">
-        <div class="flex items-center gap-1.5">
+      <div class="flex-1 mx-2.5 min-w-0 text-left">
+        <div onclick="requestTVStatus()" title="Tap to refresh TV status" class="flex items-center gap-1.5 cursor-pointer active:opacity-75 transition">
           <span id="conn-dot" class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse shrink-0"></span>
           <span id="conn-status" class="text-xs font-bold text-white truncate leading-tight">TV Awake</span>
         </div>
-        <div class="flex items-center gap-1.5 mt-0.5 text-[10px] text-slate-400">
+        <div onclick="openWifiModal()" title="Tap to scan & connect TV Wi-Fi" class="flex items-center gap-1.5 mt-0.5 text-[10px] text-slate-400 cursor-pointer hover:text-sky-300 active:opacity-75 transition group">
           <i id="wifi-icon" class="fa-solid fa-wifi text-[9px] text-sky-400"></i>
-          <span id="wifi-ssid-disp" class="truncate font-medium text-slate-300">Checking Wi-Fi...</span>
+          <span id="wifi-ssid-disp" class="truncate font-medium text-slate-300 group-hover:underline">Checking Wi-Fi...</span>
           <span id="wifi-signal-badge" class="shrink-0 text-[9px] text-emerald-400 font-semibold">• Good</span>
         </div>
       </div>
@@ -676,6 +676,12 @@
           </div>
         </div>
 
+        <!-- TV Wi-Fi Manager -->
+        <button onclick="closeModal('modal-settings'); openWifiModal();" class="w-full p-3 rounded-xl bg-sky-950/30 border border-sky-500/20 text-sky-200 font-semibold flex items-center justify-between hover:bg-sky-900/30 active:scale-98 transition">
+          <span class="flex items-center gap-2.5"><i class="fa-solid fa-wifi text-sky-400"></i> TV Wi-Fi Networks & Scan</span>
+          <i class="fa-solid fa-chevron-right text-[10px] text-sky-400"></i>
+        </button>
+
         <!-- TV Keyboard Input -->
         <button onclick="closeModal('modal-settings'); openKeyboardModal();" class="w-full p-3 rounded-xl bg-[#1c1d24] border border-white/10 text-white font-semibold flex items-center justify-between hover:bg-[#252731] active:scale-98 transition">
           <span class="flex items-center gap-2.5"><i class="fa-solid fa-keyboard text-sky-400"></i> TV Text & Search</span>
@@ -705,6 +711,78 @@
         <button onclick="closeModal('modal-settings')" class="w-full py-2.5 bg-[#1c1d24] hover:bg-[#252731] text-white font-semibold text-xs rounded-xl border border-white/10">
           Close
         </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ==================== MODAL: TV WI-FI MANAGER ==================== -->
+  <div id="modal-wifi" class="fixed inset-0 z-50 bg-black/85 backdrop-blur-sm hidden items-center justify-center p-4">
+    <div class="bg-[#131419] rounded-3xl p-5 w-full max-w-sm space-y-4 border border-white/10 shadow-2xl flex flex-col max-h-[85vh]">
+      <!-- Header -->
+      <div class="flex items-center justify-between border-b border-white/10 pb-3 shrink-0">
+        <div>
+          <h3 class="text-xs font-bold text-white uppercase tracking-wider flex items-center gap-2">
+            <i class="fa-solid fa-wifi text-sky-400"></i> TV Wi-Fi Manager
+          </h3>
+          <p class="text-[10px] text-slate-400 mt-0.5">Scan & connect TV to wireless networks</p>
+        </div>
+        <div class="flex items-center gap-2">
+          <button id="wifi-refresh-btn" onclick="triggerWifiScan()" title="Rescan Networks" class="w-8 h-8 rounded-xl bg-[#1c1d24] border border-white/10 flex items-center justify-center text-slate-300 hover:text-sky-400 active:scale-95 transition">
+            <i class="fa-solid fa-rotate text-xs"></i>
+          </button>
+          <button onclick="closeModal('modal-wifi')" class="w-8 h-8 rounded-xl bg-[#1c1d24] border border-white/10 flex items-center justify-center text-slate-400 hover:text-white transition">
+            <i class="fa-solid fa-xmark text-sm"></i>
+          </button>
+        </div>
+      </div>
+
+      <!-- Current Connected Network Card -->
+      <div class="p-3 rounded-2xl bg-black/50 border border-white/10 shrink-0">
+        <div class="flex items-center justify-between mb-1.5">
+          <span class="text-[9px] uppercase font-bold tracking-wider text-slate-400">Active TV Network</span>
+          <span id="wifi-active-status-pill" class="text-[9px] px-2 py-0.5 rounded-full font-bold bg-emerald-950/80 text-emerald-400 border border-emerald-800">Connected</span>
+        </div>
+        <div class="flex items-center justify-between">
+          <div class="flex items-center gap-2.5 min-w-0">
+            <div class="w-8 h-8 rounded-xl bg-sky-500/10 border border-sky-500/20 flex items-center justify-center text-sky-400 shrink-0">
+              <i class="fa-solid fa-wifi text-xs"></i>
+            </div>
+            <div class="min-w-0">
+              <span id="wifi-active-ssid" class="font-bold text-white text-xs block truncate">Checking...</span>
+              <span id="wifi-active-details" class="text-[10px] text-slate-400 block truncate">Signal: -- dBm</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Scanner Status / Banner -->
+      <div id="wifi-status-banner" class="hidden py-2 px-3 rounded-xl text-xs font-semibold flex items-center justify-between transition shrink-0">
+        <span id="wifi-status-banner-text">Connecting...</span>
+      </div>
+
+      <!-- Networks Section -->
+      <div class="flex-1 overflow-y-auto space-y-2 min-h-[140px] pr-1">
+        <div class="flex items-center justify-between text-[10px] uppercase font-bold tracking-wider text-slate-400 px-1">
+          <span>Available Networks</span>
+          <span id="wifi-scan-count"></span>
+        </div>
+
+        <!-- Scanning State Indicator -->
+        <div id="wifi-scanning-state" class="py-8 flex flex-col items-center justify-center space-y-2 text-slate-400">
+          <i class="fa-solid fa-circle-notch fa-spin text-xl text-sky-400"></i>
+          <span class="text-xs font-medium">Scanning TV Wi-Fi frequencies...</span>
+        </div>
+
+        <!-- Dynamic Network List -->
+        <div id="wifi-networks-list" class="space-y-1.5 hidden">
+          <!-- Populated by JavaScript -->
+        </div>
+      </div>
+
+      <!-- Footer Info -->
+      <div class="border-t border-white/10 pt-2.5 text-[10px] text-slate-400 flex items-center justify-between shrink-0">
+        <span>Dual-Band 2.4 / 5 GHz</span>
+        <button onclick="requestTVStatus()" class="hover:text-sky-400 transition">Check TV Status</button>
       </div>
     </div>
   </div>
@@ -828,7 +906,12 @@
   <script>
     const CLOUD_TOPIC_CMD = 'orbit_devja_tv_cmd';
     const CLOUD_TOPIC_STATUS = 'orbit_devja_tv_status';
-    const NTFY_BASE = 'https://ntfy.adminforge.de';
+    const RELAY_ENDPOINTS = [
+      'https://ntfy.adminforge.de',
+      'https://ntfy.tedomum.fr'
+    ];
+    let currentRelayIndex = 0;
+    let NTFY_BASE = RELAY_ENDPOINTS[currentRelayIndex];
     const AUTH_TOKEN = 'ORBIT_SEC_2309';
 
     // HARDWARE THEMES (ANTI-SLOP INDUSTRIAL FINISHES)
@@ -1087,16 +1170,29 @@
         }
       }
 
-      try {
-        const res = await fetch(`${NTFY_BASE}/${CLOUD_TOPIC_CMD}`, {
-          method: 'POST',
-          body: command,
-          headers: { 'Title': 'SmartTV Command', 'Priority': 'urgent' }
-        });
-        if (res.ok) flashStatus('Sent');
-      } catch (err) {
-        flashStatus('Offline', true);
+      let attempt = 0;
+      while (attempt < RELAY_ENDPOINTS.length) {
+        const relayUrl = RELAY_ENDPOINTS[(currentRelayIndex + attempt) % RELAY_ENDPOINTS.length];
+        try {
+          const res = await fetch(`${relayUrl}/${CLOUD_TOPIC_CMD}`, {
+            method: 'POST',
+            body: command,
+            headers: { 'Title': 'SmartTV Command', 'Priority': 'urgent' }
+          });
+          if (res.ok) {
+            flashStatus(attempt === 0 ? 'Sent' : 'Sent (Backup)');
+            if (attempt > 0) {
+              currentRelayIndex = (currentRelayIndex + attempt) % RELAY_ENDPOINTS.length;
+              NTFY_BASE = relayUrl;
+            }
+            return;
+          }
+        } catch (err) {
+          console.warn(`[Orbit Cloud] Relay error on ${relayUrl}:`, err);
+        }
+        attempt++;
       }
+      flashStatus('Offline', true);
     }
 
     function sendQuickChannel(channel) {
@@ -1532,38 +1628,55 @@
       flashStatus('Sent to TV');
     }
 
-    // ==================== SSE STATUS LISTENER ====================
+    // ==================== SSE STATUS LISTENER & WI-FI MANAGER ====================
+    let statusEvtSource = null;
+    let statusReconnectTimer = null;
+    let cachedWifiNetworks = [];
+    let isScanningWifi = false;
+
     async function fetchLatestStatus() {
-      try {
-        const res = await fetch(`${NTFY_BASE}/${CLOUD_TOPIC_STATUS}/json?poll=1`);
-        if (res.ok) {
-          const lines = (await res.text()).trim().split('\n');
-          for (let i = lines.length - 1; i >= 0; i--) {
-            try {
-              const item = JSON.parse(lines[i]);
-              if (item.message) {
-                let statusObj;
-                try {
-                  statusObj = JSON.parse(item.message);
-                } catch(e) {
-                  statusObj = JSON.parse(item.message.replace(/([{,]\s*)([a-zA-Z0-9_]+)\s*:/g, '$1"$2":'));
+      for (const relay of RELAY_ENDPOINTS) {
+        try {
+          const res = await fetch(`${relay}/${CLOUD_TOPIC_STATUS}/json?poll=1`);
+          if (res.ok) {
+            const lines = (await res.text()).trim().split('\n');
+            for (let i = lines.length - 1; i >= 0; i--) {
+              try {
+                const item = JSON.parse(lines[i]);
+                if (item.message) {
+                  let statusObj;
+                  try {
+                    statusObj = JSON.parse(item.message);
+                  } catch(e) {
+                    statusObj = JSON.parse(item.message.replace(/([{,]\s*)([a-zA-Z0-9_]+)\s*:/g, '$1"$2":'));
+                  }
+                  if (statusObj && (statusObj.type === 'tv_status' || statusObj.power !== undefined)) {
+                    updateLiveTVStatus(statusObj);
+                    return;
+                  }
                 }
-                if (statusObj && (statusObj.type === 'tv_status' || statusObj.power !== undefined)) {
-                  updateLiveTVStatus(statusObj);
-                  break;
-                }
-              }
-            } catch(e) {}
+              } catch(e) {}
+            }
           }
-        }
-      } catch(e) {}
+        } catch(e) {}
+      }
     }
 
     function initCloudStatusListener() {
       fetchLatestStatus();
+      connectStatusStream();
+    }
+
+    function connectStatusStream() {
+      if (statusEvtSource) {
+        try { statusEvtSource.close(); } catch(e) {}
+      }
+
+      const activeRelay = RELAY_ENDPOINTS[currentRelayIndex];
       try {
-        const evtSource = new EventSource(`${NTFY_BASE}/${CLOUD_TOPIC_STATUS}/sse`);
-        evtSource.onmessage = (e) => {
+        statusEvtSource = new EventSource(`${activeRelay}/${CLOUD_TOPIC_STATUS}/sse`);
+        
+        statusEvtSource.onmessage = (e) => {
           try {
             const data = JSON.parse(e.data);
             if (data.event === 'message') {
@@ -1578,15 +1691,268 @@
                   } catch(pe) {
                     statusObj = JSON.parse(data.message.replace(/([{,]\s*)([a-zA-Z0-9_]+)\s*:/g, '$1"$2":'));
                   }
-                  if (statusObj && (statusObj.type === 'tv_status' || statusObj.power !== undefined)) {
-                    updateLiveTVStatus(statusObj);
+                  if (statusObj) {
+                    if (statusObj.type === 'wifi_scan_results') {
+                      renderWifiScanResults(statusObj.networks);
+                    } else if (statusObj.type === 'wifi_connect_result') {
+                      handleWifiConnectResult(statusObj);
+                    } else if (statusObj.type === 'tv_status' || statusObj.power !== undefined) {
+                      updateLiveTVStatus(statusObj);
+                    }
                   }
                 } catch (jsonErr) {}
               }
             }
           } catch (err) {}
         };
+
+        statusEvtSource.onerror = () => {
+          clearTimeout(statusReconnectTimer);
+          statusReconnectTimer = setTimeout(() => {
+            currentRelayIndex = (currentRelayIndex + 1) % RELAY_ENDPOINTS.length;
+            NTFY_BASE = RELAY_ENDPOINTS[currentRelayIndex];
+            connectStatusStream();
+          }, 6000);
+        };
       } catch (e) {}
+    }
+
+    // ==================== WI-FI UI CONTROLLER ====================
+    function openWifiModal() {
+      openModal('modal-wifi');
+      const activeSsidEl = document.getElementById('wifi-active-ssid');
+      const activeDetailsEl = document.getElementById('wifi-active-details');
+      const curSsid = currentTVStatus ? currentTVStatus.wifi : 'Checking...';
+      const curRssi = currentTVStatus ? currentTVStatus.rssi : 0;
+      if (activeSsidEl) activeSsidEl.textContent = curSsid || 'Disconnected';
+      if (activeDetailsEl) activeDetailsEl.textContent = curRssi ? `Signal: ${curRssi} dBm` : 'Status: Connected';
+      
+      triggerWifiScan();
+    }
+
+    function triggerWifiScan() {
+      if (isScanningWifi) return;
+      isScanningWifi = true;
+
+      const refreshBtn = document.getElementById('wifi-refresh-btn');
+      if (refreshBtn) refreshBtn.innerHTML = '<i class="fa-solid fa-rotate fa-spin text-xs text-sky-400"></i>';
+
+      const scanState = document.getElementById('wifi-scanning-state');
+      const listContainer = document.getElementById('wifi-networks-list');
+      const countEl = document.getElementById('wifi-scan-count');
+      const banner = document.getElementById('wifi-status-banner');
+      if (banner) banner.classList.add('hidden');
+
+      if (scanState) scanState.classList.remove('hidden');
+      if (listContainer) listContainer.classList.add('hidden');
+      if (countEl) countEl.textContent = 'Scanning...';
+
+      sendCommand('WIFI_SCAN');
+
+      setTimeout(() => {
+        if (isScanningWifi) {
+          isScanningWifi = false;
+          if (refreshBtn) refreshBtn.innerHTML = '<i class="fa-solid fa-rotate text-xs"></i>';
+          if (scanState) scanState.classList.add('hidden');
+          if (listContainer) listContainer.classList.remove('hidden');
+          if (countEl && cachedWifiNetworks.length === 0) countEl.textContent = 'Scan timeout';
+        }
+      }, 9000);
+    }
+
+    function renderWifiScanResults(networks) {
+      isScanningWifi = false;
+      const refreshBtn = document.getElementById('wifi-refresh-btn');
+      if (refreshBtn) refreshBtn.innerHTML = '<i class="fa-solid fa-rotate text-xs"></i>';
+
+      const scanState = document.getElementById('wifi-scanning-state');
+      const listContainer = document.getElementById('wifi-networks-list');
+      const countEl = document.getElementById('wifi-scan-count');
+
+      if (!Array.isArray(networks)) networks = [];
+      cachedWifiNetworks = networks;
+
+      networks.sort((a, b) => (b.rssi || -99) - (a.rssi || -99));
+
+      if (countEl) countEl.textContent = `(${networks.length} found)`;
+      if (scanState) scanState.classList.add('hidden');
+      if (listContainer) {
+        listContainer.classList.remove('hidden');
+        listContainer.innerHTML = '';
+
+        if (networks.length === 0) {
+          listContainer.innerHTML = `
+            <div class="py-6 text-center text-slate-500 text-xs">
+              <i class="fa-solid fa-wifi text-lg mb-1 block"></i>
+              No networks detected. Tap refresh to retry.
+            </div>`;
+          return;
+        }
+
+        const currentActiveSsid = currentTVStatus ? (currentTVStatus.wifi || '') : '';
+
+        networks.forEach((net, idx) => {
+          const isCurrent = currentActiveSsid && (net.ssid.toLowerCase() === currentActiveSsid.toLowerCase());
+          const isSecured = net.sec && net.sec !== 'open';
+          
+          let signalIcon = 'fa-wifi';
+          let signalColor = 'text-emerald-400';
+          if (net.rssi < -78) {
+            signalColor = 'text-amber-400';
+          } else if (net.rssi < -85) {
+            signalColor = 'text-rose-400';
+          }
+
+          const card = document.createElement('div');
+          card.id = `wifi-card-${idx}`;
+          card.className = `p-3 rounded-2xl border transition ${isCurrent ? 'bg-emerald-950/20 border-emerald-500/40' : 'bg-black/30 border-white/5 hover:border-white/15'}`;
+
+          card.innerHTML = `
+            <div class="flex items-center justify-between gap-2">
+              <div class="flex items-center gap-2.5 min-w-0 flex-1">
+                <i class="fa-solid ${signalIcon} ${signalColor} text-xs shrink-0"></i>
+                <div class="min-w-0">
+                  <span class="font-bold text-white text-xs block truncate">${escapeHtml(net.ssid)}</span>
+                  <div class="flex items-center gap-2 text-[9px] text-slate-400">
+                    <span>${isSecured ? '<i class=\"fa-solid fa-lock text-[8px]\"></i> ' + net.sec.toUpperCase() : '<i class=\"fa-solid fa-lock-open text-[8px]\"></i> Open'}</span>
+                    <span>•</span>
+                    <span>${net.rssi} dBm</span>
+                  </div>
+                </div>
+              </div>
+              <div class="shrink-0">
+                ${isCurrent ? `
+                  <span class="text-[9px] px-2 py-0.5 rounded-full font-bold bg-emerald-950/80 text-emerald-400 border border-emerald-800">
+                    Active
+                  </span>
+                ` : `
+                  <button onclick="selectWifiNetwork(${idx})" class="py-1 px-3 rounded-xl bg-[#1c1d24] hover:bg-[#252731] border border-white/10 text-white font-semibold text-xs active:scale-95 transition">
+                    Connect
+                  </button>
+                `}
+              </div>
+            </div>
+            <div id="wifi-drawer-${idx}" class="hidden mt-2.5 pt-2.5 border-t border-white/10 space-y-2">
+              ${isSecured ? `
+                <div class="relative">
+                  <input type="password" id="wifi-pass-${idx}" placeholder="Enter Wi-Fi Password" class="w-full bg-[#1c1d24] border border-white/15 rounded-xl px-3 py-2 text-xs text-white placeholder-slate-500 focus:outline-none focus:border-sky-400 pr-10">
+                  <button onclick="toggleWifiPass(${idx})" type="button" class="absolute right-3 top-2.5 text-slate-400 hover:text-white">
+                    <i id="wifi-eye-${idx}" class="fa-solid fa-eye text-xs"></i>
+                  </button>
+                </div>
+              ` : `
+                <p class="text-[11px] text-slate-300">This is an open network. Connect TV without a password?</p>
+              `}
+              <div class="flex items-center gap-2">
+                <button onclick="closeWifiDrawer(${idx})" type="button" class="flex-1 py-1.5 rounded-xl bg-white/5 hover:bg-white/10 text-slate-300 font-semibold text-xs transition">Cancel</button>
+                <button onclick="doWifiConnect(${idx})" id="wifi-conn-btn-${idx}" type="button" class="flex-1 py-1.5 rounded-xl bg-sky-600 hover:bg-sky-500 text-white font-semibold text-xs shadow-md active:scale-95 transition flex items-center justify-center gap-1.5">
+                  <i class="fa-solid fa-link text-[10px]"></i> Connect TV
+                </button>
+              </div>
+            </div>
+          `;
+          listContainer.appendChild(card);
+        });
+      }
+    }
+
+    function selectWifiNetwork(idx) {
+      cachedWifiNetworks.forEach((_, i) => {
+        const d = document.getElementById(`wifi-drawer-${i}`);
+        if (d && i !== idx) d.classList.add('hidden');
+      });
+      const drawer = document.getElementById(`wifi-drawer-${idx}`);
+      if (drawer) {
+        drawer.classList.remove('hidden');
+        const passInput = document.getElementById(`wifi-pass-${idx}`);
+        if (passInput) passInput.focus();
+      }
+    }
+
+    function closeWifiDrawer(idx) {
+      const drawer = document.getElementById(`wifi-drawer-${idx}`);
+      if (drawer) drawer.classList.add('hidden');
+    }
+
+    function toggleWifiPass(idx) {
+      const input = document.getElementById(`wifi-pass-${idx}`);
+      const eye = document.getElementById(`wifi-eye-${idx}`);
+      if (!input || !eye) return;
+      if (input.type === 'password') {
+        input.type = 'text';
+        eye.className = 'fa-solid fa-eye-slash text-xs';
+      } else {
+        input.type = 'password';
+        eye.className = 'fa-solid fa-eye text-xs';
+      }
+    }
+
+    function doWifiConnect(idx) {
+      const net = cachedWifiNetworks[idx];
+      if (!net) return;
+
+      const isSecured = net.sec && net.sec !== 'open';
+      let password = '';
+      if (isSecured) {
+        const passInput = document.getElementById(`wifi-pass-${idx}`);
+        password = passInput ? passInput.value.trim() : '';
+        if (!password) {
+          alert('Please enter the Wi-Fi password.');
+          return;
+        }
+      }
+
+      const btn = document.getElementById(`wifi-conn-btn-${idx}`);
+      if (btn) {
+        btn.innerHTML = '<i class="fa-solid fa-circle-notch fa-spin text-xs"></i> Connecting TV...';
+        btn.disabled = true;
+      }
+
+      const banner = document.getElementById('wifi-status-banner');
+      const bannerText = document.getElementById('wifi-status-banner-text');
+      if (banner && bannerText) {
+        banner.className = 'py-2 px-3 rounded-xl text-xs font-semibold flex items-center justify-between bg-sky-950/80 text-sky-300 border border-sky-800 shrink-0';
+        bannerText.innerHTML = `<i class="fa-solid fa-circle-notch fa-spin mr-1.5"></i> Connecting TV to "${escapeHtml(net.ssid)}"...`;
+        banner.classList.remove('hidden');
+      }
+
+      const b64Ssid = btoa(unescape(encodeURIComponent(net.ssid)));
+      const b64Pass = btoa(unescape(encodeURIComponent(password)));
+      const secType = net.sec || (isSecured ? 'wpa2' : 'open');
+
+      sendCommand('WIFI_CONNECT', `${secType}|${b64Ssid}|${b64Pass}`);
+    }
+
+    function handleWifiConnectResult(res) {
+      const banner = document.getElementById('wifi-status-banner');
+      const bannerText = document.getElementById('wifi-status-banner-text');
+      if (!banner || !bannerText) return;
+
+      if (res.status === 'connected') {
+        banner.className = 'py-2 px-3 rounded-xl text-xs font-semibold flex items-center justify-between bg-emerald-950/80 text-emerald-300 border border-emerald-800 shrink-0';
+        bannerText.innerHTML = `<i class="fa-solid fa-check mr-1.5"></i> Connected to "${escapeHtml(res.ssid)}"!`;
+        banner.classList.remove('hidden');
+        flashStatus('Connected to Wi-Fi!');
+        setTimeout(() => {
+          triggerWifiScan();
+        }, 2000);
+      } else {
+        banner.className = 'py-2 px-3 rounded-xl text-xs font-semibold flex items-center justify-between bg-rose-950/80 text-rose-300 border border-rose-800 shrink-0';
+        bannerText.innerHTML = `<i class="fa-solid fa-triangle-exclamation mr-1.5"></i> Failed to connect. Check password.`;
+        banner.classList.remove('hidden');
+      }
+
+      cachedWifiNetworks.forEach((_, i) => {
+        const btn = document.getElementById(`wifi-conn-btn-${i}`);
+        if (btn) {
+          btn.innerHTML = '<i class="fa-solid fa-link text-[10px]"></i> Connect TV';
+          btn.disabled = false;
+        }
+      });
+    }
+
+    function escapeHtml(str) {
+      return String(str).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
     }
 
     // ==================== PWA INSTALLATION ====================

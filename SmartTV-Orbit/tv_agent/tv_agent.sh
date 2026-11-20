@@ -13,8 +13,10 @@ else
     CURL="/data/local/tmp/curl"
 fi
 CURL_OPTS="-s --resolve ntfy.adminforge.de:443:195.201.173.232 -k"
+CURL_OPTS_BACKUP="-s --resolve ntfy.tedomum.fr:443:163.172.185.142 -k"
 CMD_TOPIC="https://ntfy.adminforge.de/orbit_devja_tv_cmd/raw"
 STATUS_TOPIC="https://ntfy.adminforge.de/orbit_devja_tv_status"
+STATUS_TOPIC_BACKUP="https://ntfy.tedomum.fr/orbit_devja_tv_status"
 
 # Default Routine States: PARAS_ALL_DAY enabled by default (anytime wake)
 PARAS_ALL_DAY="1"
@@ -103,6 +105,7 @@ publish_tv_status() {
     STATUS_JSON="{\"type\":\"tv_status\",\"power\":\"$WAKE\",\"pkg\":\"$PKG\",\"app\":\"$APP_NAME\",\"volume\":$VOL,\"wifi\":\"$WIFI_SSID\",\"rssi\":$WIFI_RSSI,\"time\":\"$TIME_NOW\"}"
     echo "[Orbit Agent] Publishing Live Status: $STATUS_JSON"
     $CURL $CURL_OPTS -H "Title: TV_STATUS" -d "$STATUS_JSON" "$STATUS_TOPIC" < /dev/null >/dev/null 2>&1
+    $CURL $CURL_OPTS_BACKUP -H "Title: TV_STATUS" -d "$STATUS_JSON" "$STATUS_TOPIC_BACKUP" < /dev/null >/dev/null 2>&1
 }
 
 # Worker 1: TV Wake Monitor & Care Reminders
@@ -336,6 +339,27 @@ while true; do
                 ;;
             STATUS|STATUS:*)
                 echo "[Orbit Cloud] Status request received"
+                publish_tv_status
+                ;;
+            WIFI_SCAN|WIFI_SCAN:*)
+                echo "[Orbit Cloud] Wi-Fi Scan requested..."
+                NETWORKS=$(/data/local/tmp/wifi_helper.sh scan 2>/dev/null)
+                [ -z "$NETWORKS" ] && NETWORKS="[]"
+                PAYLOAD="{\"type\":\"wifi_scan_results\",\"networks\":$NETWORKS}"
+                $CURL $CURL_OPTS -H "Title: TV_WIFI_SCAN" -d "$PAYLOAD" "$STATUS_TOPIC" < /dev/null >/dev/null 2>&1
+                $CURL $CURL_OPTS_BACKUP -H "Title: TV_WIFI_SCAN" -d "$PAYLOAD" "$STATUS_TOPIC_BACKUP" < /dev/null >/dev/null 2>&1
+                ;;
+            WIFI_CONNECT:*)
+                PAYLOAD="${LINE#WIFI_CONNECT:}"
+                # Format: WIFI_CONNECT:<sec>|<b64_ssid>|<b64_pass>
+                SEC=$(echo "$PAYLOAD" | cut -d'|' -f1)
+                B64_SSID=$(echo "$PAYLOAD" | cut -d'|' -f2)
+                B64_PASS=$(echo "$PAYLOAD" | cut -d'|' -f3)
+                echo "[Orbit Cloud] Connecting Wi-Fi: sec=$SEC, b64_ssid=$B64_SSID"
+                RESULT=$(/data/local/tmp/wifi_helper.sh connect_b64 "$SEC" "$B64_SSID" "$B64_PASS" 2>/dev/null)
+                $CURL $CURL_OPTS -H "Title: TV_WIFI_CONNECT" -d "$RESULT" "$STATUS_TOPIC" < /dev/null >/dev/null 2>&1
+                $CURL $CURL_OPTS_BACKUP -H "Title: TV_WIFI_CONNECT" -d "$RESULT" "$STATUS_TOPIC_BACKUP" < /dev/null >/dev/null 2>&1
+                sleep 2
                 publish_tv_status
                 ;;
             SCREEN|SCREEN:*)

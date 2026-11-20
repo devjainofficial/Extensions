@@ -86,4 +86,20 @@ else
     fi
 fi
 
+# 7. Start persistent Watchdog Supervisor in background inside Termux
+# Automatically monitors tv_agent and restarts it if it ever gets killed!
+(
+    while true; do
+        sleep 30
+        if ! adb -s 127.0.0.1:5555 get-state 2>&1 | grep -q "device"; then
+            adb connect 127.0.0.1:5555 >/dev/null 2>&1
+        fi
+        RUNNING=$(adb -s 127.0.0.1:5555 shell "ps -ef | grep -v grep | grep 'tv_agent.sh'" 2>/dev/null)
+        if [ -z "$RUNNING" ]; then
+            echo "[Orbit Watchdog] tv_agent not running! Reviving daemon on $(date)..." >> "$LOG"
+            adb -s 127.0.0.1:5555 shell "nohup /data/local/tmp/tv_agent.sh > /data/local/tmp/tv_agent.log 2>&1 &"
+        fi
+    done
+) &
+
 echo "=== [Orbit Boot] Completed at $(date) ===" >> "$LOG"
