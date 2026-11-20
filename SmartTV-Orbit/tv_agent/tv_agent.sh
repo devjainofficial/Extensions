@@ -73,6 +73,9 @@ publish_tv_status() {
         com.android.chrome)
             APP_NAME="Chrome"
             ;;
+        com.google.android.apps.tv.dreamx)
+            APP_NAME="Ambient Screensaver"
+            ;;
         *)
             if [ "$PKG" != "Unknown" ]; then
                 APP_NAME="$PKG"
@@ -83,9 +86,21 @@ publish_tv_status() {
     VOL=$(dumpsys audio 2>/dev/null | grep -A 6 'STREAM_MUSIC:' | grep 'streamVolume:' | head -n 1 | cut -d: -f2 | tr -d ' \r\n')
     [ -z "$VOL" ] && VOL="20"
 
+    # Extract active WiFi SSID and signal
+    WIFI_RAW=$(cmd wifi status 2>/dev/null | grep 'Wifi is connected to' | head -n 1)
+    if [ -n "$WIFI_RAW" ]; then
+        WIFI_SSID=$(echo "$WIFI_RAW" | cut -d'"' -f2 | tr -d '\\')
+        WIFI_RSSI=$(cmd wifi status 2>/dev/null | grep 'RSSI:' | head -n 1 | sed 's/.*RSSI: //' | cut -d',' -f1 | tr -d ' \r\n')
+    else
+        WIFI_SSID="Disconnected"
+        WIFI_RSSI="0"
+    fi
+    [ -z "$WIFI_SSID" ] && WIFI_SSID="Disconnected"
+    [ -z "$WIFI_RSSI" ] && WIFI_RSSI="0"
+
     TIME_NOW=$(date +"%I:%M %p")
 
-    STATUS_JSON="{\"type\":\"tv_status\",\"power\":\"$WAKE\",\"pkg\":\"$PKG\",\"app\":\"$APP_NAME\",\"volume\":$VOL,\"time\":\"$TIME_NOW\"}"
+    STATUS_JSON="{\"type\":\"tv_status\",\"power\":\"$WAKE\",\"pkg\":\"$PKG\",\"app\":\"$APP_NAME\",\"volume\":$VOL,\"wifi\":\"$WIFI_SSID\",\"rssi\":$WIFI_RSSI,\"time\":\"$TIME_NOW\"}"
     echo "[Orbit Agent] Publishing Live Status: $STATUS_JSON"
     $CURL $CURL_OPTS -H "Title: TV_STATUS" -d "$STATUS_JSON" "$STATUS_TOPIC" < /dev/null >/dev/null 2>&1
 }

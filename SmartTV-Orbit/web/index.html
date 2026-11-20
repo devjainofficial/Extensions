@@ -185,6 +185,23 @@
     <!-- ==================== VIEW 1: REMOTE CONTROLLER ==================== -->
     <section id="view-remote" class="space-y-3.5">
 
+      <!-- LIVE TV & WI-FI CONNECTION BANNER -->
+      <div onclick="requestTVStatus()" title="Tap to refresh connection details" class="cursor-pointer glass-card rounded-2xl px-3.5 py-2 flex items-center justify-between text-xs border border-white/10 hover:border-white/20 active:scale-98 transition shadow-sm">
+        <div class="flex items-center gap-2.5 min-w-0">
+          <div id="wifi-icon-bg" class="w-8 h-8 rounded-xl bg-sky-500/20 text-sky-400 flex items-center justify-center shrink-0">
+            <i id="wifi-icon" class="fa-solid fa-wifi text-sm"></i>
+          </div>
+          <div class="min-w-0">
+            <div class="text-[10px] text-slate-400 font-semibold tracking-wider uppercase leading-none">Connected Wi-Fi</div>
+            <div id="wifi-ssid-disp" class="text-xs font-bold text-white truncate leading-tight mt-0.5">Detecting Wi-Fi...</div>
+          </div>
+        </div>
+        <div class="flex items-center gap-2 shrink-0">
+          <span id="wifi-signal-badge" class="text-[10px] font-bold text-sky-400 bg-sky-950/60 border border-sky-800/80 px-2 py-0.5 rounded-full">Wi-Fi Active</span>
+          <i class="fa-solid fa-arrows-rotate text-[10px] text-slate-400"></i>
+        </div>
+      </div>
+
       <!-- FATHER'S DEVOTIONAL CHANNELS WITH REAL LOGOS -->
       <div class="grid grid-cols-2 gap-2.5 w-full">
         <!-- Paras TV Card -->
@@ -549,6 +566,32 @@
       </div>
 
       <div class="space-y-2.5 text-xs">
+        <!-- TV Network Diagnostics Info -->
+        <div class="p-3 rounded-2xl bg-black/40 border border-white/10 space-y-2">
+          <div class="flex items-center justify-between text-xs font-bold text-white border-b border-white/10 pb-2">
+            <span class="flex items-center gap-2"><i class="fa-solid fa-network-wired text-sky-400"></i> TV Network Details</span>
+            <span id="diag-status-pill" class="text-[10px] px-2 py-0.5 rounded-full font-bold bg-emerald-950/80 text-emerald-400 border border-emerald-800">Online</span>
+          </div>
+          <div class="grid grid-cols-2 gap-2 text-[11px]">
+            <div>
+              <span class="text-slate-400 block text-[9px] uppercase font-semibold">Wi-Fi Network</span>
+              <span id="diag-wifi" class="font-bold text-white truncate block">Checking...</span>
+            </div>
+            <div>
+              <span class="text-slate-400 block text-[9px] uppercase font-semibold">Signal Strength</span>
+              <span id="diag-rssi" class="font-bold text-sky-400">Checking...</span>
+            </div>
+            <div>
+              <span class="text-slate-400 block text-[9px] uppercase font-semibold">TV IP Address</span>
+              <span class="font-bold text-slate-300">10.218.252.142</span>
+            </div>
+            <div>
+              <span class="text-slate-400 block text-[9px] uppercase font-semibold">Active App</span>
+              <span id="diag-app" class="font-bold text-purple-300 truncate block">YouTube TV</span>
+            </div>
+          </div>
+        </div>
+
         <!-- Quick Keyboard -->
         <button onclick="closeModal('modal-settings'); openKeyboardModal();" class="w-full p-3 rounded-xl bg-black/40 border border-white/10 text-white font-semibold flex items-center justify-between hover:bg-white/5 active:scale-98 transition">
           <span class="flex items-center gap-2"><i class="fa-solid fa-keyboard text-purple-400"></i> TV Search & Keyboard</span>
@@ -1106,17 +1149,80 @@
     function updateLiveTVStatus(status) {
       if (!status) return;
       const isAwake = status.power === 'Awake';
+      const isDreaming = status.power === 'Dreaming';
 
       const connDot = document.getElementById('conn-dot');
       const connStatus = document.getElementById('conn-status');
       if (connDot && connStatus) {
-        connDot.className = isAwake ? 'w-2.5 h-2.5 rounded-full bg-emerald-400 animate-pulse' : 'w-2.5 h-2.5 rounded-full bg-amber-400';
-        connStatus.textContent = isAwake ? `TV Awake • ${status.app || 'Online'}` : 'TV Standby';
+        connDot.className = isAwake ? 'w-2.5 h-2.5 rounded-full bg-emerald-400 animate-pulse' : (isDreaming ? 'w-2.5 h-2.5 rounded-full bg-sky-400' : 'w-2.5 h-2.5 rounded-full bg-amber-400');
+        connStatus.textContent = isAwake ? `TV Awake • ${status.app || 'Online'}` : (isDreaming ? 'TV Ambient Screensaver' : 'TV Standby');
       }
 
       const quickVol = document.getElementById('vol-quick-disp');
       if (quickVol && status.volume !== undefined) {
         quickVol.textContent = `${status.volume}%`;
+      }
+
+      // Live Wi-Fi Connection & Signal Strength
+      const wifiSSID = status.wifi || 'Disconnected';
+      const wifiDisp = document.getElementById('wifi-ssid-disp');
+      const wifiBadge = document.getElementById('wifi-signal-badge');
+      const wifiIcon = document.getElementById('wifi-icon');
+      const wifiIconBg = document.getElementById('wifi-icon-bg');
+      const diagWifi = document.getElementById('diag-wifi');
+      const diagRssi = document.getElementById('diag-rssi');
+      const diagApp = document.getElementById('diag-app');
+      const diagPill = document.getElementById('diag-status-pill');
+
+      if (wifiDisp) wifiDisp.textContent = wifiSSID;
+      if (diagWifi) diagWifi.textContent = wifiSSID;
+      if (diagApp) diagApp.textContent = status.app || 'Unknown';
+      if (diagPill) {
+        diagPill.textContent = isAwake ? 'Awake' : (isDreaming ? 'Ambient' : 'Standby');
+        diagPill.className = isAwake ? 'text-[10px] px-2 py-0.5 rounded-full font-bold bg-emerald-950/80 text-emerald-400 border border-emerald-800' : 'text-[10px] px-2 py-0.5 rounded-full font-bold bg-amber-950/80 text-amber-400 border border-amber-800';
+      }
+
+      if (wifiSSID === 'Disconnected' || !wifiSSID) {
+        if (wifiBadge) {
+          wifiBadge.textContent = 'Disconnected';
+          wifiBadge.className = 'text-[10px] font-bold text-red-400 bg-red-950/60 border border-red-800/80 px-2 py-0.5 rounded-full';
+        }
+        if (wifiIcon) wifiIcon.className = 'fa-solid fa-wifi-slash text-sm';
+        if (wifiIconBg) wifiIconBg.className = 'w-8 h-8 rounded-xl bg-red-500/20 text-red-400 flex items-center justify-center shrink-0';
+        if (diagRssi) {
+          diagRssi.textContent = 'Disconnected';
+          diagRssi.className = 'font-bold text-red-400';
+        }
+      } else {
+        let signalLabel = 'Connected';
+        let signalColor = 'text-emerald-400';
+        let badgeClass = 'text-[10px] font-bold text-emerald-400 bg-emerald-950/60 border border-emerald-800/80 px-2 py-0.5 rounded-full';
+        const rssi = parseInt(status.rssi, 10);
+        if (!isNaN(rssi) && rssi < 0) {
+          if (rssi >= -60) {
+            signalLabel = `Strong (${rssi} dBm)`;
+          } else if (rssi >= -72) {
+            signalLabel = `Good (${rssi} dBm)`;
+          } else if (rssi >= -82) {
+            signalLabel = `Fair (${rssi} dBm)`;
+            signalColor = 'text-amber-400';
+            badgeClass = 'text-[10px] font-bold text-amber-400 bg-amber-950/60 border border-amber-800/80 px-2 py-0.5 rounded-full';
+          } else {
+            signalLabel = `Weak (${rssi} dBm)`;
+            signalColor = 'text-red-400';
+            badgeClass = 'text-[10px] font-bold text-red-400 bg-red-950/60 border border-red-800/80 px-2 py-0.5 rounded-full';
+          }
+        }
+        if (wifiBadge) {
+          wifiBadge.textContent = signalLabel;
+          wifiBadge.className = badgeClass;
+        }
+        if (wifiIcon) wifiIcon.className = 'fa-solid fa-wifi text-sm';
+        if (wifiIconBg) wifiIconBg.className = 'w-8 h-8 rounded-xl bg-sky-500/20 text-sky-400 flex items-center justify-center shrink-0';
+        if (diagRssi) {
+          diagRssi.textContent = signalLabel;
+          diagRssi.className = `font-bold ${signalColor}`;
+        }
       }
     }
 
