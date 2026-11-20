@@ -49,6 +49,10 @@ monitor_wake() {
             
             echo "[Orbit Agent] Current TV time: $HOUR:$MIN ($HM)"
             
+            # Default startup sound to 20
+            echo "[Orbit Routine] Setting default TV sound to 20 on wake..."
+            cmd media_session volume --stream 3 --set 20 < /dev/null 2>&1
+            
             # Feature 3: Night Volume Guard check on wake (9:30 PM = 2130, 6:00 AM = 600)
             if [ "$NIGHT_GUARD" = "1" ]; then
                 if [ "$HM" -ge 2130 ] || [ "$HM" -lt 600 ]; then

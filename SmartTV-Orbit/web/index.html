@@ -7,6 +7,8 @@
   <meta name="theme-color" content="#141418" id="meta-theme-color">
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <link rel="icon" type="image/png" sizes="64x64" href="favicon.png">
+  <link rel="apple-touch-icon" sizes="180x180" href="apple-touch-icon.png">
   <link rel="manifest" href="manifest.json">
   <script src="https://cdn.tailwindcss.com"></script>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
@@ -173,6 +175,12 @@
       <span id="conn-status" class="text-xs font-semibold text-slate-200">Connect to TV</span>
       <i class="fa-solid fa-caret-down text-[10px] text-slate-400"></i>
     </div>
+
+    <!-- PWA Install Button (shown when installable) -->
+    <button id="pwa-install-btn" onclick="promptInstallApp()" title="Install App on Device" class="hidden px-3 py-1.5 rounded-full bg-gradient-to-r from-purple-600 to-indigo-600 border border-purple-400/40 flex items-center gap-1.5 text-xs font-semibold text-white shadow-md active:scale-95 transition">
+      <i class="fa-solid fa-download text-[11px]"></i>
+      <span>Install</span>
+    </button>
 
     <!-- Right Controls: Lock, Alert, Theme & Keyboard -->
     <div class="flex items-center gap-2">
@@ -747,6 +755,18 @@
       </div>
 
       <div class="space-y-3 text-xs">
+        <!-- Install App Section -->
+        <div class="p-3 bg-gradient-to-r from-purple-900/30 to-indigo-900/30 rounded-xl border border-purple-500/30 space-y-1.5">
+          <div class="font-semibold text-white flex items-center justify-between">
+            <span class="flex items-center gap-1.5"><i class="fa-solid fa-mobile-screen-button text-purple-400"></i> Install Web App</span>
+            <span class="text-[10px] text-purple-300 bg-purple-500/20 px-2 py-0.5 rounded-full font-medium">PWA</span>
+          </div>
+          <p class="text-[10px] text-slate-300">Add SmartTV Orbit to your home screen for full-screen native remote control without browser bars.</p>
+          <button onclick="promptInstallApp()" class="w-full mt-1.5 py-2 px-3 rounded-lg bg-purple-600 hover:bg-purple-500 active:scale-95 text-white font-semibold text-xs flex items-center justify-center gap-2 shadow-md transition">
+            <i class="fa-solid fa-download"></i> Install App on This Device
+          </button>
+        </div>
+
         <div class="p-3 bg-black/30 rounded-xl border border-white/10 space-y-1">
           <div class="font-semibold text-slate-300">Active Theme Color</div>
           <button onclick="closeModal('modal-settings'); openThemeModal();" class="text-xs accent-color font-bold flex items-center gap-1.5 pt-1">
@@ -1559,6 +1579,52 @@
         }
       }
     });
+
+    // ==================== PWA INSTALLATION & SERVICE WORKER ====================
+    let deferredInstallPrompt = null;
+
+    if ('serviceWorker' in navigator) {
+      window.addEventListener('load', () => {
+        navigator.serviceWorker.register('./sw.js')
+          .then(reg => console.log('[Orbit PWA] Service Worker registered:', reg.scope))
+          .catch(err => console.error('[Orbit PWA] SW registration failed:', err));
+      });
+    }
+
+    window.addEventListener('beforeinstallprompt', (e) => {
+      e.preventDefault();
+      deferredInstallPrompt = e;
+      const btn = document.getElementById('pwa-install-btn');
+      if (btn) btn.classList.remove('hidden');
+    });
+
+    window.addEventListener('appinstalled', () => {
+      deferredInstallPrompt = null;
+      const btn = document.getElementById('pwa-install-btn');
+      if (btn) btn.classList.add('hidden');
+      flashStatus('App Installed');
+    });
+
+    function promptInstallApp() {
+      if (deferredInstallPrompt) {
+        deferredInstallPrompt.prompt();
+        deferredInstallPrompt.userChoice.then((choiceResult) => {
+          if (choiceResult.outcome === 'accepted') {
+            flashStatus('App Installed!');
+            const btn = document.getElementById('pwa-install-btn');
+            if (btn) btn.classList.add('hidden');
+          }
+          deferredInstallPrompt = null;
+        });
+      } else {
+        const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent) && !window.MSStream;
+        if (isIOS) {
+          alert('To install SmartTV Orbit on iPhone/iPad:\n\n1. Tap the Share button (square with arrow up) at the bottom.\n2. Scroll down and tap "Add to Home Screen".\n3. Tap "Add" at top right.');
+        } else {
+          alert('To install SmartTV Orbit:\n\n1. Tap your browser menu (3 dots at top right).\n2. Tap "Install App" or "Add to Home Screen".\n\n(If you already installed it, open it directly from your home screen!)');
+        }
+      }
+    }
 
     document.addEventListener('DOMContentLoaded', () => {
       checkAuthStatus();
