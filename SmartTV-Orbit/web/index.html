@@ -205,6 +205,23 @@
       30%, 50%, 70% { transform: translate3d(-4px, 0, 0); }
       40%, 60% { transform: translate3d(4px, 0, 0); }
     }
+
+    /* Smart Standby Sleep State (Visual Awareness + Instant Wake) */
+    .tv-sleeping .remote-deck {
+      opacity: 0.45;
+      filter: grayscale(30%);
+      transition: opacity 0.3s ease, filter 0.3s ease;
+    }
+    .power-key-sleep {
+      animation: standbyPulse 2.2s infinite ease-in-out;
+      border-color: rgba(244, 63, 94, 0.4) !important;
+      background: rgba(244, 63, 94, 0.15) !important;
+      box-shadow: 0 0 16px rgba(244, 63, 94, 0.4) !important;
+    }
+    @keyframes standbyPulse {
+      0%, 100% { transform: scale(1); opacity: 0.85; }
+      50% { transform: scale(1.05); opacity: 1; }
+    }
   </style>
 </head>
 <body class="flex flex-col min-h-screen">
@@ -254,7 +271,7 @@
     <div class="bg-[#131419] border border-white/10 rounded-2xl p-2.5 flex items-center justify-between shadow-lg">
       
       <!-- Power Switch -->
-      <button onclick="sendCommand('key', '26')" title="Power Toggle" class="w-10 h-10 rounded-xl bg-[#1c1d24] border border-white/10 flex items-center justify-center text-rose-500 hover:text-rose-400 active:scale-95 transition shadow-sm shrink-0">
+      <button id="power-btn" onclick="sendCommand('key', '26')" title="Power Toggle" class="w-10 h-10 rounded-xl bg-[#1c1d24] border border-white/10 flex items-center justify-center text-rose-500 hover:text-rose-400 active:scale-95 transition shadow-sm shrink-0">
         <i class="fa-solid fa-power-off text-sm"></i>
       </button>
 
@@ -290,6 +307,16 @@
     <!-- ==================== TAB 1: REMOTE CONTROLLER ==================== -->
     <section id="view-remote" class="space-y-3">
 
+      <!-- SMART STANDBY NOTIFICATION BANNER -->
+      <div id="standby-wake-banner" onclick="sendCommand('key', '26')" class="cursor-pointer bg-rose-950/40 border border-rose-500/30 rounded-xl px-3 py-2 flex items-center justify-between text-[11px] text-rose-200 hidden active:scale-98 transition shadow-lg">
+        <span class="flex items-center gap-2 font-medium">
+          <i class="fa-solid fa-moon text-rose-400 text-xs animate-pulse"></i>
+          <span>TV in Standby • Tap any key to wake</span>
+        </span>
+        <span class="text-[9px] bg-rose-500/25 border border-rose-500/30 px-2 py-0.5 rounded-full font-bold uppercase tracking-wider text-rose-200">Wake TV</span>
+      </div>
+
+      <div id="remote-deck" class="remote-deck space-y-3 transition-all duration-300">
       <!-- FATHER'S DEVOTIONAL SWITCHES (PARAS & JINVANI) -->
       <div class="grid grid-cols-2 gap-2 w-full">
         <!-- Paras TV Card -->
@@ -435,6 +462,7 @@
             </div>
           </div>
         </div>
+      </div>
       </div>
 
     </section>
@@ -1047,6 +1075,18 @@
       const payloadStr = payload ? `:${payload}` : '';
       const command = `AUTH:${AUTH_TOKEN}|${type.toUpperCase()}${payloadStr}`;
 
+      // Optimistic wake: Immediately restore remote brightness & hide standby banner
+      const remoteView = document.getElementById('view-remote');
+      if (remoteView && remoteView.classList.contains('tv-sleeping')) {
+        remoteView.classList.remove('tv-sleeping');
+        const standbyBanner = document.getElementById('standby-wake-banner');
+        if (standbyBanner) standbyBanner.classList.add('hidden');
+        const powerBtn = document.getElementById('power-btn');
+        if (powerBtn) {
+          powerBtn.className = 'w-10 h-10 rounded-xl bg-[#1c1d24] border border-white/10 flex items-center justify-center text-emerald-400 active:scale-95 transition shadow-sm shrink-0';
+        }
+      }
+
       try {
         const res = await fetch(`${NTFY_BASE}/${CLOUD_TOPIC_CMD}`, {
           method: 'POST',
@@ -1211,11 +1251,44 @@
       const isAwake = status.power === 'Awake';
       const isDreaming = status.power === 'Dreaming';
 
+      const remoteView = document.getElementById('view-remote');
+      const powerBtn = document.getElementById('power-btn');
+      const standbyBanner = document.getElementById('standby-wake-banner');
+
       const connDot = document.getElementById('conn-dot');
       const connStatus = document.getElementById('conn-status');
-      if (connDot && connStatus) {
-        connDot.className = isAwake ? 'w-2 h-2 rounded-full bg-emerald-400 animate-pulse shrink-0' : (isDreaming ? 'w-2 h-2 rounded-full bg-sky-400 shrink-0' : 'w-2 h-2 rounded-full bg-amber-400 shrink-0');
-        connStatus.textContent = isAwake ? `TV Awake • ${status.app || 'Online'}` : (isDreaming ? 'TV Ambient' : 'TV Standby');
+
+      if (isAwake) {
+        if (remoteView) remoteView.classList.remove('tv-sleeping');
+        if (powerBtn) {
+          powerBtn.className = 'w-10 h-10 rounded-xl bg-[#1c1d24] border border-white/10 flex items-center justify-center text-emerald-400 active:scale-95 transition shadow-sm shrink-0';
+        }
+        if (standbyBanner) standbyBanner.classList.add('hidden');
+        if (connDot && connStatus) {
+          connDot.className = 'w-2 h-2 rounded-full bg-emerald-400 animate-pulse shrink-0';
+          connStatus.textContent = `TV Awake • ${status.app || 'Online'}`;
+        }
+      } else if (isDreaming) {
+        if (remoteView) remoteView.classList.remove('tv-sleeping');
+        if (powerBtn) {
+          powerBtn.className = 'w-10 h-10 rounded-xl bg-[#1c1d24] border border-white/10 flex items-center justify-center text-sky-400 active:scale-95 transition shadow-sm shrink-0';
+        }
+        if (standbyBanner) standbyBanner.classList.add('hidden');
+        if (connDot && connStatus) {
+          connDot.className = 'w-2 h-2 rounded-full bg-sky-400 shrink-0';
+          connStatus.textContent = 'TV Ambient';
+        }
+      } else {
+        // TV is in Standby / Off
+        if (remoteView) remoteView.classList.add('tv-sleeping');
+        if (powerBtn) {
+          powerBtn.className = 'w-10 h-10 rounded-xl border flex items-center justify-center active:scale-95 transition shadow-sm shrink-0 power-key-sleep';
+        }
+        if (standbyBanner) standbyBanner.classList.remove('hidden');
+        if (connDot && connStatus) {
+          connDot.className = 'w-2 h-2 rounded-full bg-amber-400 shrink-0';
+          connStatus.textContent = 'TV in Standby';
+        }
       }
 
       const quickVol = document.getElementById('vol-quick-disp');
