@@ -1,5 +1,5 @@
 // SmartTV Orbit - Service Worker
-const CACHE_NAME = 'orbit-v2.4';
+const CACHE_NAME = 'orbit-v2.5';
 const ASSETS_TO_CACHE = [
   './',
   './index.html',
@@ -38,8 +38,8 @@ self.addEventListener('activate', (event) => {
 });
 
 self.addEventListener('fetch', (event) => {
-  // Pass-through for cloud relay commands (ntfy.sh)
-  if (event.request.url.includes('ntfy.sh')) {
+  // Pass-through for cloud relay commands (ntfy)
+  if (event.request.url.includes('ntfy.') || event.request.url.includes('adminforge')) {
     return;
   }
 

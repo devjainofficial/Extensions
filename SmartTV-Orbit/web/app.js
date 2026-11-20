@@ -1,7 +1,7 @@
 // SmartTV Orbit - Cloud Web Remote & Automation Hub
 const CLOUD_TOPIC_CMD = 'orbit_devja_tv_cmd';
 const CLOUD_TOPIC_STATUS = 'orbit_devja_tv_status';
-const NTFY_BASE = 'https://ntfy.sh';
+const NTFY_BASE = 'https://ntfy.adminforge.de';
 const AUTH_TOKEN = 'ORBIT_SEC_2309';
 
 // State

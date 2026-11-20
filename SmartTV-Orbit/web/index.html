@@ -828,7 +828,7 @@
   <script>
     const CLOUD_TOPIC_CMD = 'orbit_devja_tv_cmd';
     const CLOUD_TOPIC_STATUS = 'orbit_devja_tv_status';
-    const NTFY_BASE = 'https://ntfy.sh';
+    const NTFY_BASE = 'https://ntfy.adminforge.de';
     const AUTH_TOKEN = 'ORBIT_SEC_2309';
 
     // HARDWARE THEMES (ANTI-SLOP INDUSTRIAL FINISHES)
@@ -1533,7 +1533,34 @@
     }
 
     // ==================== SSE STATUS LISTENER ====================
+    async function fetchLatestStatus() {
+      try {
+        const res = await fetch(`${NTFY_BASE}/${CLOUD_TOPIC_STATUS}/json?poll=1`);
+        if (res.ok) {
+          const lines = (await res.text()).trim().split('\n');
+          for (let i = lines.length - 1; i >= 0; i--) {
+            try {
+              const item = JSON.parse(lines[i]);
+              if (item.message) {
+                let statusObj;
+                try {
+                  statusObj = JSON.parse(item.message);
+                } catch(e) {
+                  statusObj = JSON.parse(item.message.replace(/([{,]\s*)([a-zA-Z0-9_]+)\s*:/g, '$1"$2":'));
+                }
+                if (statusObj && (statusObj.type === 'tv_status' || statusObj.power !== undefined)) {
+                  updateLiveTVStatus(statusObj);
+                  break;
+                }
+              }
+            } catch(e) {}
+          }
+        }
+      } catch(e) {}
+    }
+
     function initCloudStatusListener() {
+      fetchLatestStatus();
       try {
         const evtSource = new EventSource(`${NTFY_BASE}/${CLOUD_TOPIC_STATUS}/sse`);
         evtSource.onmessage = (e) => {
@@ -1545,8 +1572,13 @@
               }
               if (data.message) {
                 try {
-                  const statusObj = JSON.parse(data.message);
-                  if (statusObj.type === 'tv_status' || statusObj.power !== undefined) {
+                  let statusObj;
+                  try {
+                    statusObj = JSON.parse(data.message);
+                  } catch(pe) {
+                    statusObj = JSON.parse(data.message.replace(/([{,]\s*)([a-zA-Z0-9_]+)\s*:/g, '$1"$2":'));
+                  }
+                  if (statusObj && (statusObj.type === 'tv_status' || statusObj.power !== undefined)) {
                     updateLiveTVStatus(statusObj);
                   }
                 } catch (jsonErr) {}

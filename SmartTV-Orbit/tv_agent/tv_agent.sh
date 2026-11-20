@@ -12,9 +12,9 @@ if command -v curl >/dev/null 2>&1; then
 else
     CURL="/data/local/tmp/curl"
 fi
-CURL_OPTS="-s --resolve ntfy.sh:443:159.203.148.75 -k"
-CMD_TOPIC="https://ntfy.sh/orbit_devja_tv_cmd/raw"
-STATUS_TOPIC="https://ntfy.sh/orbit_devja_tv_status"
+CURL_OPTS="-s --resolve ntfy.adminforge.de:443:195.201.173.232 -k"
+CMD_TOPIC="https://ntfy.adminforge.de/orbit_devja_tv_cmd/raw"
+STATUS_TOPIC="https://ntfy.adminforge.de/orbit_devja_tv_status"
 
 # Default Routine States: PARAS_ALL_DAY enabled by default (anytime wake)
 PARAS_ALL_DAY="1"
@@ -139,16 +139,36 @@ monitor_wake() {
                 fi
             fi
 
+            # Wait up to 10 seconds for Wi-Fi / Internet to be active before launching stream
+            echo "[Orbit Routine] Checking network connectivity before opening live stream..."
+            NET_OK=0
+            net_i=0
+            while [ $net_i -lt 10 ]; do
+                if $CURL $CURL_OPTS -I "https://ntfy.adminforge.de" >/dev/null 2>&1 || \
+                   $CURL -s --connect-timeout 2 -k -I "https://1.1.1.1" >/dev/null 2>&1; then
+                    NET_OK=1
+                    break
+                fi
+                sleep 1
+                net_i=$((net_i + 1))
+            done
+
             # Channel Routine Selection:
             if [ "$JINVANI_ENABLED" = "1" ] && [ "$HM" -ge "$JINVANI_START" ] && [ "$HM" -lt "$JINVANI_END" ]; then
                 echo "[Orbit Routine] Launching Morning Jinvani Channel Live ($JINVANI_START-$JINVANI_END)..."
-                sleep 2
+                am force-stop com.google.android.youtube.tv < /dev/null 2>&1
+                sleep 1
                 am start -a android.intent.action.VIEW -d "https://www.youtube.com/@jinvanichannelofficial/live" -p com.google.android.youtube.tv < /dev/null
             elif [ "$PARAS_ENABLED" = "1" ]; then
                 echo "[Orbit Routine] Launching Default Paras TV Live (Direct stream)..."
-                sleep 2
+                am force-stop com.google.android.youtube.tv < /dev/null 2>&1
+                sleep 1
                 am start -a android.intent.action.VIEW -d "https://www.youtube.com/@parasnetwork/live" -p com.google.android.youtube.tv < /dev/null
             fi
+
+            # Reinforce volume 20 right after opening channel
+            sleep 3
+            cmd media_session volume --stream 3 --set 20 < /dev/null 2>&1
 
             # Publish fresh status after waking
             sleep 4
