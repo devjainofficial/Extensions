@@ -206,13 +206,46 @@ while true; do
         fi
         
         case "$LINE" in
+            KEY:24|VOL_UP|VOL_UP:*)
+                cmd media_session volume --show --stream 3 --adj raise < /dev/null 2>&1
+                publish_tv_status
+                ;;
+            KEY:25|VOL_DOWN|VOL_DOWN:*)
+                cmd media_session volume --show --stream 3 --adj lower < /dev/null 2>&1
+                publish_tv_status
+                ;;
+            KEY:164|MUTE|MUTE:*)
+                CUR_VOL=$(dumpsys audio 2>/dev/null | grep -A 6 'STREAM_MUSIC:' | grep 'streamVolume:' | head -n 1 | cut -d: -f2 | tr -d ' \r\n')
+                if [ "$CUR_VOL" != "0" ] && [ -n "$CUR_VOL" ]; then
+                    PREV_MUTE_VOL="$CUR_VOL"
+                    cmd media_session volume --show --stream 3 --set 0 < /dev/null 2>&1
+                else
+                    RESTORE_VOL="${PREV_MUTE_VOL:-20}"
+                    cmd media_session volume --show --stream 3 --set "$RESTORE_VOL" < /dev/null 2>&1
+                fi
+                publish_tv_status
+                ;;
+            KEY:85|PLAY_PAUSE|PLAY_PAUSE:*)
+                input keyevent 85 < /dev/null
+                ;;
+            KEY:89|REWIND|REWIND:*)
+                input keyevent 89 < /dev/null || input keyevent 21 < /dev/null
+                ;;
+            KEY:90|FAST_FORWARD|FAST_FORWARD:*)
+                input keyevent 90 < /dev/null || input keyevent 22 < /dev/null
+                ;;
+            KEY:26|POWER|POWER:*)
+                input keyevent 26 < /dev/null
+                sleep 2
+                publish_tv_status
+                ;;
             KEY:*)
                 KEY_CODE="${LINE#KEY:}"
                 input keyevent "$KEY_CODE" < /dev/null
                 ;;
             VOL:*)
                 VOL_LEVEL="${LINE#VOL:}"
-                cmd media_session volume --stream 3 --set "$VOL_LEVEL" < /dev/null 2>&1
+                cmd media_session volume --show --stream 3 --set "$VOL_LEVEL" < /dev/null 2>&1
                 publish_tv_status
                 ;;
             TYPE:*)
@@ -230,7 +263,7 @@ while true; do
                 case "$URL" in
                     *hotstar.com*|*hotstar:*)
                         am start -a android.intent.action.VIEW -d "$URL" in.startv.hotstar < /dev/null || \
-                        monkey -p in.startv.hotstar -c android.intent.category.LAUNCHER 1 < /dev/null
+                        am start -a android.intent.action.MAIN -c android.intent.category.LEANBACK_LAUNCHER in.startv.hotstar < /dev/null
                         ;;
                     *)
                         am start -a android.intent.action.VIEW -d "$URL" -p com.google.android.youtube.tv < /dev/null
@@ -251,7 +284,8 @@ while true; do
                 PKG="${LINE#LAUNCH_APP:}"
                 echo "[Orbit Cloud] Launching app: $PKG"
                 input keyevent 224 < /dev/null
-                monkey -p "$PKG" -c android.intent.category.LAUNCHER 1 < /dev/null
+                am start -a android.intent.action.MAIN -c android.intent.category.LEANBACK_LAUNCHER "$PKG" < /dev/null || \
+                monkey -p "$PKG" 1 < /dev/null
                 sleep 3
                 publish_tv_status
                 ;;
@@ -261,7 +295,7 @@ while true; do
                 cmd media_session volume --stream 3 --set 20 < /dev/null 2>&1
                 am start -a android.intent.action.VIEW -d "hotstar://sports" in.startv.hotstar < /dev/null || \
                 am start -a android.intent.action.VIEW -d "https://www.hotstar.com/in/sports/cricket" in.startv.hotstar < /dev/null || \
-                monkey -p in.startv.hotstar -c android.intent.category.LAUNCHER 1 < /dev/null
+                am start -a android.intent.action.MAIN -c android.intent.category.LEANBACK_LAUNCHER in.startv.hotstar < /dev/null
                 sleep 3
                 publish_tv_status
                 ;;
