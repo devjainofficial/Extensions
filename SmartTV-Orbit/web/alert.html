@@ -3,7 +3,8 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>SmartTV Orbit | TV Message</title>
+  <title>SmartTV Orbit | TV Notification</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
   <style>
     * {
       box-sizing: border-box;
@@ -11,8 +12,8 @@
       padding: 0;
     }
     body {
-      background: radial-gradient(circle at center, #1e1438, #0a0714);
-      color: #f1f5f9;
+      background: radial-gradient(circle at center, #13111f, #07060c);
+      color: #f8fafc;
       font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
       display: flex;
       flex-direction: column;
@@ -22,51 +23,79 @@
       overflow: hidden;
       text-align: center;
       padding: 40px;
+      user-select: none;
     }
     .card {
-      background: rgba(26, 18, 48, 0.85);
-      border: 2px solid rgba(168, 85, 247, 0.4);
+      background: rgba(22, 19, 36, 0.92);
+      border: 2px solid rgba(168, 85, 247, 0.35);
       border-radius: 36px;
-      padding: 48px 64px;
-      max-width: 900px;
-      width: 90%;
-      box-shadow: 0 20px 60px rgba(0, 0, 0, 0.7), 0 0 40px rgba(168, 85, 247, 0.3);
-      backdrop-filter: blur(20px);
-      animation: popIn 0.35s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+      padding: 56px 64px;
+      max-width: 960px;
+      width: 92%;
+      box-shadow: 0 30px 80px rgba(0, 0, 0, 0.85), 0 0 50px rgba(168, 85, 247, 0.25);
+      backdrop-filter: blur(24px);
+      animation: popIn 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+      position: relative;
     }
     @keyframes popIn {
-      from { transform: scale(0.85); opacity: 0; }
+      from { transform: scale(0.82); opacity: 0; }
       to { transform: scale(1); opacity: 1; }
     }
     .badge {
       display: inline-flex;
       align-items: center;
-      gap: 10px;
+      gap: 12px;
       background: #7c3aed;
       color: white;
-      font-size: 20px;
+      font-size: 22px;
       font-weight: 700;
-      padding: 8px 24px;
+      padding: 10px 28px;
       border-radius: 9999px;
-      margin-bottom: 28px;
-      box-shadow: 0 4px 15px rgba(124, 58, 237, 0.5);
+      margin-bottom: 32px;
+      box-shadow: 0 4px 20px rgba(124, 58, 237, 0.4);
       text-transform: uppercase;
-      letter-spacing: 1px;
+      letter-spacing: 1.5px;
+    }
+    .badge.type-med {
+      background: linear-gradient(135deg, #059669, #10b981);
+      box-shadow: 0 4px 25px rgba(16, 185, 129, 0.5);
+    }
+    .badge.type-water {
+      background: linear-gradient(135deg, #0284c7, #38bdf8);
+      box-shadow: 0 4px 25px rgba(56, 189, 248, 0.5);
+    }
+    .badge.type-call {
+      background: linear-gradient(135deg, #d97706, #f59e0b);
+      box-shadow: 0 4px 25px rgba(245, 158, 11, 0.5);
+    }
+    .badge.type-love {
+      background: linear-gradient(135deg, #e11d48, #f43f5e);
+      box-shadow: 0 4px 25px rgba(244, 63, 94, 0.5);
+    }
+    .icon-hero {
+      font-size: 72px;
+      margin-bottom: 24px;
+      display: inline-block;
+      animation: gentlePulse 2s infinite ease-in-out;
+    }
+    @keyframes gentlePulse {
+      0%, 100% { transform: scale(1); }
+      50% { transform: scale(1.08); }
     }
     .message {
-      font-size: 52px;
+      font-size: 54px;
       font-weight: 800;
       line-height: 1.35;
       color: #ffffff;
-      margin-bottom: 30px;
+      margin-bottom: 36px;
       word-break: break-word;
-      text-shadow: 0 4px 20px rgba(0, 0, 0, 0.5);
+      text-shadow: 0 4px 24px rgba(0, 0, 0, 0.6);
     }
     .countdown-bar {
       width: 100%;
-      height: 6px;
-      background: rgba(255, 255, 255, 0.1);
-      border-radius: 3px;
+      height: 8px;
+      background: rgba(255, 255, 255, 0.12);
+      border-radius: 9999px;
       overflow: hidden;
       margin-top: 24px;
     }
@@ -74,21 +103,42 @@
       height: 100%;
       width: 100%;
       background: #a855f7;
-      border-radius: 3px;
+      border-radius: 9999px;
       transition: width 1s linear;
     }
+    .countdown-fill.type-med { background: #10b981; }
+    .countdown-fill.type-water { background: #38bdf8; }
+    .countdown-fill.type-call { background: #f59e0b; }
+    .countdown-fill.type-love { background: #f43f5e; }
     .dismiss-hint {
-      margin-top: 16px;
-      font-size: 16px;
+      margin-top: 18px;
+      font-size: 18px;
       color: #94a3b8;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+    }
+    .dismiss-hint kbd {
+      background: rgba(255, 255, 255, 0.15);
+      padding: 2px 10px;
+      border-radius: 6px;
+      font-weight: bold;
+      color: #f1f5f9;
     }
   </style>
 </head>
 <body>
 
-  <div class="card">
-    <div class="badge">
-      <span>🔔</span> Message from Family
+  <div class="card" id="alert-card">
+    <div id="icon-container" class="icon-hero">
+      <i class="fa-solid fa-bell text-purple-400"></i>
+    </div>
+    <div>
+      <div class="badge" id="badge-pill">
+        <span id="badge-icon"><i class="fa-solid fa-bell"></i></span>
+        <span id="badge-text">Message from Dev</span>
+      </div>
     </div>
     <div class="message" id="msg-text">
       Message from Dev
@@ -97,28 +147,132 @@
       <div class="countdown-fill" id="bar"></div>
     </div>
     <div class="dismiss-hint">
-      Auto-dismissing in <b id="timer" class="text-white">10</b>s (or press Back on remote)
+      Auto-dismissing in <b id="timer" style="color: #ffffff;">12</b>s &nbsp;•&nbsp; Press <kbd>Back</kbd> or <kbd>OK</kbd> to dismiss
     </div>
   </div>
 
   <script>
-    const params = new URLSearchParams(window.location.search);
-    const rawMsg = params.get('msg') || 'Hello! Check your phone.';
-    document.getElementById('msg-text').textContent = decodeURIComponent(rawMsg);
+    // Play gentle chime using Web Audio API
+    function playChime() {
+      try {
+        const AudioCtx = window.AudioContext || window.webkitAudioContext;
+        if (!AudioCtx) return;
+        const ctx = new AudioCtx();
+        if (ctx.state === 'suspended') ctx.resume();
 
-    let totalSeconds = 10;
+        const notes = [523.25, 659.25, 783.99, 1046.50]; // C5, E5, G5, C6
+        notes.forEach((freq, idx) => {
+          const osc = ctx.createOscillator();
+          const gain = ctx.createGain();
+          osc.type = 'sine';
+          osc.frequency.setValueAtTime(freq, ctx.currentTime + idx * 0.12);
+
+          gain.gain.setValueAtTime(0, ctx.currentTime + idx * 0.12);
+          gain.gain.linearRampToValueAtTime(0.18, ctx.currentTime + idx * 0.12 + 0.04);
+          gain.gain.exponentialRampToValueAtTime(0.0001, ctx.currentTime + idx * 0.12 + 0.8);
+
+          osc.connect(gain);
+          gain.connect(ctx.destination);
+
+          osc.start(ctx.currentTime + idx * 0.12);
+          osc.stop(ctx.currentTime + idx * 0.12 + 0.85);
+        });
+      } catch (e) {
+        console.warn('Audio chime unsupported:', e);
+      }
+    }
+
+    // Parse URL Parameters
+    const params = new URLSearchParams(window.location.search);
+    const rawMsg = params.get('msg') || 'Dad, please take your morning medicines 💊';
+    const type = (params.get('type') || 'msg').toLowerCase();
+    const title = params.get('title') || '';
+    const duration = parseInt(params.get('dur') || '12', 10);
+
+    const msgEl = document.getElementById('msg-text');
+    const badgeEl = document.getElementById('badge-pill');
+    const badgeTextEl = document.getElementById('badge-text');
+    const badgeIconEl = document.getElementById('badge-icon');
+    const iconContainer = document.getElementById('icon-container');
+    const barEl = document.getElementById('bar');
+    const timerEl = document.getElementById('timer');
+    const cardEl = document.getElementById('alert-card');
+
+    msgEl.textContent = decodeURIComponent(rawMsg);
+
+    // Apply Theme by Type
+    if (type === 'med') {
+      badgeEl.classList.add('type-med');
+      barEl.classList.add('type-med');
+      cardEl.style.borderColor = 'rgba(16, 185, 129, 0.4)';
+      cardEl.style.boxShadow = '0 30px 80px rgba(0, 0, 0, 0.85), 0 0 50px rgba(16, 185, 129, 0.3)';
+      badgeIconEl.innerHTML = '<i class="fa-solid fa-pills"></i>';
+      badgeTextEl.textContent = title || 'Medication Reminder';
+      iconContainer.innerHTML = '<i class="fa-solid fa-capsules" style="color: #34d399;"></i>';
+    } else if (type === 'water') {
+      badgeEl.classList.add('type-water');
+      barEl.classList.add('type-water');
+      cardEl.style.borderColor = 'rgba(56, 189, 248, 0.4)';
+      cardEl.style.boxShadow = '0 30px 80px rgba(0, 0, 0, 0.85), 0 0 50px rgba(56, 189, 248, 0.3)';
+      badgeIconEl.innerHTML = '<i class="fa-solid fa-glass-water"></i>';
+      badgeTextEl.textContent = title || 'Hydration Reminder';
+      iconContainer.innerHTML = '<i class="fa-solid fa-droplet" style="color: #38bdf8;"></i>';
+    } else if (type === 'call') {
+      badgeEl.classList.add('type-call');
+      barEl.classList.add('type-call');
+      cardEl.style.borderColor = 'rgba(245, 158, 11, 0.4)';
+      cardEl.style.boxShadow = '0 30px 80px rgba(0, 0, 0, 0.85), 0 0 50px rgba(245, 158, 11, 0.3)';
+      badgeIconEl.innerHTML = '<i class="fa-solid fa-phone"></i>';
+      badgeTextEl.textContent = title || 'Family Call';
+      iconContainer.innerHTML = '<i class="fa-solid fa-phone-volume" style="color: #fbbf24;"></i>';
+    } else if (type === 'love') {
+      badgeEl.classList.add('type-love');
+      barEl.classList.add('type-love');
+      cardEl.style.borderColor = 'rgba(244, 63, 94, 0.4)';
+      cardEl.style.boxShadow = '0 30px 80px rgba(0, 0, 0, 0.85), 0 0 50px rgba(244, 63, 94, 0.3)';
+      badgeIconEl.innerHTML = '<i class="fa-solid fa-heart"></i>';
+      badgeTextEl.textContent = title || 'Message of Care';
+      iconContainer.innerHTML = '<i class="fa-solid fa-heart" style="color: #fb7185;"></i>';
+    } else {
+      badgeTextEl.textContent = title || 'Message from Family';
+      iconContainer.innerHTML = '<i class="fa-solid fa-bell" style="color: #c084fc;"></i>';
+    }
+
+    // Play chime on load
+    window.addEventListener('DOMContentLoaded', () => {
+      setTimeout(playChime, 200);
+    });
+
+    // Dismiss function
+    function dismiss() {
+      if (window.history.length > 1) {
+        window.history.back();
+      } else {
+        window.close();
+      }
+    }
+
+    // Remote D-Pad / Back / Enter key listener
+    window.addEventListener('keydown', (e) => {
+      // Android Back = 4 / Escape / Backspace, Enter / OK = 13 / 23
+      if (['Escape', 'Backspace', 'Enter', ' ', 'ArrowLeft', 'ArrowRight'].includes(e.key) || e.keyCode === 4 || e.keyCode === 23) {
+        dismiss();
+      }
+    });
+
+    // Countdown timer
+    let totalSeconds = duration > 0 ? duration : 12;
     let remaining = totalSeconds;
-    const bar = document.getElementById('bar');
-    const timer = document.getElementById('timer');
+    timerEl.textContent = remaining;
 
     const interval = setInterval(() => {
       remaining--;
-      timer.textContent = remaining;
-      bar.style.width = ((remaining / totalSeconds) * 100) + '%';
+      timerEl.textContent = remaining;
+      barEl.style.width = ((remaining / totalSeconds) * 100) + '%';
 
       if (remaining <= 0) {
         clearInterval(interval);
-        window.history.back();
+        dismiss();
       }
     }, 1000);
   </script>

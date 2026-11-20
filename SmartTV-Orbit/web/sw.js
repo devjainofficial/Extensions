@@ -1,8 +1,9 @@
 // SmartTV Orbit - Service Worker
-const CACHE_NAME = 'orbit-v1.1';
+const CACHE_NAME = 'orbit-v2.0';
 const ASSETS_TO_CACHE = [
   './',
   './index.html',
+  './alert.html',
   './manifest.json',
   './icon-192.png',
   './icon-512.png',

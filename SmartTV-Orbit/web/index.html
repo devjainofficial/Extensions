@@ -203,7 +203,62 @@
   <main class="flex-1 px-4 py-2 max-w-md mx-auto w-full flex flex-col justify-center">
 
     <!-- ==================== VIEW 1: REMOTE CONTROLLER ==================== -->
-    <section id="view-remote" class="space-y-4">
+    <section id="view-remote" class="space-y-3.5">
+
+      <!-- ==================== LIVE TV STATUS & SCREEN PEEK (FEATURE 2) ==================== -->
+      <div class="glass-card rounded-2xl p-3 shadow-md space-y-2 border border-white/10 max-w-sm mx-auto w-full">
+        <!-- Top Status Bar -->
+        <div class="flex items-center justify-between">
+          <div class="flex items-center gap-2">
+            <span id="tv-status-dot" class="w-2.5 h-2.5 rounded-full bg-emerald-400 animate-pulse"></span>
+            <span id="tv-status-power" class="text-xs font-bold text-white">TV Awake</span>
+            <span id="tv-status-app-badge" class="text-[10px] bg-purple-500/20 text-purple-300 font-semibold px-2 py-0.5 rounded-md flex items-center gap-1 border border-purple-500/30">
+              <i class="fa-solid fa-play text-[8px]"></i>
+              <span id="tv-status-app-name" class="truncate max-w-[105px]">YouTube TV</span>
+            </span>
+          </div>
+
+          <div class="flex items-center gap-1.5">
+            <span id="tv-status-vol-badge" class="text-[10px] text-slate-300 font-semibold bg-white/5 px-2 py-0.5 rounded-md flex items-center gap-1">
+              <i class="fa-solid fa-volume-high text-[9px] text-slate-400"></i>
+              <span id="tv-status-volume-val">20%</span>
+            </span>
+            <button onclick="toggleScreenPeek()" title="Peek Screen" class="px-2 py-1 rounded-lg bg-purple-600/30 hover:bg-purple-600/50 border border-purple-400/30 text-[10px] font-bold text-purple-200 flex items-center gap-1 active:scale-95 transition">
+              <i class="fa-solid fa-eye text-[9px]"></i> Peek
+            </button>
+            <button onclick="requestTVStatus()" title="Refresh Status" class="w-6 h-6 rounded-lg bg-white/5 hover:bg-white/10 flex items-center justify-center text-slate-400 hover:text-white text-[10px] active:scale-90 transition">
+              <i class="fa-solid fa-arrows-rotate"></i>
+            </button>
+          </div>
+        </div>
+
+        <!-- Collapsible Screen Peek Card -->
+        <div id="remote-peek-box" class="w-full aspect-video bg-black/70 rounded-xl flex items-center justify-center border border-white/10 overflow-hidden relative hidden">
+          <div id="remote-peek-loading" class="text-xs text-purple-300 hidden flex flex-col items-center gap-1.5">
+            <i class="fa-solid fa-circle-notch fa-spin text-xl"></i>
+            <span>Snapping TV screen over cloud...</span>
+          </div>
+          <img id="remote-peek-img" class="w-full h-full object-contain hidden" alt="TV Screen Peek">
+          
+          <!-- Peek Overlay Footer -->
+          <div id="remote-peek-footer" class="absolute bottom-0 inset-x-0 bg-black/80 backdrop-blur-sm px-3 py-1.5 flex items-center justify-between text-[10px] text-slate-300 hidden border-t border-white/10">
+            <span id="remote-peek-time" class="flex items-center gap-1">
+              <i class="fa-regular fa-clock text-[9px]"></i> Just now
+            </span>
+            <div class="flex items-center gap-2">
+              <button onclick="requestScreenshot()" class="text-purple-300 hover:text-white font-medium flex items-center gap-1">
+                <i class="fa-solid fa-camera text-[9px]"></i> Snap
+              </button>
+              <button onclick="openPeekFullscreen()" class="text-purple-300 hover:text-white font-medium flex items-center gap-1">
+                <i class="fa-solid fa-expand text-[9px]"></i> Full
+              </button>
+              <button onclick="closeScreenPeek()" class="text-slate-400 hover:text-white">
+                <i class="fa-solid fa-xmark"></i>
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
 
       <!-- FATHER'S DEVOTIONAL CHANNELS WITH REAL LOGOS -->
       <div class="grid grid-cols-2 gap-2.5 max-w-xs mx-auto w-full">
@@ -409,6 +464,74 @@
         <p class="text-[11px] text-slate-300 pl-11">Prevents loud blasts late at night. When TV turns on between 9:30 PM and 6:00 AM, volume is automatically capped at a gentle 18%.</p>
       </div>
 
+      <!-- ==================== DAILY MEDICATION & CARE REMINDERS (FEATURE 4) ==================== -->
+      <div class="glass-card rounded-2xl p-4 border-l-4 border-l-emerald-500 shadow-md space-y-3">
+        <div class="flex items-center justify-between">
+          <div class="flex items-center gap-2.5">
+            <div class="w-9 h-9 rounded-xl bg-emerald-500/20 text-emerald-400 flex items-center justify-center text-base shadow-sm">
+              <i class="fa-solid fa-pills"></i>
+            </div>
+            <div>
+              <div class="flex items-center gap-1.5">
+                <h3 class="text-xs font-bold text-white">Medication & Care Reminders</h3>
+                <span class="text-[9px] bg-emerald-500/20 text-emerald-300 font-bold px-1.5 py-0.5 rounded">CHIME + BANNER</span>
+              </div>
+              <span class="text-[11px] text-emerald-400 font-medium">Gentle full-screen chime on dad's TV</span>
+            </div>
+          </div>
+        </div>
+
+        <p class="text-[11px] text-slate-300">Plays a peaceful chime and pops up an on-screen banner for 12 seconds so father never misses medicines:</p>
+
+        <div class="space-y-2.5 pt-1">
+          <!-- Morning Medicine Slot -->
+          <div class="p-2.5 rounded-xl bg-black/40 border border-white/10 flex items-center justify-between">
+            <div class="flex items-center gap-2.5">
+              <span class="text-lg">💊</span>
+              <div>
+                <div class="text-xs font-bold text-white">Morning Medicine</div>
+                <div class="text-[10px] text-slate-400">Scheduled: <b id="morning-med-display" class="text-emerald-300">08:30 AM</b></div>
+              </div>
+            </div>
+            <div class="flex items-center gap-2">
+              <button onclick="testMedicationAlert('morning')" title="Test on TV" class="text-[10px] font-semibold text-emerald-400 hover:text-emerald-300 bg-emerald-950/60 border border-emerald-800 px-2 py-1 rounded-lg active:scale-95 transition">
+                <i class="fa-solid fa-play text-[9px]"></i> Test
+              </button>
+              <button onclick="openMedicationTimeModal('morning')" title="Change Time" class="text-[10px] font-semibold text-slate-300 hover:text-white bg-white/10 px-2 py-1 rounded-lg active:scale-95 transition">
+                <i class="fa-solid fa-pen text-[9px]"></i>
+              </button>
+              <label class="relative inline-flex items-center cursor-pointer">
+                <input type="checkbox" id="morning-med-toggle" checked onchange="toggleMedicationSlot('morning', this.checked)" class="sr-only peer">
+                <div class="w-8 h-4 bg-[#272730] peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-slate-300 after:border after:rounded-full after:h-3 after:w-3 after:transition-all peer-checked:bg-emerald-500"></div>
+              </label>
+            </div>
+          </div>
+
+          <!-- Night Medicine Slot -->
+          <div class="p-2.5 rounded-xl bg-black/40 border border-white/10 flex items-center justify-between">
+            <div class="flex items-center gap-2.5">
+              <span class="text-lg">🌙</span>
+              <div>
+                <div class="text-xs font-bold text-white">Night Medicine</div>
+                <div class="text-[10px] text-slate-400">Scheduled: <b id="night-med-display" class="text-emerald-300">08:30 PM</b></div>
+              </div>
+            </div>
+            <div class="flex items-center gap-2">
+              <button onclick="testMedicationAlert('night')" title="Test on TV" class="text-[10px] font-semibold text-emerald-400 hover:text-emerald-300 bg-emerald-950/60 border border-emerald-800 px-2 py-1 rounded-lg active:scale-95 transition">
+                <i class="fa-solid fa-play text-[9px]"></i> Test
+              </button>
+              <button onclick="openMedicationTimeModal('night')" title="Change Time" class="text-[10px] font-semibold text-slate-300 hover:text-white bg-white/10 px-2 py-1 rounded-lg active:scale-95 transition">
+                <i class="fa-solid fa-pen text-[9px]"></i>
+              </button>
+              <label class="relative inline-flex items-center cursor-pointer">
+                <input type="checkbox" id="night-med-toggle" checked onchange="toggleMedicationSlot('night', this.checked)" class="sr-only peer">
+                <div class="w-8 h-4 bg-[#272730] peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-slate-300 after:border after:rounded-full after:h-3 after:w-3 after:transition-all peer-checked:bg-emerald-500"></div>
+              </label>
+            </div>
+          </div>
+        </div>
+      </div>
+
       <div class="pt-1">
         <span class="text-[11px] font-semibold text-slate-400 uppercase tracking-wider block">Scheduled Automations</span>
       </div>
@@ -422,19 +545,65 @@
     <!-- ==================== VIEW 3: APPS & CAST ==================== -->
     <section id="view-apps" class="space-y-4 hidden max-w-sm mx-auto w-full">
       
-      <!-- FAST URL & CLIPBOARD CASTER -->
-      <div class="glass-card rounded-2xl p-3.5 shadow-md space-y-2">
+      <!-- ==================== CLOUD PUSH-TO-TV CASTING HUB (FEATURE 3) ==================== -->
+      <div class="glass-card rounded-2xl p-4 shadow-md space-y-3 border-l-4 border-l-purple-500">
         <div class="flex items-center justify-between">
-          <span class="text-[11px] font-semibold text-slate-300 uppercase tracking-wider">Play Video or Stream on TV</span>
-          <button onclick="pasteAndCast()" class="text-[10px] accent-color hover:underline flex items-center gap-1 font-medium">
-            <i class="fa-solid fa-paste"></i> Paste & Cast
+          <div class="flex items-center gap-2">
+            <span class="w-8 h-8 rounded-xl bg-purple-500/20 text-purple-300 flex items-center justify-center text-sm font-bold shadow-sm">
+              <i class="fa-solid fa-cloud-arrow-up"></i>
+            </span>
+            <div>
+              <h3 class="text-xs font-bold text-white">Cloud Push-to-TV Caster</h3>
+              <span class="text-[10px] text-purple-300 font-medium">Cast from anywhere in the world</span>
+            </div>
+          </div>
+          <span class="text-[9px] text-emerald-400 bg-emerald-950/60 border border-emerald-800/80 px-2 py-0.5 rounded-full font-bold">WAN ACTIVE</span>
+        </div>
+
+        <p class="text-[11px] text-slate-300">Paste any YouTube video link, devotional channel, or live stream. It starts playing on father's TV instantly:</p>
+
+        <!-- Input & Action Buttons -->
+        <div class="space-y-2">
+          <div class="flex gap-2">
+            <input type="url" id="cast-url-input" placeholder="Paste YouTube link (https://youtu.be/...)" class="flex-1 bg-black/50 border border-white/15 rounded-xl px-3 py-2.5 text-xs text-white focus:outline-none focus:border-purple-400">
+            <button onclick="castUrlToTV()" class="bg-gradient-to-r from-purple-600 to-indigo-600 hover:from-purple-500 hover:to-indigo-500 text-white text-xs font-bold px-4 rounded-xl flex items-center justify-center gap-1.5 shadow-md active:scale-95 transition">
+              <i class="fa-solid fa-play text-[10px]"></i> Cast
+            </button>
+          </div>
+          <button onclick="pasteAndCast()" class="w-full py-2 px-3 rounded-xl bg-white/5 hover:bg-white/10 border border-white/10 text-xs font-semibold text-slate-200 flex items-center justify-center gap-2 active:scale-95 transition">
+            <i class="fa-solid fa-clipboard text-purple-400"></i> Paste from Clipboard & Cast Now
           </button>
         </div>
-        <div class="flex gap-2">
-          <input type="url" id="cast-url-input" placeholder="Paste YouTube link or stream URL..." class="flex-1 bg-black/40 border border-white/10 rounded-xl px-3 py-2 text-xs text-white focus:outline-none">
-          <button onclick="castUrlToTV()" class="bg-purple-600 hover:bg-purple-500 text-white text-xs font-semibold px-4 rounded-xl flex items-center justify-center gap-1 shadow-md active:scale-95 transition">
-            <i class="fa-solid fa-play"></i> Cast
-          </button>
+
+        <!-- Quick Cast Preset Pills -->
+        <div class="space-y-1.5 pt-1">
+          <span class="text-[10px] font-semibold text-slate-400 uppercase tracking-wider block">Quick-Cast Presets (1-Tap Play)</span>
+          <div class="grid grid-cols-2 gap-2">
+            <button onclick="castPreset('paras')" class="p-2 rounded-xl bg-black/40 border border-white/10 hover:border-amber-400/50 text-left text-xs text-white transition active:scale-95 flex items-center gap-2">
+              <img src="img/paras_tv.jpg" class="w-6 h-6 rounded-lg object-cover">
+              <span class="truncate font-semibold text-[11px]">Paras TV Live</span>
+            </button>
+            <button onclick="castPreset('jinvani')" class="p-2 rounded-xl bg-black/40 border border-white/10 hover:border-orange-400/50 text-left text-xs text-white transition active:scale-95 flex items-center gap-2">
+              <img src="img/jinvani.jpg" class="w-6 h-6 rounded-lg object-cover">
+              <span class="truncate font-semibold text-[11px]">Jinvani Live</span>
+            </button>
+            <button onclick="castPreset('bhaktamar')" class="p-2 rounded-xl bg-black/40 border border-white/10 hover:border-purple-400/50 text-left text-xs text-white transition active:scale-95 flex items-center gap-2">
+              <span class="text-sm">🙏</span>
+              <span class="truncate font-semibold text-[11px]">Bhaktamar Stotra</span>
+            </button>
+            <button onclick="castPreset('navkar')" class="p-2 rounded-xl bg-black/40 border border-white/10 hover:border-purple-400/50 text-left text-xs text-white transition active:scale-95 flex items-center gap-2">
+              <span class="text-sm">🕊️</span>
+              <span class="truncate font-semibold text-[11px]">Navkar Mantra 24/7</span>
+            </button>
+            <button onclick="castPreset('cricket')" class="p-2 rounded-xl bg-black/40 border border-white/10 hover:border-emerald-400/50 text-left text-xs text-white transition active:scale-95 flex items-center gap-2">
+              <span class="text-sm">🏏</span>
+              <span class="truncate font-semibold text-[11px]">Live Cricket</span>
+            </button>
+            <button onclick="castPreset('news')" class="p-2 rounded-xl bg-black/40 border border-white/10 hover:border-red-400/50 text-left text-xs text-white transition active:scale-95 flex items-center gap-2">
+              <span class="text-sm">📰</span>
+              <span class="truncate font-semibold text-[11px]">Aaj Tak Live</span>
+            </button>
+          </div>
         </div>
       </div>
 
@@ -832,6 +1001,39 @@
       <div class="flex gap-2 pt-2">
         <button onclick="closeModal('modal-action')" class="flex-1 py-2.5 bg-[#272730] text-slate-300 font-semibold text-xs rounded-xl hover:bg-black/60 border border-white/10">Cancel</button>
         <button onclick="saveNewAction()" class="flex-1 py-2.5 bg-purple-600 text-white font-semibold text-xs rounded-xl shadow-md">Add Button</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ==================== MODAL: EDIT MEDICATION REMINDER TIME (FEATURE 4) ==================== -->
+  <div id="modal-med-time" class="fixed inset-0 z-50 bg-black/80 backdrop-blur-sm hidden items-center justify-center p-4">
+    <div class="glass-card rounded-3xl p-5 w-full max-w-sm space-y-4 border border-white/10 shadow-2xl">
+      <div class="flex items-center justify-between border-b border-white/10 pb-3">
+        <h3 class="text-sm font-bold text-white flex items-center gap-2">
+          <i class="fa-solid fa-clock text-emerald-400"></i> Set Medicine Time
+        </h3>
+        <button onclick="closeModal('modal-med-time')" class="text-slate-400 hover:text-white">
+          <i class="fa-solid fa-xmark"></i>
+        </button>
+      </div>
+
+      <input type="hidden" id="med-slot-target" value="morning">
+
+      <div class="space-y-3 text-xs">
+        <div>
+          <label class="block text-slate-300 font-semibold mb-1.5" id="med-slot-label">Morning Medicine Reminder Time</label>
+          <input type="time" id="med-slot-time-input" class="w-full bg-black/50 border border-white/15 rounded-xl px-3 py-2.5 text-white text-sm focus:outline-none focus:border-emerald-400">
+        </div>
+        <p class="text-[11px] text-slate-400">When father's TV is turned on at this time, a gentle chime sounds and an on-screen reminder banner pops up for 12 seconds.</p>
+      </div>
+
+      <div class="pt-2 flex gap-2">
+        <button onclick="closeModal('modal-med-time')" class="flex-1 py-2.5 bg-[#272730] hover:bg-black/60 text-white font-semibold text-xs rounded-xl border border-white/10">
+          Cancel
+        </button>
+        <button onclick="saveMedicationTime()" class="flex-1 py-2.5 bg-emerald-600 hover:bg-emerald-500 text-white font-semibold text-xs rounded-xl shadow-md active:scale-95 transition">
+          Save Time
+        </button>
       </div>
     </div>
   </div>
@@ -1369,17 +1571,32 @@
       flashStatus('Casting to TV...');
     }
 
-    // ==================== SCREEN CAPTURE ====================
+    // ==================== SCREEN CAPTURE & LIVE PEEK (FEATURE 2) ====================
     let isCapturingScreen = false;
 
     function requestScreenshot() {
       if (isCapturingScreen) return;
       isCapturingScreen = true;
 
-      document.getElementById('screen-placeholder').classList.add('hidden');
-      document.getElementById('screen-img').classList.add('hidden');
-      document.getElementById('screen-loading').classList.remove('hidden');
-      document.getElementById('screen-meta').classList.add('hidden');
+      // View 4 (Custom Tab) preview state
+      const ph = document.getElementById('screen-placeholder');
+      const sImg = document.getElementById('screen-img');
+      const sLoad = document.getElementById('screen-loading');
+      const sMeta = document.getElementById('screen-meta');
+      if (ph) ph.classList.add('hidden');
+      if (sImg) sImg.classList.add('hidden');
+      if (sLoad) sLoad.classList.remove('hidden');
+      if (sMeta) sMeta.classList.add('hidden');
+
+      // View 1 (Remote Tab) Peek state
+      const peekBox = document.getElementById('remote-peek-box');
+      const peekLoad = document.getElementById('remote-peek-loading');
+      const peekImg = document.getElementById('remote-peek-img');
+      const peekFooter = document.getElementById('remote-peek-footer');
+      if (peekBox) peekBox.classList.remove('hidden');
+      if (peekLoad) peekLoad.classList.remove('hidden');
+      if (peekImg) peekImg.classList.add('hidden');
+      if (peekFooter) peekFooter.classList.add('hidden');
 
       sendCommand('SCREEN', 'now');
       flashStatus('Capturing Screen...');
@@ -1404,12 +1621,16 @@
         setTimeout(() => {
           if (isCapturingScreen) {
             isCapturingScreen = false;
-            document.getElementById('screen-loading').classList.add('hidden');
-            const img = document.getElementById('screen-img');
-            if (img.src && !img.src.endsWith('/')) {
-              img.classList.remove('hidden');
-            } else {
-              document.getElementById('screen-placeholder').classList.remove('hidden');
+            if (sLoad) sLoad.classList.add('hidden');
+            if (peekLoad) peekLoad.classList.add('hidden');
+            if (sImg && sImg.src && !sImg.src.endsWith('/')) {
+              sImg.classList.remove('hidden');
+            } else if (ph) {
+              ph.classList.remove('hidden');
+            }
+            if (peekImg && peekImg.src && !peekImg.src.endsWith('/')) {
+              peekImg.classList.remove('hidden');
+              if (peekFooter) peekFooter.classList.remove('hidden');
             }
           }
         }, 3000);
@@ -1418,20 +1639,221 @@
 
     function displayCapturedScreen(url) {
       isCapturingScreen = false;
-      const img = document.getElementById('screen-img');
-      img.src = `${url}?t=${Date.now()}`;
-      img.onload = () => {
-        document.getElementById('screen-loading').classList.add('hidden');
-        document.getElementById('screen-placeholder').classList.add('hidden');
-        img.classList.remove('hidden');
-        document.getElementById('screen-meta').classList.remove('hidden');
-        document.getElementById('screen-time').textContent = `Captured: ${new Date().toLocaleTimeString()}`;
-      };
+      const timeStr = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', second: '2-digit' });
+
+      // View 4
+      const sImg = document.getElementById('screen-img');
+      const sLoad = document.getElementById('screen-loading');
+      const ph = document.getElementById('screen-placeholder');
+      const sMeta = document.getElementById('screen-meta');
+      const sTime = document.getElementById('screen-time');
+
+      if (sImg) {
+        sImg.src = `${url}?t=${Date.now()}`;
+        sImg.onload = () => {
+          if (sLoad) sLoad.classList.add('hidden');
+          if (ph) ph.classList.add('hidden');
+          sImg.classList.remove('hidden');
+          if (sMeta) sMeta.classList.remove('hidden');
+          if (sTime) sTime.textContent = `Captured: ${timeStr}`;
+        };
+      }
+
+      // View 1 (Remote Peek)
+      const peekBox = document.getElementById('remote-peek-box');
+      const peekLoad = document.getElementById('remote-peek-loading');
+      const peekImg = document.getElementById('remote-peek-img');
+      const peekFooter = document.getElementById('remote-peek-footer');
+      const peekTime = document.getElementById('remote-peek-time');
+
+      if (peekImg && peekBox) {
+        peekBox.classList.remove('hidden');
+        peekImg.src = `${url}?t=${Date.now()}`;
+        peekImg.onload = () => {
+          if (peekLoad) peekLoad.classList.add('hidden');
+          peekImg.classList.remove('hidden');
+          if (peekFooter) peekFooter.classList.remove('hidden');
+          if (peekTime) peekTime.innerHTML = `<i class="fa-regular fa-clock text-[9px]"></i> Captured ${timeStr}`;
+        };
+      }
+    }
+
+    function toggleScreenPeek() {
+      const peekBox = document.getElementById('remote-peek-box');
+      if (!peekBox) return;
+      if (peekBox.classList.contains('hidden')) {
+        peekBox.classList.remove('hidden');
+        const peekImg = document.getElementById('remote-peek-img');
+        if (!peekImg.src || peekImg.src.endsWith('/') || peekImg.classList.contains('hidden')) {
+          requestScreenshot();
+        }
+      } else {
+        peekBox.classList.add('hidden');
+      }
+    }
+
+    function closeScreenPeek() {
+      const peekBox = document.getElementById('remote-peek-box');
+      if (peekBox) peekBox.classList.add('hidden');
+    }
+
+    function openPeekFullscreen() {
+      const img = document.getElementById('remote-peek-img');
+      if (img && img.src) window.open(img.src, '_blank');
     }
 
     function openScreenFullscreen() {
       const img = document.getElementById('screen-img');
-      if (img.src) window.open(img.src, '_blank');
+      if (img && img.src) window.open(img.src, '_blank');
+    }
+
+    function requestTVStatus() {
+      sendCommand('STATUS', 'now');
+      flashStatus('Refreshing TV Status...');
+    }
+
+    function updateLiveTVStatus(status) {
+      if (!status) return;
+
+      const isAwake = status.power === 'Awake';
+      const powerEl = document.getElementById('tv-status-power');
+      const dotEl = document.getElementById('tv-status-dot');
+      if (powerEl && dotEl) {
+        powerEl.textContent = isAwake ? 'TV Awake' : 'TV Standby';
+        dotEl.className = isAwake 
+          ? 'w-2.5 h-2.5 rounded-full bg-emerald-400 animate-pulse'
+          : 'w-2.5 h-2.5 rounded-full bg-amber-400';
+      }
+
+      const appNameEl = document.getElementById('tv-status-app-name');
+      if (appNameEl && status.app) {
+        appNameEl.textContent = status.app;
+      }
+
+      const volValEl = document.getElementById('tv-status-volume-val');
+      if (volValEl && status.volume !== undefined) {
+        volValEl.textContent = `${status.volume}%`;
+      }
+      const volDisplay = document.getElementById('vol-display');
+      if (volDisplay && status.volume !== undefined) {
+        volDisplay.textContent = `${status.volume}%`;
+      }
+
+      const connStatus = document.getElementById('conn-status');
+      if (connStatus) {
+        connStatus.textContent = isAwake ? 'TV Online (Live)' : 'TV in Standby';
+        connStatus.className = isAwake ? 'text-xs font-semibold text-emerald-400' : 'text-xs font-semibold text-amber-400';
+      }
+    }
+
+    // ==================== CLOUD PUSH-TO-TV PRESETS (FEATURE 3) ====================
+    function castPreset(key) {
+      switch (key) {
+        case 'paras':
+          sendCommand('URL', 'https://www.youtube.com/@parasnetwork/live');
+          flashStatus('Casting Paras TV Live...');
+          break;
+        case 'jinvani':
+          sendCommand('URL', 'https://www.youtube.com/@jinvanichannelofficial/live');
+          flashStatus('Casting Jinvani Channel Live...');
+          break;
+        case 'bhaktamar':
+          sendCommand('URL', 'https://www.youtube.com/results?search_query=Bhaktamar+Stotra+live');
+          flashStatus('Casting Bhaktamar Stotra...');
+          break;
+        case 'navkar':
+          sendCommand('URL', 'https://www.youtube.com/results?search_query=Navkar+Mantra+live+24+hours');
+          flashStatus('Casting Navkar Mantra 24/7...');
+          break;
+        case 'cricket':
+          launchCricketLive();
+          break;
+        case 'news':
+          sendCommand('URL', 'https://www.youtube.com/results?search_query=Aaj+Tak+Live');
+          flashStatus('Casting Aaj Tak Live News...');
+          break;
+      }
+    }
+
+    // ==================== DAILY MEDICATION & CARE REMINDERS (FEATURE 4) ====================
+    let morningMedEnabled = localStorage.getItem('orbit_med_morning_enabled') !== '0';
+    let morningMedTime = localStorage.getItem('orbit_med_morning_time') || '08:30';
+    let nightMedEnabled = localStorage.getItem('orbit_med_night_enabled') !== '0';
+    let nightMedTime = localStorage.getItem('orbit_med_night_time') || '20:30';
+
+    function initMedicationReminders() {
+      const mToggle = document.getElementById('morning-med-toggle');
+      if (mToggle) mToggle.checked = morningMedEnabled;
+      const mDisp = document.getElementById('morning-med-display');
+      if (mDisp) mDisp.textContent = formatTimeDisplay(morningMedTime);
+
+      const nToggle = document.getElementById('night-med-toggle');
+      if (nToggle) nToggle.checked = nightMedEnabled;
+      const nDisp = document.getElementById('night-med-display');
+      if (nDisp) nDisp.textContent = formatTimeDisplay(nightMedTime);
+    }
+
+    function toggleMedicationSlot(slot, isEnabled) {
+      if (slot === 'morning') {
+        morningMedEnabled = isEnabled;
+        localStorage.setItem('orbit_med_morning_enabled', isEnabled ? '1' : '0');
+        const [h, m] = morningMedTime.split(':').map(Number);
+        const hm = h * 100 + m;
+        sendCommand('REMINDER_CONFIG', `morning:${isEnabled ? '1' : '0'}:${hm}`);
+        flashStatus(isEnabled ? 'Morning Medicine Reminder: ON' : 'Morning Medicine: OFF');
+      } else if (slot === 'night') {
+        nightMedEnabled = isEnabled;
+        localStorage.setItem('orbit_med_night_enabled', isEnabled ? '1' : '0');
+        const [h, m] = nightMedTime.split(':').map(Number);
+        const hm = h * 100 + m;
+        sendCommand('REMINDER_CONFIG', `night:${isEnabled ? '1' : '0'}:${hm}`);
+        flashStatus(isEnabled ? 'Night Medicine Reminder: ON' : 'Night Medicine: OFF');
+      }
+    }
+
+    function openMedicationTimeModal(slot) {
+      document.getElementById('med-slot-target').value = slot;
+      const label = document.getElementById('med-slot-label');
+      const input = document.getElementById('med-slot-time-input');
+      if (slot === 'morning') {
+        label.textContent = 'Morning Medicine Reminder Time';
+        input.value = morningMedTime;
+      } else {
+        label.textContent = 'Night Medicine Reminder Time';
+      }
+      document.getElementById('modal-med-time').classList.remove('hidden');
+      document.getElementById('modal-med-time').classList.add('flex');
+    }
+
+    function saveMedicationTime() {
+      const slot = document.getElementById('med-slot-target').value;
+      const timeVal = document.getElementById('med-slot-time-input').value;
+      if (!timeVal) return;
+
+      if (slot === 'morning') {
+        morningMedTime = timeVal;
+        localStorage.setItem('orbit_med_morning_time', timeVal);
+        document.getElementById('morning-med-display').textContent = formatTimeDisplay(timeVal);
+        const [h, m] = timeVal.split(':').map(Number);
+        sendCommand('REMINDER_CONFIG', `morning:${morningMedEnabled ? '1' : '0'}:${h * 100 + m}`);
+      } else {
+        nightMedTime = timeVal;
+        localStorage.setItem('orbit_med_night_time', timeVal);
+        document.getElementById('night-med-display').textContent = formatTimeDisplay(timeVal);
+        const [h, m] = timeVal.split(':').map(Number);
+        sendCommand('REMINDER_CONFIG', `night:${nightMedEnabled ? '1' : '0'}:${h * 100 + m}`);
+      }
+      closeModal('modal-med-time');
+      flashStatus('Reminder Time Saved');
+    }
+
+    function testMedicationAlert(slot) {
+      if (slot === 'morning') {
+        sendCommand('ALERT', 'med|Morning Medication|Dad, please take your morning medicines 💊');
+      } else {
+        sendCommand('ALERT', 'med|Night Medication|Dad, time for your night medicines 💊');
+      }
+      flashStatus('Testing Reminder on TV...');
     }
 
     // ==================== CORE ACTIONS ENGINE ====================
@@ -1631,6 +2053,7 @@
       applyTheme(currentTheme);
       renderRoutines();
       renderCustomActions();
+      initMedicationReminders();
       initCloudStatusListener();
       
       const pToggle = document.getElementById('paras-allday-toggle');
@@ -1638,6 +2061,9 @@
 
       const nToggle = document.getElementById('night-guard-toggle');
       if (nToggle) nToggle.checked = nightGuard;
+
+      // Check live TV status after initial load
+      setTimeout(requestTVStatus, 800);
     });
 
     function switchTab(tabId) {
@@ -1756,6 +2182,14 @@
             if (data.event === 'message') {
               if (data.attachment && data.attachment.url) {
                 displayCapturedScreen(data.attachment.url);
+              }
+              if (data.message) {
+                try {
+                  const statusObj = JSON.parse(data.message);
+                  if (statusObj.type === 'tv_status' || statusObj.power !== undefined) {
+                    updateLiveTVStatus(statusObj);
+                  }
+                } catch (jsonErr) {}
               }
             }
           } catch (err) {}

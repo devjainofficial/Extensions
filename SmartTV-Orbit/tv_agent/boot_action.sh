@@ -3,6 +3,8 @@
 # Runs upon TV startup (via Termux + Projectivy Autostart)
 # Option A: Zero-Flicker Wallpaper Boot
 
+export PATH="/data/data/com.termux/files/usr/bin:/system/bin:/system/xbin:$PATH"
+
 # 1. Immediately return to Home Screen wallpaper so Termux is completely hidden from the user!
 am start -a android.intent.action.MAIN -c android.intent.category.HOME < /dev/null 2>&1
 
