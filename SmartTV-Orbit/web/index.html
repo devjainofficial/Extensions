@@ -79,9 +79,86 @@
     .accent-color {
       color: var(--accent-color) !important;
     }
+    @keyframes shake {
+      0%, 100% { transform: translateX(0); }
+      20%, 60% { transform: translateX(-8px); }
+      40%, 80% { transform: translateX(8px); }
+    }
+    .shake {
+      animation: shake 0.4s ease-in-out;
+    }
+    .pin-dot.filled {
+      background: #a855f7;
+      border-color: #c084fc;
+      box-shadow: 0 0 12px rgba(168, 85, 247, 0.7);
+    }
+    .pin-btn {
+      background: #23232c;
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      border-radius: 9999px;
+      width: 66px;
+      height: 66px;
+      margin: 0 auto;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.4rem;
+      font-weight: 600;
+      color: #f1f5f9;
+      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.35);
+      transition: all 0.1s ease;
+      touch-action: manipulation;
+    }
+    .pin-btn:active {
+      transform: scale(0.92);
+      background: #343440;
+      filter: brightness(1.2);
+    }
   </style>
 </head>
 <body class="min-h-screen flex flex-col justify-between pb-24">
+
+  <!-- ==================== SECURITY PIN LOCK OVERLAY ==================== -->
+  <div id="lock-screen" class="fixed inset-0 z-[100] bg-[#141418] flex flex-col items-center justify-between p-6 select-none transition-all duration-300">
+    <!-- Top Branding -->
+    <div class="mt-8 flex flex-col items-center text-center">
+      <div class="w-16 h-16 rounded-3xl bg-gradient-to-tr from-purple-600/30 to-violet-500/20 border border-purple-500/30 flex items-center justify-center mb-4 shadow-[0_0_25px_rgba(168,85,247,0.25)]">
+        <i class="fa-solid fa-shield-halved text-2xl text-purple-400"></i>
+      </div>
+      <h1 class="text-xl font-bold tracking-tight text-white">SmartTV Orbit</h1>
+      <p id="lock-subtitle" class="text-xs text-slate-400 mt-1 font-medium">Enter 4-Digit Security PIN</p>
+
+      <!-- 4 PIN Indicator Dots -->
+      <div id="pin-dots" class="flex items-center gap-4 mt-8">
+        <span class="pin-dot w-3.5 h-3.5 rounded-full border-2 border-white/20 transition-all duration-150"></span>
+        <span class="pin-dot w-3.5 h-3.5 rounded-full border-2 border-white/20 transition-all duration-150"></span>
+        <span class="pin-dot w-3.5 h-3.5 rounded-full border-2 border-white/20 transition-all duration-150"></span>
+        <span class="pin-dot w-3.5 h-3.5 rounded-full border-2 border-white/20 transition-all duration-150"></span>
+      </div>
+      <div id="lock-error" class="text-xs text-red-400 font-medium h-4 mt-3 transition-opacity opacity-0"></div>
+    </div>
+
+    <!-- Numeric Keypad -->
+    <div class="w-full max-w-xs grid grid-cols-3 gap-3.5 mb-6">
+      <button onclick="pressPin('1')" class="pin-btn">1</button>
+      <button onclick="pressPin('2')" class="pin-btn">2</button>
+      <button onclick="pressPin('3')" class="pin-btn">3</button>
+      <button onclick="pressPin('4')" class="pin-btn">4</button>
+      <button onclick="pressPin('5')" class="pin-btn">5</button>
+      <button onclick="pressPin('6')" class="pin-btn">6</button>
+      <button onclick="pressPin('7')" class="pin-btn">7</button>
+      <button onclick="pressPin('8')" class="pin-btn">8</button>
+      <button onclick="pressPin('9')" class="pin-btn">9</button>
+      <div class="flex items-center justify-center"></div>
+      <button onclick="pressPin('0')" class="pin-btn">0</button>
+      <button onclick="backspacePin()" class="pin-btn text-lg"><i class="fa-solid fa-delete-left"></i></button>
+    </div>
+
+    <!-- Bottom Info -->
+    <div class="text-[11px] text-slate-500 pb-2">
+      Authorized devices stay unlocked automatically
+    </div>
+  </div>
 
   <!-- ==================== TOP BAR ==================== -->
   <header class="px-5 pt-4 pb-2 flex items-center justify-between max-w-md mx-auto w-full">
@@ -97,8 +174,11 @@
       <i class="fa-solid fa-caret-down text-[10px] text-slate-400"></i>
     </div>
 
-    <!-- Right Controls: TV Alert, Theme & Keyboard -->
+    <!-- Right Controls: Lock, Alert, Theme & Keyboard -->
     <div class="flex items-center gap-2">
+      <button onclick="lockRemote()" title="Lock Remote" class="w-11 h-11 rounded-full bg-[#272730] border border-white/10 flex items-center justify-center text-slate-300 hover:text-red-400 shadow-lg active:scale-90 transition">
+        <i class="fa-solid fa-lock text-sm"></i>
+      </button>
       <button onclick="openAlertModal()" title="Send TV Message / Alert" class="w-11 h-11 rounded-full bg-[#272730] border border-white/10 flex items-center justify-center text-purple-400 shadow-lg active:scale-90 transition">
         <i class="fa-solid fa-bell text-sm"></i>
       </button>
@@ -1348,7 +1428,140 @@
       localStorage.setItem('orbit_custom_actions_v2', JSON.stringify(customActions));
     }
 
+    // ==================== SECURITY & AUTHENTICATION (Salted SHA-256 for PIN 2309) ====================
+    const PIN_SALT = 'orbit_salt_';
+    const PIN_HASH = '3d58628bb1ff2780ec4cccf0999667466d12728c8c69b6f2d6ac61b863c99302';
+    const AUTH_TOKEN = 'ORBIT_SEC_2309';
+
+    let enteredPin = '';
+    let failedAttempts = 0;
+    let lockTimer = null;
+
+    async function hashString(str) {
+      const buffer = new TextEncoder().encode(str);
+      const hashBuffer = await crypto.subtle.digest('SHA-256', buffer);
+      return Array.from(new Uint8Array(hashBuffer)).map(b => b.toString(16).padStart(2, '0')).join('');
+    }
+
+    function checkAuthStatus() {
+      const savedHash = localStorage.getItem('orbit_auth_hash');
+      const lockScreen = document.getElementById('lock-screen');
+      if (savedHash === PIN_HASH) {
+        lockScreen.classList.add('hidden');
+      } else {
+        lockScreen.classList.remove('hidden');
+        resetPinDots();
+      }
+    }
+
+    function resetPinDots() {
+      enteredPin = '';
+      const dots = document.querySelectorAll('.pin-dot');
+      dots.forEach(d => d.classList.remove('filled'));
+    }
+
+    async function pressPin(digit) {
+      if (lockTimer) return;
+      if (enteredPin.length >= 4) return;
+
+      if (navigator.vibrate) navigator.vibrate(15);
+      enteredPin += digit;
+
+      const dots = document.querySelectorAll('.pin-dot');
+      if (dots[enteredPin.length - 1]) {
+        dots[enteredPin.length - 1].classList.add('filled');
+      }
+
+      if (enteredPin.length === 4) {
+        const computedHash = await hashString(PIN_SALT + enteredPin);
+        if (computedHash === PIN_HASH) {
+          // Success! Save authorized state
+          localStorage.setItem('orbit_auth_hash', computedHash);
+          localStorage.setItem('orbit_auth_token', AUTH_TOKEN);
+          const lockScreen = document.getElementById('lock-screen');
+          lockScreen.classList.add('opacity-0');
+          setTimeout(() => {
+            lockScreen.classList.add('hidden');
+            lockScreen.classList.remove('opacity-0');
+            resetPinDots();
+            flashStatus('Remote Unlocked');
+          }, 200);
+        } else {
+          // Failure
+          failedAttempts++;
+          const errorEl = document.getElementById('lock-error');
+          const dotsContainer = document.getElementById('pin-dots');
+
+          dotsContainer.classList.add('shake');
+          setTimeout(() => dotsContainer.classList.remove('shake'), 400);
+
+          if (failedAttempts >= 5) {
+            startLockoutTimer(60);
+          } else {
+            errorEl.textContent = `Incorrect PIN (${5 - failedAttempts} attempts remaining)`;
+            errorEl.classList.remove('opacity-0');
+            setTimeout(() => {
+              errorEl.classList.add('opacity-0');
+              resetPinDots();
+            }, 1200);
+          }
+        }
+      }
+    }
+
+    function backspacePin() {
+      if (lockTimer) return;
+      if (enteredPin.length === 0) return;
+      if (navigator.vibrate) navigator.vibrate(10);
+      const dots = document.querySelectorAll('.pin-dot');
+      if (dots[enteredPin.length - 1]) {
+        dots[enteredPin.length - 1].classList.remove('filled');
+      }
+      enteredPin = enteredPin.slice(0, -1);
+    }
+
+    function startLockoutTimer(seconds) {
+      let remaining = seconds;
+      const subtitle = document.getElementById('lock-subtitle');
+      const errorEl = document.getElementById('lock-error');
+      errorEl.textContent = 'Too many attempts. Keypad locked.';
+      errorEl.classList.remove('opacity-0');
+
+      lockTimer = setInterval(() => {
+        remaining--;
+        subtitle.textContent = `Try again in ${remaining}s...`;
+        if (remaining <= 0) {
+          clearInterval(lockTimer);
+          lockTimer = null;
+          failedAttempts = 0;
+          subtitle.textContent = 'Enter 4-Digit Security PIN';
+          errorEl.classList.add('opacity-0');
+          resetPinDots();
+        }
+      }, 1000);
+    }
+
+    function lockRemote() {
+      localStorage.removeItem('orbit_auth_hash');
+      localStorage.removeItem('orbit_auth_token');
+      checkAuthStatus();
+      flashStatus('Remote Locked');
+    }
+
+    // Keyboard listener for laptop/desktop PIN entry
+    window.addEventListener('keydown', (e) => {
+      const lockScreen = document.getElementById('lock-screen');
+      if (lockScreen && !lockScreen.classList.contains('hidden')) {
+        if (e.key >= '0' && e.key <= '9') {
+          pressPin(e.key);
+        } else if (e.key === 'Backspace') {
+          backspacePin();
+        }
+      }
+    });
+
     document.addEventListener('DOMContentLoaded', () => {
+      checkAuthStatus();
       applyTheme(currentTheme);
       renderRoutines();
       renderCustomActions();
@@ -1379,8 +1592,8 @@
 
     async function sendCommand(type, payload) {
       if (navigator.vibrate) navigator.vibrate(30);
-      const command = `${type.toUpperCase()}:${payload}`;
-      console.log('Sending command:', command);
+      const command = `AUTH:${AUTH_TOKEN}|${type.toUpperCase()}:${payload}`;
+      console.log('Sending secure command:', command);
 
       try {
         const res = await fetch(`${NTFY_BASE}/${CLOUD_TOPIC_CMD}`, {

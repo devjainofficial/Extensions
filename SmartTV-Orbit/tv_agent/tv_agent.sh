@@ -84,7 +84,22 @@ while true; do
     $CURL $CURL_OPTS -N "$CMD_TOPIC" | while read -r LINE; do
         # Ignore empty lines or heartbeats
         [ -z "$LINE" ] && continue
-        echo "[Orbit Cloud] Command received: $LINE"
+        
+        # Security Verification: Ensure command carries valid secret auth token
+        SECRET_TOKEN="ORBIT_SEC_2309"
+        if echo "$LINE" | grep -q "^AUTH:"; then
+            CMD_TOKEN=$(echo "$LINE" | cut -d'|' -f1 | cut -d':' -f2)
+            if [ "$CMD_TOKEN" != "$SECRET_TOKEN" ]; then
+                echo "[Orbit Security] Unauthorized command rejected (bad token: $CMD_TOKEN)"
+                continue
+            fi
+            # Strip the AUTH prefix: e.g. AUTH:ORBIT_SEC_2309|KEY:19 -> KEY:19
+            LINE=$(echo "$LINE" | sed 's/^AUTH:[^|]*|//')
+            echo "[Orbit Cloud] Authenticated command accepted: $LINE"
+        else
+            echo "[Orbit Security] Rejected unsigned command (no AUTH token): $LINE"
+            continue
+        fi
         
         case "$LINE" in
             KEY:*)

@@ -2,6 +2,7 @@
 const CLOUD_TOPIC_CMD = 'orbit_devja_tv_cmd';
 const CLOUD_TOPIC_STATUS = 'orbit_devja_tv_status';
 const NTFY_BASE = 'https://ntfy.sh';
+const AUTH_TOKEN = 'ORBIT_SEC_2309';
 
 // State
 let tvStatus = {
@@ -54,7 +55,7 @@ async function sendCommand(type, payload) {
   // Haptic feedback for touch devices
   if (navigator.vibrate) navigator.vibrate(25);
 
-  const command = `${type.toUpperCase()}:${payload}`;
+  const command = `AUTH:${AUTH_TOKEN}|${type.toUpperCase()}:${payload}`;
   console.log('Sending command:', command);
 
   try {
