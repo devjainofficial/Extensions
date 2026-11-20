@@ -26,7 +26,7 @@ done
 # 4. Action based on connectivity
 if [ "$CONNECTED" = "1" ]; then
     # Clear any previous YouTube error state and launch Paras TV Live
-    am force-stop com.google.android.youtube.tv < /dev/null 2>&1
+    /system/bin/am force-stop com.google.android.youtube.tv < /dev/null 2>&1
     sleep 1
     am start -a android.intent.action.VIEW -d "https://www.youtube.com/@parasnetwork/live" -p com.google.android.youtube.tv < /dev/null
 else

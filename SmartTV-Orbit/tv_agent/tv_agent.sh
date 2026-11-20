@@ -4,7 +4,11 @@
 
 trap '' HUP INT TERM
 
-CURL="/data/local/tmp/curl"
+if command -v curl >/dev/null 2>&1; then
+    CURL="curl"
+else
+    CURL="/data/local/tmp/curl"
+fi
 CURL_OPTS="-s --resolve ntfy.sh:443:159.203.148.75 -k"
 CMD_TOPIC="https://ntfy.sh/orbit_devja_tv_cmd/raw"
 STATUS_TOPIC="https://ntfy.sh/orbit_devja_tv_status"
