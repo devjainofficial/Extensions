@@ -3,127 +3,222 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-  <title>SmartTV Orbit | Remote Controller</title>
+  <title>SmartTV Orbit | Precision Remote</title>
   
   <!-- PWA & Mobile Meta -->
   <link rel="manifest" href="manifest.json">
-  <meta name="theme-color" id="meta-theme-color" content="#141418">
+  <meta name="theme-color" id="meta-theme-color" content="#0d0e11">
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
   <link rel="icon" type="image/png" sizes="192x192" href="icon-192.png">
   <link rel="apple-touch-icon" href="apple-touch-icon.png">
 
-  <!-- Tailwind CSS & FontAwesome -->
+  <!-- Tailwind CSS & FontAwesome Icons -->
   <script src="https://cdn.tailwindcss.com"></script>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
   
   <style>
     :root {
-      --bg-body: #141418;
-      --remote-body: #1c1c22;
-      --tactile-btn: #272730;
-      --tactile-btn-hover: #343440;
-      --tactile-btn-border: rgba(255, 255, 255, 0.08);
-      --dpad-color: #7c3aed;
-      --dpad-glow: rgba(124, 58, 237, 0.5);
-      --card-bg: rgba(26, 26, 32, 0.85);
-      --card-border: rgba(255, 255, 255, 0.08);
-      --accent-color: #a78bfa;
+      --bg-body: #0a0b0e;
+      --remote-surface: #131419;
+      --remote-border: rgba(255, 255, 255, 0.08);
+      --btn-bg: #1c1d24;
+      --btn-hover: #252731;
+      --btn-border: rgba(255, 255, 255, 0.08);
+      --btn-highlight: rgba(255, 255, 255, 0.12);
+      --dpad-ring: #181920;
+      --dpad-center: #20222b;
+      --dpad-active: #f59e0b;
+      --accent: #f59e0b;
+      --card-bg: #131419;
+    }
+
+    * {
+      box-sizing: border-box;
+      -webkit-tap-highlight-color: transparent;
     }
 
     body {
       background-color: var(--bg-body);
-      color: #f1f5f9;
-      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+      color: #e2e8f0;
+      font-family: -apple-system, BlinkMacSystemFont, "SF Pro Display", "Segoe UI", Roboto, sans-serif;
       user-select: none;
       -webkit-user-select: none;
-      -webkit-tap-highlight-color: transparent;
       touch-action: manipulation;
       min-height: 100vh;
       overflow-x: hidden;
-      padding-bottom: 72px;
-      transition: background-color 0.3s ease;
+      padding-bottom: 78px;
+      transition: background-color 0.25s ease;
     }
 
-    .glass-card {
-      background: var(--card-bg);
-      border: 1px solid var(--card-border);
-      backdrop-filter: blur(16px);
-      -webkit-backdrop-filter: blur(16px);
-    }
-
-    .tactile-btn {
-      background: var(--tactile-btn);
-      border: 1px solid var(--tactile-btn-border);
-      box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.4), 0 2px 4px -2px rgba(0, 0, 0, 0.3), inset 0 1px 0 rgba(255, 255, 255, 0.08);
-      transition: all 0.08s ease;
+    /* Industrial Hardware Tactile Key */
+    .hardware-key {
+      background: var(--btn-bg);
+      border: 1px solid var(--btn-border);
+      box-shadow: 0 3px 6px -1px rgba(0, 0, 0, 0.6), 0 1px 2px rgba(0, 0, 0, 0.4), inset 0 1px 0 var(--btn-highlight);
+      border-radius: 14px;
+      transition: transform 0.06s ease, box-shadow 0.06s ease, background-color 0.1s ease;
+      cursor: pointer;
       display: flex;
       align-items: center;
       justify-content: center;
+    }
+    .hardware-key:active {
+      transform: translateY(1.5px) scale(0.97);
+      box-shadow: 0 1px 2px rgba(0, 0, 0, 0.6), inset 0 2px 4px rgba(0, 0, 0, 0.6);
+      background: var(--btn-hover);
+    }
+
+    /* Directional Clickpad */
+    .clickpad-wheel {
+      width: 224px;
+      height: 224px;
+      border-radius: 50%;
+      background: var(--dpad-ring);
+      border: 1px solid var(--btn-border);
+      box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.8), inset 0 1px 0 rgba(255, 255, 255, 0.12), inset 0 -2px 6px rgba(0, 0, 0, 0.5);
+      position: relative;
+    }
+
+    .clickpad-btn {
+      position: absolute;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #94a3b8;
+      transition: color 0.08s ease, transform 0.06s ease;
+      cursor: pointer;
+    }
+    .clickpad-btn:active {
+      color: var(--dpad-active);
+    }
+    .clickpad-btn.up { top: 12px; left: 0; right: 0; height: 52px; }
+    .clickpad-btn.down { bottom: 12px; left: 0; right: 0; height: 52px; }
+    .clickpad-btn.left { left: 12px; top: 0; bottom: 0; width: 52px; }
+    .clickpad-btn.right { right: 12px; top: 0; bottom: 0; width: 52px; }
+
+    .clickpad-btn.up:active { transform: translateY(-2px); }
+    .clickpad-btn.down:active { transform: translateY(2px); }
+    .clickpad-btn.left:active { transform: translateX(-2px); }
+    .clickpad-btn.right:active { transform: translateX(2px); }
+
+    .clickpad-center {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      width: 84px;
+      height: 84px;
+      border-radius: 50%;
+      background: var(--dpad-center);
+      border: 1px solid var(--btn-border);
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.6), inset 0 1px 0 rgba(255, 255, 255, 0.15);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #f8fafc;
+      font-weight: 700;
+      font-size: 15px;
+      letter-spacing: 0.5px;
+      cursor: pointer;
+      transition: transform 0.06s ease, box-shadow 0.06s ease, color 0.08s ease;
+    }
+    .clickpad-center:active {
+      transform: translate(-50%, -50%) scale(0.94);
+      box-shadow: 0 1px 2px rgba(0, 0, 0, 0.6), inset 0 2px 4px rgba(0, 0, 0, 0.6);
+      color: var(--dpad-active);
+    }
+
+    /* Concentric grooved ring effect */
+    .concentric-ring {
+      position: absolute;
+      inset: 22px;
+      border-radius: 50%;
+      border: 1px dashed rgba(255, 255, 255, 0.05);
+      pointer-events: none;
+    }
+
+    /* Physical Volume Rocker Container */
+    .volume-rocker {
+      background: var(--btn-bg);
+      border: 1px solid var(--btn-border);
+      box-shadow: 0 3px 6px -1px rgba(0, 0, 0, 0.5), inset 0 1px 0 var(--btn-highlight);
       border-radius: 16px;
+      display: flex;
+      align-items: stretch;
+      overflow: hidden;
+      height: 48px;
     }
-    .tactile-btn:active {
-      transform: translateY(2px) scale(0.96);
-      box-shadow: 0 1px 2px rgba(0, 0, 0, 0.4), inset 0 2px 4px rgba(0, 0, 0, 0.4);
+    .rocker-btn {
+      flex: 1;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      transition: background-color 0.08s ease, transform 0.06s ease;
+      color: #f1f5f9;
+    }
+    .rocker-btn:active {
+      background: var(--btn-hover);
+      transform: scale(0.95);
+    }
+    .rocker-readout {
+      width: 74px;
+      border-left: 1px solid rgba(255, 255, 255, 0.06);
+      border-right: 1px solid rgba(255, 255, 255, 0.06);
+      background: rgba(0, 0, 0, 0.35);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      pointer-events: none;
     }
 
-    .dpad-wedge {
-      transition: filter 0.1s ease, transform 0.08s ease;
-      transform-origin: 120px 120px;
+    /* Active Tab Glow */
+    .nav-tab.active {
+      color: var(--accent);
     }
-    .dpad-wedge:active {
-      filter: drop-shadow(0 0 12px var(--dpad-glow)) brightness(1.25);
-    }
-
-    .dpad-center {
-      transition: filter 0.1s ease, transform 0.08s ease;
-      transform-origin: 120px 120px;
-    }
-    .dpad-center:active {
-      filter: drop-shadow(0 0 16px var(--dpad-glow)) brightness(1.25);
-      transform: scale(0.94);
+    .nav-tab.active i {
+      transform: translateY(-1px);
     }
 
-    .active-nav {
-      color: var(--accent-color) !important;
-    }
-
+    /* Lock Screen PIN Dots */
     .pin-dot {
       width: 14px;
       height: 14px;
-      border-radius: 9999px;
-      border: 2px solid rgba(255, 255, 255, 0.3);
+      border-radius: 50%;
+      border: 2px solid rgba(255, 255, 255, 0.25);
       transition: all 0.15s ease;
     }
     .pin-dot.filled {
-      background-color: var(--accent-color);
-      border-color: var(--accent-color);
-      box-shadow: 0 0 12px var(--dpad-glow);
+      background-color: var(--accent);
+      border-color: var(--accent);
+      box-shadow: 0 0 10px rgba(245, 158, 11, 0.5);
     }
 
     .shake {
-      animation: shakeAnim 0.4s cubic-bezier(.36,.07,.19,.97) both;
+      animation: shakeAnim 0.35s cubic-bezier(.36,.07,.19,.97) both;
     }
     @keyframes shakeAnim {
       10%, 90% { transform: translate3d(-2px, 0, 0); }
       20%, 80% { transform: translate3d(3px, 0, 0); }
-      30%, 50%, 70% { transform: translate3d(-5px, 0, 0); }
-      40%, 60% { transform: translate3d(5px, 0, 0); }
+      30%, 50%, 70% { transform: translate3d(-4px, 0, 0); }
+      40%, 60% { transform: translate3d(4px, 0, 0); }
     }
   </style>
 </head>
 <body class="flex flex-col min-h-screen">
 
   <!-- ==================== SECURITY LOCK OVERLAY (PIN 2309) ==================== -->
-  <div id="lock-screen" class="fixed inset-0 z-50 bg-[#0d0d12]/95 backdrop-blur-xl flex flex-col items-center justify-center p-6 transition-opacity duration-300">
-    <div class="w-14 h-14 rounded-2xl bg-purple-500/20 text-purple-400 flex items-center justify-center text-2xl mb-3 shadow-lg border border-purple-500/30">
-      <i class="fa-solid fa-shield-halved"></i>
+  <div id="lock-screen" class="fixed inset-0 z-50 bg-[#090a0d]/98 backdrop-blur-2xl flex flex-col items-center justify-center p-6 transition-opacity duration-300">
+    <div class="w-13 h-13 rounded-2xl bg-[#1c1d24] text-amber-400 flex items-center justify-center text-xl mb-3 border border-white/10 shadow-xl">
+      <i class="fa-solid fa-lock"></i>
     </div>
-    <h2 class="text-base font-bold text-white mb-0.5">SmartTV Orbit</h2>
+    <h2 class="text-sm font-bold text-white tracking-wide uppercase">SmartTV Remote</h2>
     <p class="text-xs text-slate-400 mb-6" id="lock-subtitle">Enter 4-Digit Security PIN</p>
 
     <!-- PIN Dots -->
-    <div class="flex items-center gap-3.5 mb-7" id="pin-dots">
+    <div class="flex items-center gap-3 mb-6" id="pin-dots">
       <div class="pin-dot"></div>
       <div class="pin-dot"></div>
       <div class="pin-dot"></div>
@@ -131,234 +226,207 @@
     </div>
 
     <!-- Error message -->
-    <div id="lock-error" class="text-xs font-semibold text-red-400 h-5 mb-3 opacity-0 transition-opacity">
+    <div id="lock-error" class="text-xs font-semibold text-rose-400 h-5 mb-3 opacity-0 transition-opacity">
       Incorrect PIN
     </div>
 
-    <!-- Keypad -->
-    <div class="grid grid-cols-3 gap-3.5 w-60 mb-5">
-      <button onclick="pressPin('1')" class="tactile-btn h-14 text-lg font-bold text-white">1</button>
-      <button onclick="pressPin('2')" class="tactile-btn h-14 text-lg font-bold text-white">2</button>
-      <button onclick="pressPin('3')" class="tactile-btn h-14 text-lg font-bold text-white">3</button>
-      <button onclick="pressPin('4')" class="tactile-btn h-14 text-lg font-bold text-white">4</button>
-      <button onclick="pressPin('5')" class="tactile-btn h-14 text-lg font-bold text-white">5</button>
-      <button onclick="pressPin('6')" class="tactile-btn h-14 text-lg font-bold text-white">6</button>
-      <button onclick="pressPin('7')" class="tactile-btn h-14 text-lg font-bold text-white">7</button>
-      <button onclick="pressPin('8')" class="tactile-btn h-14 text-lg font-bold text-white">8</button>
-      <button onclick="pressPin('9')" class="tactile-btn h-14 text-lg font-bold text-white">9</button>
+    <!-- Tactile Keypad -->
+    <div class="grid grid-cols-3 gap-3 w-56 mb-5">
+      <button onclick="pressPin('1')" class="hardware-key h-13 text-base font-bold text-white">1</button>
+      <button onclick="pressPin('2')" class="hardware-key h-13 text-base font-bold text-white">2</button>
+      <button onclick="pressPin('3')" class="hardware-key h-13 text-base font-bold text-white">3</button>
+      <button onclick="pressPin('4')" class="hardware-key h-13 text-base font-bold text-white">4</button>
+      <button onclick="pressPin('5')" class="hardware-key h-13 text-base font-bold text-white">5</button>
+      <button onclick="pressPin('6')" class="hardware-key h-13 text-base font-bold text-white">6</button>
+      <button onclick="pressPin('7')" class="hardware-key h-13 text-base font-bold text-white">7</button>
+      <button onclick="pressPin('8')" class="hardware-key h-13 text-base font-bold text-white">8</button>
+      <button onclick="pressPin('9')" class="hardware-key h-13 text-base font-bold text-white">9</button>
       <div></div>
-      <button onclick="pressPin('0')" class="tactile-btn h-14 text-lg font-bold text-white">0</button>
-      <button onclick="backspacePin()" class="tactile-btn h-14 text-base text-slate-300"><i class="fa-solid fa-delete-left"></i></button>
+      <button onclick="pressPin('0')" class="hardware-key h-13 text-base font-bold text-white">0</button>
+      <button onclick="backspacePin()" class="hardware-key h-13 text-sm text-slate-300"><i class="fa-solid fa-delete-left"></i></button>
     </div>
 
-    <div class="text-[11px] text-slate-500">Authorized devices stay unlocked automatically</div>
+    <div class="text-[11px] text-slate-500 font-medium">Authorized devices stay unlocked</div>
   </div>
 
-  <!-- ==================== CLEAN MINIMAL HEADER ==================== -->
-  <header class="px-5 pt-3 pb-2 flex items-center justify-between max-w-sm mx-auto w-full">
-    <!-- Power Button -->
-    <button onclick="sendCommand('key', '26')" title="Power On / Standby" class="w-10 h-10 rounded-full bg-[#272730] border border-white/10 flex items-center justify-center text-red-500 shadow-md active:scale-90 transition">
-      <i class="fa-solid fa-power-off text-sm"></i>
-    </button>
-
-    <!-- Center Live Status Pill (Tap to refresh) -->
-    <div onclick="requestTVStatus()" title="Tap to refresh TV status" class="cursor-pointer px-3.5 py-1.5 rounded-full bg-[#272730] border border-white/10 flex items-center gap-2 shadow-sm active:scale-95 transition">
-      <span id="conn-dot" class="w-2.5 h-2.5 rounded-full bg-emerald-400 animate-pulse"></span>
-      <span id="conn-status" class="text-xs font-semibold text-slate-200">TV Online</span>
-      <i class="fa-solid fa-arrows-rotate text-[10px] text-slate-400"></i>
-    </div>
-
-    <!-- Right Controls: Alert & Settings -->
-    <div class="flex items-center gap-2">
-      <button onclick="openAlertModal()" title="Send TV Message" class="w-10 h-10 rounded-full bg-[#272730] border border-white/10 flex items-center justify-center text-purple-400 shadow-md active:scale-90 transition">
-        <i class="fa-solid fa-bell text-sm"></i>
+  <!-- ==================== UNIFIED HARDWARE CONTROL HEADER ==================== -->
+  <header class="px-4 pt-3 pb-2 max-w-sm mx-auto w-full">
+    <div class="bg-[#131419] border border-white/10 rounded-2xl p-2.5 flex items-center justify-between shadow-lg">
+      
+      <!-- Power Switch -->
+      <button onclick="sendCommand('key', '26')" title="Power Toggle" class="w-10 h-10 rounded-xl bg-[#1c1d24] border border-white/10 flex items-center justify-center text-rose-500 hover:text-rose-400 active:scale-95 transition shadow-sm shrink-0">
+        <i class="fa-solid fa-power-off text-sm"></i>
       </button>
-      <button onclick="openSettingsModal()" title="Settings & Tools" class="w-10 h-10 rounded-full bg-[#272730] border border-white/10 flex items-center justify-center text-slate-300 shadow-md active:scale-90 transition">
-        <i class="fa-solid fa-ellipsis-vertical text-sm"></i>
-      </button>
+
+      <!-- Center Status & Wi-Fi HUD -->
+      <div onclick="requestTVStatus()" title="Tap to refresh connection details" class="flex-1 mx-2.5 min-w-0 cursor-pointer text-left active:opacity-75 transition">
+        <div class="flex items-center gap-1.5">
+          <span id="conn-dot" class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse shrink-0"></span>
+          <span id="conn-status" class="text-xs font-bold text-white truncate leading-tight">TV Awake</span>
+        </div>
+        <div class="flex items-center gap-1.5 mt-0.5 text-[10px] text-slate-400">
+          <i id="wifi-icon" class="fa-solid fa-wifi text-[9px] text-sky-400"></i>
+          <span id="wifi-ssid-disp" class="truncate font-medium text-slate-300">Checking Wi-Fi...</span>
+          <span id="wifi-signal-badge" class="shrink-0 text-[9px] text-emerald-400 font-semibold">• Good</span>
+        </div>
+      </div>
+
+      <!-- Action Cluster: Alert & Settings -->
+      <div class="flex items-center gap-1.5 shrink-0">
+        <button onclick="openAlertModal()" title="Send Message to TV Screen" class="w-9 h-9 rounded-xl bg-[#1c1d24] border border-white/10 flex items-center justify-center text-slate-300 hover:text-amber-400 active:scale-95 transition">
+          <i class="fa-regular fa-bell text-xs"></i>
+        </button>
+        <button onclick="openSettingsModal()" title="Settings & Tools" class="w-9 h-9 rounded-xl bg-[#1c1d24] border border-white/10 flex items-center justify-center text-slate-300 hover:text-white active:scale-95 transition">
+          <i class="fa-solid fa-sliders text-xs"></i>
+        </button>
+      </div>
+
     </div>
   </header>
 
-  <!-- ==================== MAIN CONTENT AREA ==================== -->
-  <main class="flex-1 px-4 py-2 max-w-sm mx-auto w-full flex flex-col justify-center">
+  <!-- ==================== MAIN CONTENT CONTAINER ==================== -->
+  <main class="flex-1 px-4 py-1.5 max-w-sm mx-auto w-full flex flex-col justify-center">
 
-    <!-- ==================== VIEW 1: REMOTE CONTROLLER ==================== -->
-    <section id="view-remote" class="space-y-3.5">
+    <!-- ==================== TAB 1: REMOTE CONTROLLER ==================== -->
+    <section id="view-remote" class="space-y-3">
 
-      <!-- LIVE TV & WI-FI CONNECTION BANNER -->
-      <div onclick="requestTVStatus()" title="Tap to refresh connection details" class="cursor-pointer glass-card rounded-2xl px-3.5 py-2 flex items-center justify-between text-xs border border-white/10 hover:border-white/20 active:scale-98 transition shadow-sm">
-        <div class="flex items-center gap-2.5 min-w-0">
-          <div id="wifi-icon-bg" class="w-8 h-8 rounded-xl bg-sky-500/20 text-sky-400 flex items-center justify-center shrink-0">
-            <i id="wifi-icon" class="fa-solid fa-wifi text-sm"></i>
-          </div>
-          <div class="min-w-0">
-            <div class="text-[10px] text-slate-400 font-semibold tracking-wider uppercase leading-none">Connected Wi-Fi</div>
-            <div id="wifi-ssid-disp" class="text-xs font-bold text-white truncate leading-tight mt-0.5">Detecting Wi-Fi...</div>
-          </div>
-        </div>
-        <div class="flex items-center gap-2 shrink-0">
-          <span id="wifi-signal-badge" class="text-[10px] font-bold text-sky-400 bg-sky-950/60 border border-sky-800/80 px-2 py-0.5 rounded-full">Wi-Fi Active</span>
-          <i class="fa-solid fa-arrows-rotate text-[10px] text-slate-400"></i>
-        </div>
-      </div>
-
-      <!-- FATHER'S DEVOTIONAL CHANNELS WITH REAL LOGOS -->
-      <div class="grid grid-cols-2 gap-2.5 w-full">
+      <!-- FATHER'S DEVOTIONAL SWITCHES (PARAS & JINVANI) -->
+      <div class="grid grid-cols-2 gap-2 w-full">
         <!-- Paras TV Card -->
-        <button onclick="sendQuickChannel('paras')" class="bg-gradient-to-r from-[#0c3b82] to-[#124ba1] text-white border border-[#2b6bc9]/50 shadow-md flex items-center gap-2.5 p-2 rounded-2xl active:scale-95 transition">
-          <img src="img/paras_tv.jpg" alt="Paras TV" class="w-9 h-9 rounded-xl object-cover border border-amber-400/40 shadow-sm">
-          <div class="text-left flex-1 min-w-0">
-            <div class="text-xs font-bold leading-tight truncate">Paras TV</div>
-            <div class="text-[9px] text-amber-200/90 font-medium">Anytime Live</div>
+        <button onclick="sendQuickChannel('paras')" class="bg-[#141d2e] hover:bg-[#1a253a] border border-[#233554] rounded-2xl p-2.5 flex items-center gap-2.5 active:scale-97 transition shadow-md">
+          <img src="img/paras_tv.jpg" alt="Paras TV" class="w-9 h-9 rounded-xl object-cover border border-amber-400/30 shrink-0">
+          <div class="text-left min-w-0 flex-1">
+            <div class="text-xs font-bold text-white truncate leading-tight">Paras TV</div>
+            <div class="text-[9px] text-amber-300 font-semibold">24/7 Live</div>
           </div>
-          <span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse mr-1"></span>
+          <span class="w-1.5 h-1.5 rounded-full bg-emerald-400 shrink-0"></span>
         </button>
 
         <!-- Jinvani Channel Card -->
-        <button onclick="sendQuickChannel('jinvani')" class="bg-gradient-to-r from-[#801421] to-[#a31a2a] text-white border border-[#c43143]/50 shadow-md flex items-center gap-2.5 p-2 rounded-2xl active:scale-95 transition">
-          <img src="img/jinvani.jpg" alt="Jinvani" class="w-9 h-9 rounded-xl object-cover border border-orange-400/40 shadow-sm">
-          <div class="text-left flex-1 min-w-0">
-            <div class="text-xs font-bold leading-tight truncate">Jinvani</div>
-            <div class="text-[9px] text-orange-200/90 font-medium">Morning Live</div>
+        <button onclick="sendQuickChannel('jinvani')" class="bg-[#2a1317] hover:bg-[#38191e] border border-[#542129] rounded-2xl p-2.5 flex items-center gap-2.5 active:scale-97 transition shadow-md">
+          <img src="img/jinvani.jpg" alt="Jinvani" class="w-9 h-9 rounded-xl object-cover border border-orange-400/30 shrink-0">
+          <div class="text-left min-w-0 flex-1">
+            <div class="text-xs font-bold text-white truncate leading-tight">Jinvani</div>
+            <div class="text-[9px] text-orange-300 font-semibold">Morning Live</div>
           </div>
-          <span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse mr-1"></span>
+          <span class="w-1.5 h-1.5 rounded-full bg-emerald-400 shrink-0"></span>
         </button>
       </div>
 
-      <!-- THE SEGMENTED DIRECTIONAL D-PAD -->
+      <!-- PRECISION DIRECTIONAL CLICKPAD -->
       <div class="py-1 flex items-center justify-center">
-        <svg viewBox="0 0 240 240" class="w-56 h-56 select-none drop-shadow-2xl">
-          <defs>
-            <filter id="dpad-shadow" x="-20%" y="-20%" width="140%" height="140%">
-              <feDropShadow dx="0" dy="4" stdDeviation="4" flood-color="#000000" flood-opacity="0.45"/>
-            </filter>
-          </defs>
-
-          <!-- Outer Recessed Base Ring -->
-          <circle cx="120" cy="120" r="116" fill="rgba(0,0,0,0.35)" stroke="rgba(255,255,255,0.06)" stroke-width="2"/>
-
-          <!-- UP SEGMENT -->
-          <g class="dpad-wedge cursor-pointer" onclick="sendCommand('key', '19')">
-            <path d="M 90.84 87.05 L 45.79 36.12 A 112 112 0 0 1 194.21 36.12 L 149.16 87.05 A 44 44 0 0 0 90.84 87.05 Z" 
-                  fill="var(--dpad-color)" filter="url(#dpad-shadow)"/>
-            <polygon points="120,48 111,62 129,62" fill="white"/>
-          </g>
-
-          <!-- RIGHT SEGMENT -->
-          <g class="dpad-wedge cursor-pointer" onclick="sendCommand('key', '22')">
-            <path d="M 152.95 90.84 L 203.88 45.79 A 112 112 0 0 1 203.88 194.21 L 152.95 149.16 A 44 44 0 0 0 152.95 90.84 Z" 
-                  fill="var(--dpad-color)" filter="url(#dpad-shadow)"/>
-            <polygon points="192,120 178,111 178,129" fill="white"/>
-          </g>
-
-          <!-- DOWN SEGMENT -->
-          <g class="dpad-wedge cursor-pointer" onclick="sendCommand('key', '20')">
-            <path d="M 149.16 152.95 L 194.21 203.88 A 112 112 0 0 1 45.79 203.88 L 90.84 152.95 A 44 44 0 0 0 149.16 152.95 Z" 
-                  fill="var(--dpad-color)" filter="url(#dpad-shadow)"/>
-            <polygon points="120,192 111,178 129,178" fill="white"/>
-          </g>
-
-          <!-- LEFT SEGMENT -->
-          <g class="dpad-wedge cursor-pointer" onclick="sendCommand('key', '21')">
-            <path d="M 87.05 149.16 L 36.12 194.21 A 112 112 0 0 1 36.12 45.79 L 87.05 90.84 A 44 44 0 0 0 87.05 149.16 Z" 
-                  fill="var(--dpad-color)" filter="url(#dpad-shadow)"/>
-            <polygon points="48,120 62,111 62,129" fill="white"/>
-          </g>
-
-          <!-- CENTER OK CIRCLE -->
-          <g class="dpad-center cursor-pointer" onclick="sendCommand('key', '23')">
-            <circle cx="120" cy="120" r="37" fill="var(--dpad-color)" filter="url(#dpad-shadow)"/>
-            <text x="120" y="126" text-anchor="middle" fill="white" font-size="16" font-weight="bold" letter-spacing="0.5">OK</text>
-          </g>
-        </svg>
-      </div>
-
-      <!-- TACTILE NAVIGATION & VOLUME CONTROLS -->
-      <div class="space-y-2 w-full">
-        <!-- Row 1: Back, Home, Play/Pause, Options -->
-        <div class="grid grid-cols-4 gap-2">
-          <button onclick="sendCommand('key', '4')" title="Back" class="tactile-btn h-11">
-            <i class="fa-solid fa-arrow-left text-sm text-slate-200"></i>
+        <div class="clickpad-wheel">
+          <div class="concentric-ring"></div>
+          
+          <!-- Directional Keys -->
+          <button onclick="sendCommand('key', '19')" class="clickpad-btn up" title="Up">
+            <i class="fa-solid fa-chevron-up text-base"></i>
           </button>
-          <button onclick="sendCommand('key', '3')" title="Home" class="tactile-btn h-11">
-            <i class="fa-solid fa-house text-sm text-slate-200"></i>
+          <button onclick="sendCommand('key', '22')" class="clickpad-btn right" title="Right">
+            <i class="fa-solid fa-chevron-right text-base"></i>
           </button>
-          <button onclick="sendCommand('key', '85')" title="Play / Pause" class="tactile-btn h-11">
-            <i class="fa-solid fa-play text-sm text-slate-200"></i>
+          <button onclick="sendCommand('key', '20')" class="clickpad-btn down" title="Down">
+            <i class="fa-solid fa-chevron-down text-base"></i>
           </button>
-          <button onclick="sendCommand('key', '82')" title="Options (*)" class="tactile-btn h-11">
-            <i class="fa-solid fa-bars text-sm text-slate-200"></i>
+          <button onclick="sendCommand('key', '21')" class="clickpad-btn left" title="Left">
+            <i class="fa-solid fa-chevron-left text-base"></i>
+          </button>
+
+          <!-- Center OK Button -->
+          <button onclick="sendCommand('key', '23')" class="clickpad-center" title="OK / Select">
+            OK
           </button>
         </div>
+      </div>
 
-        <!-- Row 2: Tactile Volume Bar with Readout & Mute -->
-        <div class="grid grid-cols-4 gap-2">
-          <button onclick="sendCommand('vol_down', '1')" title="Volume Down" class="tactile-btn h-11 text-slate-200 active:scale-95">
-            <i class="fa-solid fa-minus text-sm"></i>
+      <!-- ESSENTIAL NAVIGATION ROW -->
+      <div class="grid grid-cols-4 gap-2 w-full">
+        <button onclick="sendCommand('key', '4')" title="Back" class="hardware-key h-11 text-slate-200">
+          <i class="fa-solid fa-arrow-left text-xs"></i>
+        </button>
+        <button onclick="sendCommand('key', '3')" title="Home" class="hardware-key h-11 text-slate-200">
+          <i class="fa-solid fa-house text-xs"></i>
+        </button>
+        <button onclick="sendCommand('key', '85')" title="Play / Pause" class="hardware-key h-11 text-slate-200">
+          <i class="fa-solid fa-play text-xs"></i>
+        </button>
+        <button onclick="sendCommand('key', '82')" title="Menu / Options" class="hardware-key h-11 text-slate-200">
+          <i class="fa-solid fa-bars text-xs"></i>
+        </button>
+      </div>
+
+      <!-- INTEGRATED TACTILE VOLUME ROCKER & SMART MUTE -->
+      <div class="flex items-center gap-2 w-full">
+        <!-- Rocker (- | Readout | +) -->
+        <div class="volume-rocker flex-1">
+          <button onclick="sendCommand('vol_down', '1')" class="rocker-btn" title="Volume Down">
+            <i class="fa-solid fa-minus text-xs"></i>
           </button>
-          <div class="tactile-btn h-11 col-span-1 bg-black/40 border border-white/5 font-bold text-xs text-purple-300 pointer-events-none">
-            <span id="vol-quick-disp">20%</span>
+          <div class="rocker-readout">
+            <span class="text-[9px] text-slate-400 font-semibold leading-none uppercase">Vol</span>
+            <span id="vol-quick-disp" class="text-xs font-bold text-amber-400 leading-tight">20%</span>
           </div>
-          <button onclick="sendCommand('vol_up', '1')" title="Volume Up" class="tactile-btn h-11 text-slate-200 active:scale-95">
-            <i class="fa-solid fa-plus text-sm"></i>
-          </button>
-          <button onclick="sendCommand('mute', '1')" title="Mute / Unmute" class="tactile-btn h-11 text-amber-400 active:scale-95">
-            <i class="fa-solid fa-volume-xmark text-sm"></i>
+          <button onclick="sendCommand('vol_up', '1')" class="rocker-btn" title="Volume Up">
+            <i class="fa-solid fa-plus text-xs"></i>
           </button>
         </div>
+
+        <!-- Smart Mute / Restore -->
+        <button onclick="sendCommand('mute', '1')" title="Mute / Restore" class="hardware-key h-12 w-12 text-slate-300 hover:text-amber-400 shrink-0">
+          <i id="mute-icon" class="fa-solid fa-volume-xmark text-sm"></i>
+        </button>
       </div>
 
-      <!-- BRANDED APP LAUNCHERS: YOUTUBE, HOTSTAR, CRICKET -->
+      <!-- QUICK APP LAUNCHERS -->
       <div class="grid grid-cols-3 gap-2 w-full pt-0.5">
         <!-- YouTube TV -->
-        <button onclick="sendCommand('launch_app', 'com.google.android.youtube.tv')" class="bg-white text-black font-bold text-xs py-2.5 px-2 rounded-2xl flex items-center justify-center gap-1.5 shadow-md active:scale-95 transition">
-          <i class="fa-brands fa-youtube text-red-600 text-sm"></i>
-          <span class="tracking-tight text-[11px]">YouTube</span>
+        <button onclick="sendCommand('launch_app', 'com.google.android.youtube.tv')" class="bg-[#1c1d24] hover:bg-[#252731] border border-white/10 rounded-xl py-2 px-2 flex items-center justify-center gap-1.5 active:scale-95 transition shadow-sm">
+          <i class="fa-brands fa-youtube text-red-500 text-sm"></i>
+          <span class="text-xs font-bold text-white tracking-tight">YouTube</span>
         </button>
 
         <!-- JioHotstar -->
-        <button onclick="launchHotstar()" class="bg-gradient-to-r from-[#031536] to-[#0a275e] text-white border border-[#1b438f]/60 font-bold text-xs py-2.5 px-2 rounded-2xl flex items-center justify-center gap-1.5 shadow-md active:scale-95 transition">
-          <span class="text-sky-400 text-sm font-black">★</span>
-          <span class="tracking-tight text-[11px] font-bold">Hotstar</span>
+        <button onclick="launchHotstar()" class="bg-[#101c36] hover:bg-[#16274b] border border-[#1e3a73]/60 rounded-xl py-2 px-2 flex items-center justify-center gap-1.5 active:scale-95 transition shadow-sm">
+          <span class="text-sky-400 text-xs font-black">★</span>
+          <span class="text-xs font-bold text-sky-100 tracking-tight">Hotstar</span>
         </button>
 
         <!-- Live Cricket -->
-        <button onclick="launchCricketLive()" class="bg-gradient-to-r from-[#092e1e] to-[#0d4a30] text-emerald-300 border border-emerald-500/40 font-bold text-xs py-2.5 px-2 rounded-2xl flex items-center justify-center gap-1.5 shadow-md active:scale-95 transition">
-          <span class="text-sm">🏏</span>
-          <span class="text-[11px] text-white font-bold tracking-tight">Cricket</span>
+        <button onclick="launchCricketLive()" class="bg-[#0f291c] hover:bg-[#153a27] border border-[#1b5237]/60 rounded-xl py-2 px-2 flex items-center justify-center gap-1.5 active:scale-95 transition shadow-sm">
+          <i class="fa-solid fa-baseball text-emerald-400 text-xs"></i>
+          <span class="text-xs font-bold text-emerald-100 tracking-tight">Cricket</span>
         </button>
       </div>
 
-      <!-- SCREEN PEEK ACCORDION (MINIMAL & UNCLUTTERED) -->
-      <div class="w-full pt-1">
-        <button onclick="toggleScreenPeek()" class="w-full py-2 px-3 rounded-xl bg-white/5 hover:bg-white/10 border border-white/10 text-xs font-semibold text-slate-300 flex items-center justify-between shadow-sm active:scale-98 transition">
+      <!-- SCREEN SNAPSHOT PEEK DRAWER -->
+      <div class="w-full pt-0.5">
+        <button onclick="toggleScreenPeek()" class="w-full py-2 px-3 rounded-xl bg-[#131419] hover:bg-[#1c1d24] border border-white/10 text-xs text-slate-300 flex items-center justify-between active:scale-98 transition">
           <span class="flex items-center gap-2">
-            <i class="fa-solid fa-eye text-purple-400 text-xs"></i>
-            <span>Screen Snapshot Peek</span>
+            <i class="fa-solid fa-camera text-slate-400 text-xs"></i>
+            <span class="font-semibold text-slate-300">TV Screen Preview</span>
           </span>
-          <span id="peek-toggle-label" class="text-[10px] text-purple-300 font-bold bg-purple-500/20 px-2 py-0.5 rounded-md flex items-center gap-1">
-            <span>View</span> <i class="fa-solid fa-chevron-down text-[9px]"></i>
+          <span id="peek-toggle-label" class="text-[10px] text-amber-400 font-bold flex items-center gap-1">
+            <span>View</span> <i class="fa-solid fa-chevron-down text-[8px]"></i>
           </span>
         </button>
 
-        <!-- Collapsible Screen Peek Card -->
-        <div id="remote-peek-box" class="w-full aspect-video bg-black/85 rounded-2xl flex items-center justify-center border border-white/10 overflow-hidden relative mt-2 hidden shadow-xl">
-          <div id="remote-peek-loading" class="text-xs text-purple-300 hidden flex flex-col items-center gap-1.5">
-            <i class="fa-solid fa-circle-notch fa-spin text-xl"></i>
-            <span>Capturing live TV screen...</span>
+        <!-- Collapsible Screen Preview -->
+        <div id="remote-peek-box" class="w-full aspect-video bg-black rounded-2xl flex items-center justify-center border border-white/10 overflow-hidden relative mt-2 hidden shadow-2xl">
+          <div id="remote-peek-loading" class="text-xs text-amber-400 hidden flex flex-col items-center gap-2">
+            <i class="fa-solid fa-circle-notch fa-spin text-lg"></i>
+            <span class="font-medium">Capturing live TV display...</span>
           </div>
-          <img id="remote-peek-img" class="w-full h-full object-contain hidden" alt="TV Screen Peek">
+          <img id="remote-peek-img" class="w-full h-full object-contain hidden" alt="TV Screen Snapshot">
           
-          <!-- Peek Overlay Footer -->
-          <div id="remote-peek-footer" class="absolute bottom-0 inset-x-0 bg-black/85 backdrop-blur-sm px-3 py-1.5 flex items-center justify-between text-[10px] text-slate-300 hidden border-t border-white/10">
+          <div id="remote-peek-footer" class="absolute bottom-0 inset-x-0 bg-black/90 backdrop-blur-sm px-3 py-1.5 flex items-center justify-between text-[10px] text-slate-300 hidden border-t border-white/10">
             <span id="remote-peek-time" class="flex items-center gap-1">
               <i class="fa-regular fa-clock text-[9px]"></i> Just now
             </span>
-            <div class="flex items-center gap-2">
-              <button onclick="requestScreenshot()" class="text-purple-300 hover:text-white font-medium flex items-center gap-1">
-                <i class="fa-solid fa-camera text-[9px]"></i> Refresh
+            <div class="flex items-center gap-2.5">
+              <button onclick="requestScreenshot()" class="text-amber-400 hover:text-white font-semibold flex items-center gap-1">
+                <i class="fa-solid fa-rotate-right text-[9px]"></i> Refresh
               </button>
-              <button onclick="openPeekFullscreen()" class="text-purple-300 hover:text-white font-medium flex items-center gap-1">
+              <button onclick="openPeekFullscreen()" class="text-slate-300 hover:text-white font-semibold flex items-center gap-1">
                 <i class="fa-solid fa-expand text-[9px]"></i> Full
               </button>
               <button onclick="closeScreenPeek()" class="text-slate-400 hover:text-white">
@@ -371,164 +439,152 @@
 
     </section>
 
-    <!-- ==================== VIEW 2: CAST (PUSH-TO-TV) ==================== -->
-    <section id="view-apps" class="space-y-3.5 hidden w-full">
-      <div class="glass-card rounded-2xl p-4 shadow-md space-y-3 border-l-4 border-l-purple-500">
-        <div class="flex items-center justify-between">
+    <!-- ==================== TAB 2: CAST (PUSH-TO-TV) ==================== -->
+    <section id="view-apps" class="space-y-3 hidden w-full">
+      <div class="bg-[#131419] border border-white/10 rounded-2xl p-4 shadow-lg space-y-3">
+        <div class="flex items-center justify-between border-b border-white/10 pb-2.5">
           <div class="flex items-center gap-2">
-            <span class="w-8 h-8 rounded-xl bg-purple-500/20 text-purple-300 flex items-center justify-center text-sm font-bold shadow-sm">
-              <i class="fa-solid fa-cloud-arrow-up"></i>
+            <span class="w-7 h-7 rounded-lg bg-amber-400/10 text-amber-400 flex items-center justify-center text-xs font-bold">
+              <i class="fa-solid fa-arrow-up-right-from-square"></i>
             </span>
             <div>
-              <h3 class="text-xs font-bold text-white">Cloud Push-to-TV Caster</h3>
-              <span class="text-[10px] text-purple-300 font-medium">Cast from anywhere in the world</span>
+              <h3 class="text-xs font-bold text-white">Push to TV</h3>
+              <p class="text-[10px] text-slate-400">Cast any video link directly to father's TV</p>
             </div>
           </div>
-          <span class="text-[9px] text-emerald-400 bg-emerald-950/60 border border-emerald-800/80 px-2 py-0.5 rounded-full font-bold">WAN ACTIVE</span>
+          <span class="text-[9px] text-emerald-400 bg-emerald-950/60 border border-emerald-800/80 px-2 py-0.5 rounded-full font-semibold">Ready</span>
         </div>
 
-        <!-- Input & Buttons -->
+        <!-- Input & Action -->
         <div class="space-y-2">
           <div class="flex gap-2">
-            <input type="url" id="cast-url-input" placeholder="Paste YouTube link (https://youtu.be/...)" class="flex-1 bg-black/50 border border-white/15 rounded-xl px-3 py-2.5 text-xs text-white focus:outline-none focus:border-purple-400">
-            <button onclick="castUrlToTV()" class="bg-gradient-to-r from-purple-600 to-indigo-600 hover:from-purple-500 hover:to-indigo-500 text-white text-xs font-bold px-4 rounded-xl flex items-center justify-center gap-1.5 shadow-md active:scale-95 transition">
-              <i class="fa-solid fa-play text-[10px]"></i> Cast
+            <input type="url" id="cast-url-input" placeholder="Paste YouTube link (https://youtu.be/...)" class="flex-1 bg-black/60 border border-white/15 rounded-xl px-3 py-2 text-xs text-white focus:outline-none focus:border-amber-400">
+            <button onclick="castUrlToTV()" class="bg-amber-500 hover:bg-amber-400 text-black text-xs font-bold px-4 rounded-xl flex items-center justify-center gap-1.5 active:scale-95 transition shadow-sm">
+              <i class="fa-solid fa-play text-[9px]"></i> Cast
             </button>
           </div>
-          <button onclick="pasteAndCast()" class="w-full py-2 px-3 rounded-xl bg-white/5 hover:bg-white/10 border border-white/10 text-xs font-semibold text-slate-200 flex items-center justify-center gap-2 active:scale-95 transition">
-            <i class="fa-solid fa-clipboard text-purple-400"></i> Paste from Clipboard & Cast Now
+          <button onclick="pasteAndCast()" class="w-full py-2 px-3 rounded-xl bg-[#1c1d24] hover:bg-[#252731] border border-white/10 text-xs font-semibold text-slate-200 flex items-center justify-center gap-2 active:scale-95 transition">
+            <i class="fa-regular fa-clipboard text-amber-400"></i> Paste from Clipboard & Cast
           </button>
         </div>
 
-        <!-- 1-Tap Quick Cast Presets -->
+        <!-- Quick Presets -->
         <div class="space-y-1.5 pt-1">
-          <span class="text-[10px] font-semibold text-slate-400 uppercase tracking-wider block">1-Tap Quick Cast Presets</span>
+          <span class="text-[10px] font-semibold text-slate-400 uppercase tracking-wider block">1-Tap Direct Streams</span>
           <div class="grid grid-cols-2 gap-2">
-            <button onclick="castPreset('paras')" class="p-2 rounded-xl bg-black/40 border border-white/10 hover:border-amber-400/50 text-left text-xs text-white transition active:scale-95 flex items-center gap-2">
+            <button onclick="castPreset('paras')" class="p-2 rounded-xl bg-black/40 border border-white/10 hover:border-amber-400/40 text-left text-xs text-white transition active:scale-95 flex items-center gap-2">
               <img src="img/paras_tv.jpg" class="w-6 h-6 rounded-lg object-cover">
               <span class="truncate font-semibold text-[11px]">Paras TV Live</span>
             </button>
-            <button onclick="castPreset('jinvani')" class="p-2 rounded-xl bg-black/40 border border-white/10 hover:border-orange-400/50 text-left text-xs text-white transition active:scale-95 flex items-center gap-2">
+            <button onclick="castPreset('jinvani')" class="p-2 rounded-xl bg-black/40 border border-white/10 hover:border-orange-400/40 text-left text-xs text-white transition active:scale-95 flex items-center gap-2">
               <img src="img/jinvani.jpg" class="w-6 h-6 rounded-lg object-cover">
               <span class="truncate font-semibold text-[11px]">Jinvani Live</span>
             </button>
-            <button onclick="castPreset('bhaktamar')" class="p-2 rounded-xl bg-black/40 border border-white/10 hover:border-purple-400/50 text-left text-xs text-white transition active:scale-95 flex items-center gap-2">
-              <span class="text-sm">🙏</span>
+            <button onclick="castPreset('bhaktamar')" class="p-2 rounded-xl bg-black/40 border border-white/10 hover:border-amber-400/40 text-left text-xs text-white transition active:scale-95 flex items-center gap-2">
+              <i class="fa-solid fa-hands-praying text-amber-400 text-xs"></i>
               <span class="truncate font-semibold text-[11px]">Bhaktamar Stotra</span>
             </button>
-            <button onclick="castPreset('navkar')" class="p-2 rounded-xl bg-black/40 border border-white/10 hover:border-purple-400/50 text-left text-xs text-white transition active:scale-95 flex items-center gap-2">
-              <span class="text-sm">🕊️</span>
-              <span class="truncate font-semibold text-[11px]">Navkar Mantra 24/7</span>
+            <button onclick="castPreset('navkar')" class="p-2 rounded-xl bg-black/40 border border-white/10 hover:border-amber-400/40 text-left text-xs text-white transition active:scale-95 flex items-center gap-2">
+              <i class="fa-solid fa-om text-amber-400 text-xs"></i>
+              <span class="truncate font-semibold text-[11px]">Navkar Mantra</span>
             </button>
-            <button onclick="castPreset('cricket')" class="p-2 rounded-xl bg-black/40 border border-white/10 hover:border-emerald-400/50 text-left text-xs text-white transition active:scale-95 flex items-center gap-2">
-              <span class="text-sm">🏏</span>
+            <button onclick="castPreset('cricket')" class="p-2 rounded-xl bg-black/40 border border-white/10 hover:border-emerald-400/40 text-left text-xs text-white transition active:scale-95 flex items-center gap-2">
+              <i class="fa-solid fa-baseball text-emerald-400 text-xs"></i>
               <span class="truncate font-semibold text-[11px]">Live Cricket</span>
             </button>
-            <button onclick="castPreset('news')" class="p-2 rounded-xl bg-black/40 border border-white/10 hover:border-red-400/50 text-left text-xs text-white transition active:scale-95 flex items-center gap-2">
-              <span class="text-sm">📰</span>
-              <span class="truncate font-semibold text-[11px]">Aaj Tak Live</span>
+            <button onclick="castPreset('news')" class="p-2 rounded-xl bg-black/40 border border-white/10 hover:border-rose-400/40 text-left text-xs text-white transition active:scale-95 flex items-center gap-2">
+              <i class="fa-solid fa-newspaper text-rose-400 text-xs"></i>
+              <span class="truncate font-semibold text-[11px]">Aaj Tak News</span>
             </button>
           </div>
         </div>
       </div>
     </section>
 
-    <!-- ==================== VIEW 3: CARE & ROUTINES ==================== -->
-    <section id="view-routines" class="space-y-3.5 hidden w-full">
+    <!-- ==================== TAB 3: CARE & ROUTINES ==================== -->
+    <section id="view-routines" class="space-y-3 hidden w-full">
       <!-- Medication Reminders -->
-      <div class="glass-card rounded-2xl p-4 border-l-4 border-l-emerald-500 shadow-md space-y-3">
-        <div class="flex items-center justify-between">
-          <div class="flex items-center gap-2.5">
-            <div class="w-8 h-8 rounded-xl bg-emerald-500/20 text-emerald-400 flex items-center justify-center text-sm shadow-sm">
+      <div class="bg-[#131419] border border-white/10 rounded-2xl p-4 shadow-lg space-y-3">
+        <div class="flex items-center justify-between border-b border-white/10 pb-2.5">
+          <div class="flex items-center gap-2">
+            <span class="w-7 h-7 rounded-lg bg-emerald-400/10 text-emerald-400 flex items-center justify-center text-xs font-bold">
               <i class="fa-solid fa-pills"></i>
-            </div>
+            </span>
             <div>
               <h3 class="text-xs font-bold text-white">Daily Medication Reminders</h3>
-              <span class="text-[10px] text-emerald-400 font-medium">Peaceful chime + banner on dad's TV</span>
+              <p class="text-[10px] text-slate-400">Gentle chime and banner on TV screen</p>
             </div>
           </div>
         </div>
 
-        <div class="space-y-2 pt-1">
-          <!-- Morning Medicine Slot -->
+        <div class="space-y-2 pt-0.5">
+          <!-- Morning Slot -->
           <div class="p-2.5 rounded-xl bg-black/40 border border-white/10 flex items-center justify-between">
-            <div class="flex items-center gap-2.5">
-              <span class="text-base">💊</span>
-              <div>
-                <div class="text-xs font-bold text-white">Morning Medicine</div>
-                <div class="text-[10px] text-slate-400">Time: <b id="morning-med-display" class="text-emerald-300">08:30 AM</b></div>
-              </div>
+            <div>
+              <div class="text-xs font-bold text-white">Morning Medicine</div>
+              <div class="text-[10px] text-slate-400">Scheduled: <b id="morning-med-display" class="text-emerald-400 font-semibold">08:30 AM</b></div>
             </div>
             <div class="flex items-center gap-2">
-              <button onclick="testMedicationAlert('morning')" title="Test on TV" class="text-[10px] font-semibold text-emerald-400 bg-emerald-950/60 border border-emerald-800 px-2 py-1 rounded-lg active:scale-95 transition">
-                <i class="fa-solid fa-play text-[9px]"></i> Test
+              <button onclick="testMedicationAlert('morning')" title="Test Reminder" class="text-[10px] font-semibold text-emerald-400 bg-emerald-950/60 border border-emerald-800 px-2 py-1 rounded-lg active:scale-95 transition">
+                Test
               </button>
-              <button onclick="openMedicationTimeModal('morning')" title="Change Time" class="text-[10px] font-semibold text-slate-300 bg-white/10 px-2 py-1 rounded-lg active:scale-95 transition">
+              <button onclick="openMedicationTimeModal('morning')" title="Edit Time" class="text-[10px] font-semibold text-slate-300 bg-white/10 px-2 py-1 rounded-lg active:scale-95 transition">
                 <i class="fa-solid fa-pen text-[9px]"></i>
               </button>
               <label class="relative inline-flex items-center cursor-pointer">
                 <input type="checkbox" id="morning-med-toggle" checked onchange="toggleMedicationSlot('morning', this.checked)" class="sr-only peer">
-                <div class="w-8 h-4 bg-[#272730] rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:rounded-full after:h-3 after:w-3 after:transition-all peer-checked:bg-emerald-500"></div>
+                <div class="w-8 h-4 bg-[#252731] rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:rounded-full after:h-3 after:w-3 after:transition-all peer-checked:bg-emerald-500"></div>
               </label>
             </div>
           </div>
 
-          <!-- Night Medicine Slot -->
+          <!-- Evening Slot -->
           <div class="p-2.5 rounded-xl bg-black/40 border border-white/10 flex items-center justify-between">
-            <div class="flex items-center gap-2.5">
-              <span class="text-base">🌙</span>
-              <div>
-                <div class="text-xs font-bold text-white">Night Medicine</div>
-                <div class="text-[10px] text-slate-400">Time: <b id="night-med-display" class="text-emerald-300">08:30 PM</b></div>
-              </div>
+            <div>
+              <div class="text-xs font-bold text-white">Evening Medicine</div>
+              <div class="text-[10px] text-slate-400">Scheduled: <b id="night-med-display" class="text-emerald-400 font-semibold">08:30 PM</b></div>
             </div>
             <div class="flex items-center gap-2">
-              <button onclick="testMedicationAlert('night')" title="Test on TV" class="text-[10px] font-semibold text-emerald-400 bg-emerald-950/60 border border-emerald-800 px-2 py-1 rounded-lg active:scale-95 transition">
-                <i class="fa-solid fa-play text-[9px]"></i> Test
+              <button onclick="testMedicationAlert('night')" title="Test Reminder" class="text-[10px] font-semibold text-emerald-400 bg-emerald-950/60 border border-emerald-800 px-2 py-1 rounded-lg active:scale-95 transition">
+                Test
               </button>
-              <button onclick="openMedicationTimeModal('night')" title="Change Time" class="text-[10px] font-semibold text-slate-300 bg-white/10 px-2 py-1 rounded-lg active:scale-95 transition">
+              <button onclick="openMedicationTimeModal('night')" title="Edit Time" class="text-[10px] font-semibold text-slate-300 bg-white/10 px-2 py-1 rounded-lg active:scale-95 transition">
                 <i class="fa-solid fa-pen text-[9px]"></i>
               </button>
               <label class="relative inline-flex items-center cursor-pointer">
                 <input type="checkbox" id="night-med-toggle" checked onchange="toggleMedicationSlot('night', this.checked)" class="sr-only peer">
-                <div class="w-8 h-4 bg-[#272730] rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:rounded-full after:h-3 after:w-3 after:transition-all peer-checked:bg-emerald-500"></div>
+                <div class="w-8 h-4 bg-[#252731] rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:rounded-full after:h-3 after:w-3 after:transition-all peer-checked:bg-emerald-500"></div>
               </label>
             </div>
           </div>
         </div>
       </div>
 
-      <!-- Automations: Night Guard & 24/7 Paras TV -->
-      <div class="glass-card rounded-2xl p-4 shadow-md space-y-2.5">
-        <h3 class="text-xs font-bold text-white">Smart Power Automations</h3>
+      <!-- Power & Comfort Automations -->
+      <div class="bg-[#131419] border border-white/10 rounded-2xl p-4 shadow-lg space-y-2.5">
+        <h3 class="text-xs font-bold text-white">Comfort & Power Rules</h3>
         
-        <!-- 24/7 Paras TV Default Wake -->
-        <div class="flex items-center justify-between p-2.5 bg-black/30 rounded-xl border border-white/5">
-          <div class="flex items-center gap-2">
-            <span class="text-sm">🌸</span>
-            <div>
-              <div class="text-xs font-bold text-white">Default Paras TV Wake</div>
-              <div class="text-[10px] text-slate-400">Always start on Paras TV Live</div>
-            </div>
+        <!-- Default Paras TV Wake -->
+        <div class="flex items-center justify-between p-2.5 bg-black/40 rounded-xl border border-white/10">
+          <div>
+            <div class="text-xs font-bold text-white">Startup on Paras TV</div>
+            <div class="text-[10px] text-slate-400">Always start directly on Paras TV Live</div>
           </div>
           <label class="relative inline-flex items-center cursor-pointer">
             <input type="checkbox" id="paras-allday-toggle" checked onchange="toggleParasAllDay(this.checked)" class="sr-only peer">
-            <div class="w-8 h-4 bg-[#272730] rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:rounded-full after:h-3 after:w-3 after:transition-all peer-checked:bg-amber-500"></div>
+            <div class="w-8 h-4 bg-[#252731] rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:rounded-full after:h-3 after:w-3 after:transition-all peer-checked:bg-amber-500"></div>
           </label>
         </div>
 
         <!-- Night Volume Guard -->
-        <div class="flex items-center justify-between p-2.5 bg-black/30 rounded-xl border border-white/5">
-          <div class="flex items-center gap-2">
-            <span class="text-sm">🌙</span>
-            <div>
-              <div class="text-xs font-bold text-white">Night Volume Guard</div>
-              <div class="text-[10px] text-slate-400">Cap at 18% (9:30 PM – 6:00 AM)</div>
-            </div>
+        <div class="flex items-center justify-between p-2.5 bg-black/40 rounded-xl border border-white/10">
+          <div>
+            <div class="text-xs font-bold text-white">Night Volume Guard</div>
+            <div class="text-[10px] text-slate-400">Cap sound at 18% (9:30 PM – 6:00 AM)</div>
           </div>
           <label class="relative inline-flex items-center cursor-pointer">
             <input type="checkbox" id="night-guard-toggle" checked onchange="toggleNightGuard(this.checked)" class="sr-only peer">
-            <div class="w-8 h-4 bg-[#272730] rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:rounded-full after:h-3 after:w-3 after:transition-all peer-checked:bg-indigo-500"></div>
+            <div class="w-8 h-4 bg-[#252731] rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:rounded-full after:h-3 after:w-3 after:transition-all peer-checked:bg-indigo-500"></div>
           </label>
         </div>
       </div>
@@ -537,37 +593,37 @@
 
   </main>
 
-  <!-- ==================== CLEAN 3-TAB BOTTOM NAVIGATION DOCK ==================== -->
-  <nav class="fixed bottom-0 inset-x-0 z-40 bg-[#18181e]/95 backdrop-blur-md border-t border-white/10 py-2.5 px-8 flex justify-around items-center max-w-sm mx-auto">
-    <button onclick="switchTab('remote')" id="tab-remote" class="flex flex-col items-center gap-1 text-slate-400 active-nav transition">
-      <i class="fa-solid fa-gamepad text-lg"></i>
-      <span class="text-[10px] font-semibold">Remote</span>
+  <!-- ==================== DOCKED 3-TAB HARDWARE NAVIGATION ==================== -->
+  <nav class="fixed bottom-0 inset-x-0 z-40 bg-[#0d0e12]/95 backdrop-blur-xl border-t border-white/10 py-2.5 px-8 flex justify-around items-center max-w-sm mx-auto shadow-2xl">
+    <button onclick="switchTab('remote')" id="tab-remote" class="nav-tab active flex flex-col items-center gap-1 text-slate-400 transition">
+      <i class="fa-solid fa-gamepad text-base"></i>
+      <span class="text-[10px] font-bold">Remote</span>
     </button>
-    <button onclick="switchTab('apps')" id="tab-apps" class="flex flex-col items-center gap-1 text-slate-400 transition">
-      <i class="fa-solid fa-cloud-arrow-up text-lg"></i>
-      <span class="text-[10px] font-semibold">Cast</span>
+    <button onclick="switchTab('apps')" id="tab-apps" class="nav-tab flex flex-col items-center gap-1 text-slate-400 transition">
+      <i class="fa-solid fa-arrow-up-right-from-square text-base"></i>
+      <span class="text-[10px] font-bold">Cast</span>
     </button>
-    <button onclick="switchTab('routines')" id="tab-routines" class="flex flex-col items-center gap-1 text-slate-400 transition">
-      <i class="fa-solid fa-heart-pulse text-lg"></i>
-      <span class="text-[10px] font-semibold">Care</span>
+    <button onclick="switchTab('routines')" id="tab-routines" class="nav-tab flex flex-col items-center gap-1 text-slate-400 transition">
+      <i class="fa-solid fa-heart-pulse text-base"></i>
+      <span class="text-[10px] font-bold">Care</span>
     </button>
   </nav>
 
   <!-- ==================== MODAL: SETTINGS & TOOLS ==================== -->
-  <div id="modal-settings" class="fixed inset-0 z-50 bg-black/80 backdrop-blur-sm hidden items-center justify-center p-4">
-    <div class="glass-card rounded-3xl p-5 w-full max-w-sm space-y-4 border border-white/10 shadow-2xl">
+  <div id="modal-settings" class="fixed inset-0 z-50 bg-black/85 backdrop-blur-sm hidden items-center justify-center p-4">
+    <div class="bg-[#131419] rounded-3xl p-5 w-full max-w-sm space-y-4 border border-white/10 shadow-2xl">
       <div class="flex items-center justify-between border-b border-white/10 pb-3">
-        <h3 class="text-sm font-bold text-white flex items-center gap-2">
-          <i class="fa-solid fa-gear accent-color"></i> Settings & Tools
+        <h3 class="text-xs font-bold text-white uppercase tracking-wider flex items-center gap-2">
+          <i class="fa-solid fa-sliders text-amber-400"></i> Settings & Diagnostics
         </h3>
         <button onclick="closeModal('modal-settings')" class="text-slate-400 hover:text-white">
-          <i class="fa-solid fa-xmark"></i>
+          <i class="fa-solid fa-xmark text-sm"></i>
         </button>
       </div>
 
       <div class="space-y-2.5 text-xs">
         <!-- TV Network Diagnostics Info -->
-        <div class="p-3 rounded-2xl bg-black/40 border border-white/10 space-y-2">
+        <div class="p-3 rounded-2xl bg-black/50 border border-white/10 space-y-2">
           <div class="flex items-center justify-between text-xs font-bold text-white border-b border-white/10 pb-2">
             <span class="flex items-center gap-2"><i class="fa-solid fa-network-wired text-sky-400"></i> TV Network Details</span>
             <span id="diag-status-pill" class="text-[10px] px-2 py-0.5 rounded-full font-bold bg-emerald-950/80 text-emerald-400 border border-emerald-800">Online</span>
@@ -578,113 +634,113 @@
               <span id="diag-wifi" class="font-bold text-white truncate block">Checking...</span>
             </div>
             <div>
-              <span class="text-slate-400 block text-[9px] uppercase font-semibold">Signal Strength</span>
-              <span id="diag-rssi" class="font-bold text-sky-400">Checking...</span>
+              <span class="text-slate-400 block text-[9px] uppercase font-semibold">Signal Quality</span>
+              <span id="diag-rssi" class="font-bold text-emerald-400">Checking...</span>
             </div>
             <div>
               <span class="text-slate-400 block text-[9px] uppercase font-semibold">TV IP Address</span>
               <span class="font-bold text-slate-300">10.218.252.142</span>
             </div>
             <div>
-              <span class="text-slate-400 block text-[9px] uppercase font-semibold">Active App</span>
-              <span id="diag-app" class="font-bold text-purple-300 truncate block">YouTube TV</span>
+              <span class="text-slate-400 block text-[9px] uppercase font-semibold">Foreground App</span>
+              <span id="diag-app" class="font-bold text-amber-300 truncate block">YouTube TV</span>
             </div>
           </div>
         </div>
 
-        <!-- Quick Keyboard -->
-        <button onclick="closeModal('modal-settings'); openKeyboardModal();" class="w-full p-3 rounded-xl bg-black/40 border border-white/10 text-white font-semibold flex items-center justify-between hover:bg-white/5 active:scale-98 transition">
-          <span class="flex items-center gap-2"><i class="fa-solid fa-keyboard text-purple-400"></i> TV Search & Keyboard</span>
+        <!-- TV Keyboard Input -->
+        <button onclick="closeModal('modal-settings'); openKeyboardModal();" class="w-full p-3 rounded-xl bg-[#1c1d24] border border-white/10 text-white font-semibold flex items-center justify-between hover:bg-[#252731] active:scale-98 transition">
+          <span class="flex items-center gap-2.5"><i class="fa-solid fa-keyboard text-sky-400"></i> TV Text & Search</span>
           <i class="fa-solid fa-chevron-right text-[10px] text-slate-400"></i>
         </button>
 
-        <!-- Switch Theme -->
-        <button onclick="closeModal('modal-settings'); openThemeModal();" class="w-full p-3 rounded-xl bg-black/40 border border-white/10 text-white font-semibold flex items-center justify-between hover:bg-white/5 active:scale-98 transition">
-          <span class="flex items-center gap-2"><i class="fa-solid fa-palette text-amber-400"></i> Color Theme</span>
+        <!-- Switch Hardware Finish (Theme) -->
+        <button onclick="closeModal('modal-settings'); openThemeModal();" class="w-full p-3 rounded-xl bg-[#1c1d24] border border-white/10 text-white font-semibold flex items-center justify-between hover:bg-[#252731] active:scale-98 transition">
+          <span class="flex items-center gap-2.5"><i class="fa-solid fa-palette text-amber-400"></i> Hardware Theme</span>
           <i class="fa-solid fa-chevron-right text-[10px] text-slate-400"></i>
         </button>
 
         <!-- Install PWA -->
-        <button onclick="promptInstallApp()" class="w-full p-3 rounded-xl bg-purple-950/40 border border-purple-500/30 text-purple-200 font-semibold flex items-center justify-between hover:bg-purple-900/40 active:scale-98 transition">
-          <span class="flex items-center gap-2"><i class="fa-solid fa-download text-purple-400"></i> Install Remote on Phone</span>
-          <span class="text-[9px] bg-purple-500/20 px-2 py-0.5 rounded-full">PWA</span>
+        <button onclick="promptInstallApp()" class="w-full p-3 rounded-xl bg-[#1a2333] border border-sky-500/30 text-sky-200 font-semibold flex items-center justify-between hover:bg-[#223047] active:scale-98 transition">
+          <span class="flex items-center gap-2.5"><i class="fa-solid fa-mobile-screen-button text-sky-400"></i> Install Remote on Phone</span>
+          <span class="text-[9px] bg-sky-500/20 px-2 py-0.5 rounded-full font-bold">PWA</span>
         </button>
 
         <!-- Lock Remote -->
-        <button onclick="closeModal('modal-settings'); lockRemote();" class="w-full p-3 rounded-xl bg-red-950/30 border border-red-500/20 text-red-300 font-semibold flex items-center justify-between hover:bg-red-900/30 active:scale-98 transition">
-          <span class="flex items-center gap-2"><i class="fa-solid fa-lock text-red-400"></i> Lock Remote Keypad</span>
-          <i class="fa-solid fa-arrow-right-from-bracket text-[10px] text-red-400"></i>
+        <button onclick="closeModal('modal-settings'); lockRemote();" class="w-full p-3 rounded-xl bg-rose-950/30 border border-rose-500/20 text-rose-300 font-semibold flex items-center justify-between hover:bg-rose-900/30 active:scale-98 transition">
+          <span class="flex items-center gap-2.5"><i class="fa-solid fa-lock text-rose-400"></i> Lock Remote Keypad</span>
+          <i class="fa-solid fa-arrow-right-from-bracket text-[10px] text-rose-400"></i>
         </button>
       </div>
 
       <div class="pt-1">
-        <button onclick="closeModal('modal-settings')" class="w-full py-2.5 bg-[#272730] hover:bg-black/60 text-white font-semibold text-xs rounded-xl border border-white/10">
+        <button onclick="closeModal('modal-settings')" class="w-full py-2.5 bg-[#1c1d24] hover:bg-[#252731] text-white font-semibold text-xs rounded-xl border border-white/10">
           Close
         </button>
       </div>
     </div>
   </div>
 
-  <!-- ==================== MODAL: SEND TV MESSAGE / ALERT ==================== -->
-  <div id="modal-alert" class="fixed inset-0 z-50 bg-black/80 backdrop-blur-sm hidden items-center justify-center p-4">
-    <div class="glass-card rounded-3xl p-5 w-full max-w-sm space-y-4 border border-white/10 shadow-2xl">
+  <!-- ==================== MODAL: SEND TV MESSAGE ==================== -->
+  <div id="modal-alert" class="fixed inset-0 z-50 bg-black/85 backdrop-blur-sm hidden items-center justify-center p-4">
+    <div class="bg-[#131419] rounded-3xl p-5 w-full max-w-sm space-y-4 border border-white/10 shadow-2xl">
       <div class="flex items-center justify-between border-b border-white/10 pb-3">
-        <h3 class="text-sm font-bold text-white flex items-center gap-2">
-          <i class="fa-solid fa-bell text-purple-400"></i> Send Message to TV Screen
+        <h3 class="text-xs font-bold text-white uppercase tracking-wider flex items-center gap-2">
+          <i class="fa-solid fa-bell text-amber-400"></i> Show Message on TV Screen
         </h3>
         <button onclick="closeModal('modal-alert')" class="text-slate-400 hover:text-white">
-          <i class="fa-solid fa-xmark text-base"></i>
+          <i class="fa-solid fa-xmark text-sm"></i>
         </button>
       </div>
 
       <div class="space-y-1.5">
-        <span class="text-[10px] font-semibold text-slate-400 uppercase tracking-wider">Quick Presets</span>
+        <span class="text-[10px] font-semibold text-slate-400 uppercase tracking-wider">Quick Messages</span>
         <div class="grid grid-cols-2 gap-2">
-          <button onclick="sendQuickAlert('🍲 Papa, Dinner is ready!')" class="p-2.5 rounded-xl bg-black/40 border border-white/10 hover:border-purple-400/50 text-left text-xs text-white transition active:scale-95 flex items-center gap-2">
-            <span>🍲</span> <span class="truncate">Dinner is ready!</span>
+          <button onclick="sendQuickAlert('🍲 Papa, Dinner is ready!')" class="p-2.5 rounded-xl bg-black/40 border border-white/10 hover:border-amber-400/40 text-left text-xs text-white transition active:scale-95 flex items-center gap-2">
+            <i class="fa-solid fa-utensils text-amber-400 text-xs"></i> <span class="truncate">Dinner is ready!</span>
           </button>
-          <button onclick="sendQuickAlert('💊 Papa, please take medicine!')" class="p-2.5 rounded-xl bg-black/40 border border-white/10 hover:border-purple-400/50 text-left text-xs text-white transition active:scale-95 flex items-center gap-2">
-            <span>💊</span> <span class="truncate">Take medicine!</span>
+          <button onclick="sendQuickAlert('💊 Papa, please take medicine!')" class="p-2.5 rounded-xl bg-black/40 border border-white/10 hover:border-amber-400/40 text-left text-xs text-white transition active:scale-95 flex items-center gap-2">
+            <i class="fa-solid fa-pills text-emerald-400 text-xs"></i> <span class="truncate">Take medicine!</span>
           </button>
-          <button onclick="sendQuickAlert('🥛 Papa, please drink warm water')" class="p-2.5 rounded-xl bg-black/40 border border-white/10 hover:border-purple-400/50 text-left text-xs text-white transition active:scale-95 flex items-center gap-2">
-            <span>🥛</span> <span class="truncate">Drink water</span>
+          <button onclick="sendQuickAlert('🥛 Papa, please drink warm water')" class="p-2.5 rounded-xl bg-black/40 border border-white/10 hover:border-amber-400/40 text-left text-xs text-white transition active:scale-95 flex items-center gap-2">
+            <i class="fa-solid fa-glass-water text-sky-400 text-xs"></i> <span class="truncate">Drink water</span>
           </button>
-          <button onclick="sendQuickAlert('📞 Call Dev on phone when free')" class="p-2.5 rounded-xl bg-black/40 border border-white/10 hover:border-purple-400/50 text-left text-xs text-white transition active:scale-95 flex items-center gap-2">
-            <span>📞</span> <span class="truncate">Call on phone</span>
+          <button onclick="sendQuickAlert('📞 Call Dev on phone when free')" class="p-2.5 rounded-xl bg-black/40 border border-white/10 hover:border-amber-400/40 text-left text-xs text-white transition active:scale-95 flex items-center gap-2">
+            <i class="fa-solid fa-phone text-indigo-400 text-xs"></i> <span class="truncate">Call on phone</span>
           </button>
         </div>
       </div>
 
       <div class="space-y-2 pt-1">
         <span class="text-[10px] font-semibold text-slate-400 uppercase tracking-wider">Custom Message</span>
-        <textarea id="custom-alert-input" rows="2" placeholder="Type custom message to show on TV..." class="w-full bg-black/50 border border-white/15 rounded-xl px-3 py-2 text-xs text-white focus:outline-none resize-none"></textarea>
+        <textarea id="custom-alert-input" rows="2" placeholder="Type message to display on TV..." class="w-full bg-black/60 border border-white/15 rounded-xl px-3 py-2 text-xs text-white focus:outline-none focus:border-amber-400 resize-none"></textarea>
         
-        <button onclick="sendCustomAlert()" class="w-full py-2.5 bg-purple-600 hover:bg-purple-500 text-white font-semibold text-xs rounded-xl shadow-md flex items-center justify-center gap-2 active:scale-95 transition">
-          <i class="fa-solid fa-paper-plane text-xs"></i> Show on TV Screen
+        <button onclick="sendCustomAlert()" class="w-full py-2.5 bg-amber-500 hover:bg-amber-400 text-black font-bold text-xs rounded-xl shadow-md flex items-center justify-center gap-2 active:scale-95 transition">
+          <i class="fa-solid fa-paper-plane text-xs"></i> Send to TV
         </button>
       </div>
     </div>
   </div>
 
   <!-- ==================== MODAL: KEYBOARD / TEXT ==================== -->
-  <div id="modal-keyboard" class="fixed inset-0 z-50 bg-black/80 backdrop-blur-sm hidden items-center justify-center p-4">
-    <div class="glass-card rounded-3xl p-5 w-full max-w-sm space-y-4 border border-white/10 shadow-2xl">
+  <div id="modal-keyboard" class="fixed inset-0 z-50 bg-black/85 backdrop-blur-sm hidden items-center justify-center p-4">
+    <div class="bg-[#131419] rounded-3xl p-5 w-full max-w-sm space-y-4 border border-white/10 shadow-2xl">
       <div class="flex items-center justify-between border-b border-white/10 pb-3">
-        <h3 class="text-sm font-bold text-white flex items-center gap-2">
-          <i class="fa-solid fa-keyboard text-purple-400"></i> Type on TV
+        <h3 class="text-xs font-bold text-white uppercase tracking-wider flex items-center gap-2">
+          <i class="fa-solid fa-keyboard text-sky-400"></i> Type on TV
         </h3>
         <button onclick="closeModal('modal-keyboard')" class="text-slate-400 hover:text-white">
-          <i class="fa-solid fa-xmark text-base"></i>
+          <i class="fa-solid fa-xmark text-sm"></i>
         </button>
       </div>
 
       <div class="space-y-2">
-        <input type="text" id="type-input" placeholder="Type search query or text..." class="w-full bg-black/50 border border-white/15 rounded-xl px-3 py-2.5 text-xs text-white focus:outline-none focus:border-purple-400">
+        <input type="text" id="type-input" placeholder="Type search query or text..." class="w-full bg-black/60 border border-white/15 rounded-xl px-3 py-2.5 text-xs text-white focus:outline-none focus:border-sky-400">
         <div class="flex gap-2">
-          <button onclick="sendTypedText()" class="flex-1 py-2.5 bg-purple-600 hover:bg-purple-500 text-white font-semibold text-xs rounded-xl shadow-md flex items-center justify-center gap-1.5 active:scale-95 transition">
+          <button onclick="sendTypedText()" class="flex-1 py-2.5 bg-sky-500 hover:bg-sky-400 text-black font-bold text-xs rounded-xl shadow-md flex items-center justify-center gap-1.5 active:scale-95 transition">
             <i class="fa-solid fa-paper-plane text-xs"></i> Send to TV
           </button>
-          <button onclick="sendCommand('key', '66')" title="Press Enter" class="px-4 py-2.5 bg-[#272730] hover:bg-[#343440] text-slate-200 font-semibold text-xs rounded-xl border border-white/10">
+          <button onclick="sendCommand('key', '66')" title="Press Enter" class="px-4 py-2.5 bg-[#1c1d24] hover:bg-[#252731] text-slate-200 font-semibold text-xs rounded-xl border border-white/10">
             Enter
           </button>
         </div>
@@ -692,15 +748,15 @@
     </div>
   </div>
 
-  <!-- ==================== MODAL: THEMES ==================== -->
-  <div id="modal-theme" class="fixed inset-0 z-50 bg-black/80 backdrop-blur-sm hidden items-center justify-center p-4">
-    <div class="glass-card rounded-3xl p-5 w-full max-w-sm space-y-4 border border-white/10 shadow-2xl max-h-[85vh] flex flex-col">
+  <!-- ==================== MODAL: HARDWARE THEMES ==================== -->
+  <div id="modal-theme" class="fixed inset-0 z-50 bg-black/85 backdrop-blur-sm hidden items-center justify-center p-4">
+    <div class="bg-[#131419] rounded-3xl p-5 w-full max-w-sm space-y-4 border border-white/10 shadow-2xl max-h-[85vh] flex flex-col">
       <div class="flex items-center justify-between border-b border-white/10 pb-3">
-        <h3 class="text-sm font-bold text-white flex items-center gap-2">
-          <i class="fa-solid fa-palette text-amber-400"></i> Choose Remote Theme
+        <h3 class="text-xs font-bold text-white uppercase tracking-wider flex items-center gap-2">
+          <i class="fa-solid fa-palette text-amber-400"></i> Hardware Theme
         </h3>
         <button onclick="closeModal('modal-theme')" class="text-slate-400 hover:text-white">
-          <i class="fa-solid fa-xmark text-base"></i>
+          <i class="fa-solid fa-xmark text-sm"></i>
         </button>
       </div>
       <div id="theme-options-list" class="space-y-2 overflow-y-auto flex-1 pr-1"></div>
@@ -708,14 +764,14 @@
   </div>
 
   <!-- ==================== MODAL: MEDICATION TIME ==================== -->
-  <div id="modal-med-time" class="fixed inset-0 z-50 bg-black/80 backdrop-blur-sm hidden items-center justify-center p-4">
-    <div class="glass-card rounded-3xl p-5 w-full max-w-sm space-y-4 border border-white/10 shadow-2xl">
+  <div id="modal-med-time" class="fixed inset-0 z-50 bg-black/85 backdrop-blur-sm hidden items-center justify-center p-4">
+    <div class="bg-[#131419] rounded-3xl p-5 w-full max-w-sm space-y-4 border border-white/10 shadow-2xl">
       <div class="flex items-center justify-between border-b border-white/10 pb-3">
-        <h3 class="text-sm font-bold text-white flex items-center gap-2">
+        <h3 class="text-xs font-bold text-white uppercase tracking-wider flex items-center gap-2">
           <i class="fa-solid fa-clock text-emerald-400"></i> Set Medicine Time
         </h3>
         <button onclick="closeModal('modal-med-time')" class="text-slate-400 hover:text-white">
-          <i class="fa-solid fa-xmark"></i>
+          <i class="fa-solid fa-xmark text-sm"></i>
         </button>
       </div>
 
@@ -723,14 +779,14 @@
 
       <div class="space-y-3 text-xs">
         <div>
-          <label class="block text-slate-300 font-semibold mb-1.5" id="med-slot-label">Medicine Reminder Time</label>
-          <input type="time" id="med-slot-time-input" class="w-full bg-black/50 border border-white/15 rounded-xl px-3 py-2.5 text-white text-sm focus:outline-none focus:border-emerald-400">
+          <label class="block text-slate-300 font-semibold mb-1.5" id="med-slot-label">Reminder Time</label>
+          <input type="time" id="med-slot-time-input" class="w-full bg-black/60 border border-white/15 rounded-xl px-3 py-2 text-white text-sm focus:outline-none focus:border-emerald-400">
         </div>
-        <p class="text-[11px] text-slate-400">When father's TV is turned on at this time, a gentle chime sounds and an on-screen banner appears for 12 seconds.</p>
+        <p class="text-[11px] text-slate-400 leading-relaxed">When father's TV is turned on at this scheduled time, a gentle chime sounds and an on-screen banner appears for 12 seconds.</p>
       </div>
 
       <div class="pt-2 flex gap-2">
-        <button onclick="closeModal('modal-med-time')" class="flex-1 py-2.5 bg-[#272730] hover:bg-black/60 text-white font-semibold text-xs rounded-xl border border-white/10">
+        <button onclick="closeModal('modal-med-time')" class="flex-1 py-2.5 bg-[#1c1d24] hover:bg-[#252731] text-white font-semibold text-xs rounded-xl border border-white/10">
           Cancel
         </button>
         <button onclick="saveMedicationTime()" class="flex-1 py-2.5 bg-emerald-600 hover:bg-emerald-500 text-white font-semibold text-xs rounded-xl shadow-md active:scale-95 transition">
@@ -747,86 +803,90 @@
     const NTFY_BASE = 'https://ntfy.sh';
     const AUTH_TOKEN = 'ORBIT_SEC_2309';
 
-    // THEMES
+    // HARDWARE THEMES (ANTI-SLOP INDUSTRIAL FINISHES)
     const THEMES = {
-      roku: {
-        id: 'roku',
-        name: 'Roku Royal Violet',
-        subtitle: 'Matte charcoal with vibrant royal purple ring',
-        icon: 'fa-gamepad',
+      titanium: {
+        id: 'titanium',
+        name: 'Obsidian Titanium',
+        subtitle: 'Precision dark graphite with amber tactile accents',
+        icon: 'fa-cube',
         vars: {
-          '--bg-body': '#141418',
-          '--remote-body': '#1c1c22',
-          '--tactile-btn': '#272730',
-          '--tactile-btn-hover': '#343440',
-          '--tactile-btn-border': 'rgba(255, 255, 255, 0.08)',
-          '--dpad-color': '#7c3aed',
-          '--dpad-glow': 'rgba(124, 58, 237, 0.5)',
-          '--card-bg': 'rgba(26, 26, 32, 0.85)',
-          '--card-border': 'rgba(255, 255, 255, 0.08)',
-          '--accent-color': '#a78bfa'
+          '--bg-body': '#0a0b0e',
+          '--remote-surface': '#131419',
+          '--btn-bg': '#1c1d24',
+          '--btn-hover': '#252731',
+          '--btn-border': 'rgba(255, 255, 255, 0.08)',
+          '--btn-highlight': 'rgba(255, 255, 255, 0.12)',
+          '--dpad-ring': '#181920',
+          '--dpad-center': '#20222b',
+          '--dpad-active': '#f59e0b',
+          '--accent': '#f59e0b',
+          '--card-bg': '#131419'
         }
       },
       paras: {
         id: 'paras',
-        name: 'Paras Sapphire & Gold',
-        subtitle: 'Royal sapphire blue with sacred golden yellow D-Pad',
+        name: 'Paras Sapphire',
+        subtitle: 'Deep royal sapphire with sacred gold clickpad',
         icon: 'fa-om',
         vars: {
-          '--bg-body': '#0a1628',
-          '--remote-body': '#0f223d',
-          '--tactile-btn': '#162e52',
-          '--tactile-btn-hover': '#1e3d6b',
-          '--tactile-btn-border': 'rgba(245, 158, 11, 0.25)',
-          '--dpad-color': '#f59e0b',
-          '--dpad-glow': 'rgba(245, 158, 11, 0.5)',
-          '--card-bg': 'rgba(15, 34, 61, 0.85)',
-          '--card-border': 'rgba(245, 158, 11, 0.25)',
-          '--accent-color': '#fbbf24'
+          '--bg-body': '#060d19',
+          '--remote-surface': '#0b1629',
+          '--btn-bg': '#12223f',
+          '--btn-hover': '#192e54',
+          '--btn-border': 'rgba(245, 158, 11, 0.22)',
+          '--btn-highlight': 'rgba(255, 255, 255, 0.15)',
+          '--dpad-ring': '#0e1d35',
+          '--dpad-center': '#172b4c',
+          '--dpad-active': '#fbbf24',
+          '--accent': '#fbbf24',
+          '--card-bg': '#0b1629'
         }
       },
       jinvani: {
         id: 'jinvani',
-        name: 'Jinvani Maroon & Saffron',
-        subtitle: 'Rich sacred maroon with radiant saffron D-Pad',
+        name: 'Jinvani Maroon',
+        subtitle: 'Rich sacred maroon with radiant saffron clickpad',
         icon: 'fa-sun',
         vars: {
-          '--bg-body': '#1c080b',
-          '--remote-body': '#290d12',
-          '--tactile-btn': '#3d141b',
-          '--tactile-btn-hover': '#521b24',
-          '--tactile-btn-border': 'rgba(234, 88, 12, 0.25)',
-          '--dpad-color': '#ea580c',
-          '--dpad-glow': 'rgba(234, 88, 12, 0.5)',
-          '--card-bg': 'rgba(41, 13, 18, 0.85)',
-          '--card-border': 'rgba(234, 88, 12, 0.25)',
-          '--accent-color': '#fb923c'
+          '--bg-body': '#140608',
+          '--remote-surface': '#1f0a0d',
+          '--btn-bg': '#301116',
+          '--btn-hover': '#42171e',
+          '--btn-border': 'rgba(234, 88, 12, 0.22)',
+          '--btn-highlight': 'rgba(255, 255, 255, 0.15)',
+          '--dpad-ring': '#240c10',
+          '--dpad-center': '#381419',
+          '--dpad-active': '#fb923c',
+          '--accent': '#fb923c',
+          '--card-bg': '#1f0a0d'
         }
       },
-      oled: {
-        id: 'oled',
-        name: 'OLED Pure Black & Cyan',
-        subtitle: 'Deep pitch black with neon cyan glow',
-        icon: 'fa-moon',
+      nordic: {
+        id: 'nordic',
+        name: 'Nordic Monochrome',
+        subtitle: 'Pure matte black with crisp electric cyan',
+        icon: 'fa-circle-dot',
         vars: {
           '--bg-body': '#000000',
-          '--remote-body': '#0d0f14',
-          '--tactile-btn': '#161a22',
-          '--tactile-btn-hover': '#212733',
-          '--tactile-btn-border': 'rgba(0, 240, 255, 0.2)',
-          '--dpad-color': '#00f0ff',
-          '--dpad-glow': 'rgba(0, 240, 255, 0.5)',
-          '--card-bg': 'rgba(13, 15, 20, 0.9)',
-          '--card-border': 'rgba(0, 240, 255, 0.2)',
-          '--accent-color': '#38bdf8'
+          '--remote-surface': '#0c0c0e',
+          '--btn-bg': '#151518',
+          '--btn-hover': '#1f1f24',
+          '--btn-border': 'rgba(255, 255, 255, 0.1)',
+          '--btn-highlight': 'rgba(255, 255, 255, 0.16)',
+          '--dpad-ring': '#111114',
+          '--dpad-center': '#19191d',
+          '--dpad-active': '#38bdf8',
+          '--accent': '#38bdf8',
+          '--card-bg': '#0c0c0e'
         }
       }
     };
 
-    let currentTheme = localStorage.getItem('orbit_theme') || 'roku';
+    let currentTheme = localStorage.getItem('orbit_theme') || 'titanium';
 
     function applyTheme(themeKey) {
-      const theme = THEMES[themeKey] || THEMES.roku;
+      const theme = THEMES[themeKey] || THEMES.titanium;
       currentTheme = themeKey;
       localStorage.setItem('orbit_theme', themeKey);
       for (const [prop, val] of Object.entries(theme.vars)) {
@@ -843,19 +903,19 @@
         const btn = document.createElement('button');
         btn.onclick = () => { applyTheme(theme.id); renderThemeOptions(); };
         btn.className = `w-full text-left p-3 rounded-2xl flex items-center justify-between border transition-all ${
-          isSelected ? 'border-purple-400 bg-white/10 shadow-lg' : 'border-white/10 bg-black/30 hover:bg-white/5'
+          isSelected ? 'border-amber-400 bg-white/10 shadow-lg' : 'border-white/10 bg-black/40 hover:bg-white/5'
         }`;
         btn.innerHTML = `
           <div class="flex items-center gap-3">
-            <div class="w-9 h-9 rounded-xl flex items-center justify-center text-white text-sm" style="background: ${theme.vars['--dpad-color']}">
-              <i class="fa-solid ${theme.icon}"></i>
+            <div class="w-8 h-8 rounded-xl flex items-center justify-center text-white text-xs" style="background: ${theme.vars['--btn-bg']}; border: 1px solid ${theme.vars['--btn-border']}">
+              <i class="fa-solid ${theme.icon}" style="color: ${theme.vars['--accent']}"></i>
             </div>
             <div>
               <div class="text-xs font-bold text-white">${theme.name}</div>
               <div class="text-[10px] text-slate-400">${theme.subtitle}</div>
             </div>
           </div>
-          <div>${isSelected ? '<i class="fa-solid fa-check text-purple-400"></i>' : ''}</div>
+          <div>${isSelected ? '<i class="fa-solid fa-check text-amber-400"></i>' : ''}</div>
         `;
         container.appendChild(btn);
       });
@@ -922,7 +982,7 @@
 
     async function pressPin(digit) {
       if (lockTimer || enteredPin.length >= 4) return;
-      if (navigator.vibrate) navigator.vibrate(15);
+      if (navigator.vibrate) navigator.vibrate(12);
       enteredPin += digit;
 
       const dots = document.querySelectorAll('.pin-dot');
@@ -938,8 +998,8 @@
             lockScreen.classList.add('hidden');
             lockScreen.classList.remove('opacity-0');
             resetPinDots();
-            flashStatus('Remote Unlocked');
-          }, 200);
+            flashStatus('Remote Ready');
+          }, 180);
         } else {
           failedAttempts++;
           const errorEl = document.getElementById('lock-error');
@@ -983,7 +1043,7 @@
 
     // ==================== CORE COMMAND DISPATCHER ====================
     async function sendCommand(type, payload = '') {
-      if (navigator.vibrate) navigator.vibrate(25);
+      if (navigator.vibrate) navigator.vibrate(18);
       const payloadStr = payload ? `:${payload}` : '';
       const command = `AUTH:${AUTH_TOKEN}|${type.toUpperCase()}${payloadStr}`;
 
@@ -993,30 +1053,30 @@
           body: command,
           headers: { 'Title': 'SmartTV Command', 'Priority': 'urgent' }
         });
-        if (res.ok) flashStatus('Delivered');
+        if (res.ok) flashStatus('Sent');
       } catch (err) {
-        flashStatus('Network Error', true);
+        flashStatus('Offline', true);
       }
     }
 
     function sendQuickChannel(channel) {
       if (channel === 'paras') {
         sendCommand('URL', 'https://www.youtube.com/@parasnetwork/live');
-        flashStatus('Opening Paras TV Live...');
+        flashStatus('Opening Paras TV...');
       } else if (channel === 'jinvani') {
         sendCommand('URL', 'https://www.youtube.com/@jinvanichannelofficial/live');
-        flashStatus('Opening Jinvani Channel Live...');
+        flashStatus('Opening Jinvani...');
       }
     }
 
     function launchHotstar() {
       sendCommand('LAUNCH_APP', 'in.startv.hotstar');
-      flashStatus('Opening JioHotstar...');
+      flashStatus('Opening Hotstar...');
     }
 
     function launchCricketLive() {
       sendCommand('CRICKET', 'live');
-      flashStatus('Opening Live Cricket...');
+      flashStatus('Opening Cricket...');
     }
 
     function sendTypedText() {
@@ -1036,22 +1096,22 @@
         const tab = document.getElementById(`tab-${t}`);
         if (t === tabId) {
           view.classList.remove('hidden');
-          tab.classList.add('active-nav');
+          tab.classList.add('active');
           tab.classList.remove('text-slate-400');
         } else {
           view.classList.add('hidden');
-          tab.classList.remove('active-nav');
+          tab.classList.remove('active');
           tab.classList.add('text-slate-400');
         }
       });
     }
 
-    // ==================== FEATURE 2: LIVE STATUS & SCREEN PEEK ====================
+    // ==================== LIVE STATUS & SCREEN PEEK ====================
     let isCapturingScreen = false;
 
     function requestTVStatus() {
       sendCommand('STATUS', 'now');
-      flashStatus('Refreshing TV Status...');
+      flashStatus('Refreshing...');
     }
 
     function requestScreenshot() {
@@ -1069,7 +1129,7 @@
       if (peekFooter) peekFooter.classList.add('hidden');
 
       sendCommand('SCREEN', 'now');
-      flashStatus('Snapping TV Screen...');
+      flashStatus('Snapping Screen...');
 
       setTimeout(async () => {
         try {
@@ -1154,8 +1214,8 @@
       const connDot = document.getElementById('conn-dot');
       const connStatus = document.getElementById('conn-status');
       if (connDot && connStatus) {
-        connDot.className = isAwake ? 'w-2.5 h-2.5 rounded-full bg-emerald-400 animate-pulse' : (isDreaming ? 'w-2.5 h-2.5 rounded-full bg-sky-400' : 'w-2.5 h-2.5 rounded-full bg-amber-400');
-        connStatus.textContent = isAwake ? `TV Awake • ${status.app || 'Online'}` : (isDreaming ? 'TV Ambient Screensaver' : 'TV Standby');
+        connDot.className = isAwake ? 'w-2 h-2 rounded-full bg-emerald-400 animate-pulse shrink-0' : (isDreaming ? 'w-2 h-2 rounded-full bg-sky-400 shrink-0' : 'w-2 h-2 rounded-full bg-amber-400 shrink-0');
+        connStatus.textContent = isAwake ? `TV Awake • ${status.app || 'Online'}` : (isDreaming ? 'TV Ambient' : 'TV Standby');
       }
 
       const quickVol = document.getElementById('vol-quick-disp');
@@ -1168,7 +1228,6 @@
       const wifiDisp = document.getElementById('wifi-ssid-disp');
       const wifiBadge = document.getElementById('wifi-signal-badge');
       const wifiIcon = document.getElementById('wifi-icon');
-      const wifiIconBg = document.getElementById('wifi-icon-bg');
       const diagWifi = document.getElementById('diag-wifi');
       const diagRssi = document.getElementById('diag-rssi');
       const diagApp = document.getElementById('diag-app');
@@ -1176,7 +1235,7 @@
 
       if (wifiDisp) wifiDisp.textContent = wifiSSID;
       if (diagWifi) diagWifi.textContent = wifiSSID;
-      if (diagApp) diagApp.textContent = status.app || 'Unknown';
+      if (diagApp) diagApp.textContent = status.app || 'None';
       if (diagPill) {
         diagPill.textContent = isAwake ? 'Awake' : (isDreaming ? 'Ambient' : 'Standby');
         diagPill.className = isAwake ? 'text-[10px] px-2 py-0.5 rounded-full font-bold bg-emerald-950/80 text-emerald-400 border border-emerald-800' : 'text-[10px] px-2 py-0.5 rounded-full font-bold bg-amber-950/80 text-amber-400 border border-amber-800';
@@ -1184,49 +1243,37 @@
 
       if (wifiSSID === 'Disconnected' || !wifiSSID) {
         if (wifiBadge) {
-          wifiBadge.textContent = 'Disconnected';
-          wifiBadge.className = 'text-[10px] font-bold text-red-400 bg-red-950/60 border border-red-800/80 px-2 py-0.5 rounded-full';
+          wifiBadge.textContent = '• Offline';
+          wifiBadge.className = 'shrink-0 text-[9px] text-rose-400 font-semibold';
         }
-        if (wifiIcon) wifiIcon.className = 'fa-solid fa-wifi-slash text-sm';
-        if (wifiIconBg) wifiIconBg.className = 'w-8 h-8 rounded-xl bg-red-500/20 text-red-400 flex items-center justify-center shrink-0';
+        if (wifiIcon) wifiIcon.className = 'fa-solid fa-wifi-slash text-[9px] text-rose-400';
         if (diagRssi) {
           diagRssi.textContent = 'Disconnected';
-          diagRssi.className = 'font-bold text-red-400';
+          diagRssi.className = 'font-bold text-rose-400';
         }
       } else {
-        let signalLabel = 'Connected';
+        let signalLabel = '• Strong';
         let signalColor = 'text-emerald-400';
-        let badgeClass = 'text-[10px] font-bold text-emerald-400 bg-emerald-950/60 border border-emerald-800/80 px-2 py-0.5 rounded-full';
         const rssi = parseInt(status.rssi, 10);
         if (!isNaN(rssi) && rssi < 0) {
-          if (rssi >= -60) {
-            signalLabel = `Strong (${rssi} dBm)`;
-          } else if (rssi >= -72) {
-            signalLabel = `Good (${rssi} dBm)`;
-          } else if (rssi >= -82) {
-            signalLabel = `Fair (${rssi} dBm)`;
-            signalColor = 'text-amber-400';
-            badgeClass = 'text-[10px] font-bold text-amber-400 bg-amber-950/60 border border-amber-800/80 px-2 py-0.5 rounded-full';
-          } else {
-            signalLabel = `Weak (${rssi} dBm)`;
-            signalColor = 'text-red-400';
-            badgeClass = 'text-[10px] font-bold text-red-400 bg-red-950/60 border border-red-800/80 px-2 py-0.5 rounded-full';
-          }
+          if (rssi >= -60) signalLabel = `• Strong (${rssi} dBm)`;
+          else if (rssi >= -72) signalLabel = `• Good (${rssi} dBm)`;
+          else if (rssi >= -82) { signalLabel = `• Fair (${rssi} dBm)`; signalColor = 'text-amber-400'; }
+          else { signalLabel = `• Weak (${rssi} dBm)`; signalColor = 'text-rose-400'; }
         }
         if (wifiBadge) {
           wifiBadge.textContent = signalLabel;
-          wifiBadge.className = badgeClass;
+          wifiBadge.className = `shrink-0 text-[9px] font-semibold ${signalColor}`;
         }
-        if (wifiIcon) wifiIcon.className = 'fa-solid fa-wifi text-sm';
-        if (wifiIconBg) wifiIconBg.className = 'w-8 h-8 rounded-xl bg-sky-500/20 text-sky-400 flex items-center justify-center shrink-0';
+        if (wifiIcon) wifiIcon.className = 'fa-solid fa-wifi text-[9px] text-sky-400';
         if (diagRssi) {
-          diagRssi.textContent = signalLabel;
+          diagRssi.textContent = signalLabel.replace('• ', '');
           diagRssi.className = `font-bold ${signalColor}`;
         }
       }
     }
 
-    // ==================== FEATURE 3: CLOUD PUSH-TO-TV CASTING ====================
+    // ==================== PUSH-TO-TV CASTING ====================
     async function pasteAndCast() {
       try {
         const text = await navigator.clipboard.readText();
@@ -1262,31 +1309,31 @@
       switch (key) {
         case 'paras':
           sendCommand('URL', 'https://www.youtube.com/@parasnetwork/live');
-          flashStatus('Casting Paras TV Live...');
+          flashStatus('Opening Paras TV...');
           break;
         case 'jinvani':
           sendCommand('URL', 'https://www.youtube.com/@jinvanichannelofficial/live');
-          flashStatus('Casting Jinvani Channel Live...');
+          flashStatus('Opening Jinvani...');
           break;
         case 'bhaktamar':
           sendCommand('URL', 'https://www.youtube.com/results?search_query=Bhaktamar+Stotra+live');
-          flashStatus('Casting Bhaktamar Stotra...');
+          flashStatus('Opening Bhaktamar...');
           break;
         case 'navkar':
           sendCommand('URL', 'https://www.youtube.com/results?search_query=Navkar+Mantra+live+24+hours');
-          flashStatus('Casting Navkar Mantra 24/7...');
+          flashStatus('Opening Navkar Mantra...');
           break;
         case 'cricket':
           launchCricketLive();
           break;
         case 'news':
           sendCommand('URL', 'https://www.youtube.com/results?search_query=Aaj+Tak+Live');
-          flashStatus('Casting Aaj Tak Live News...');
+          flashStatus('Opening Aaj Tak News...');
           break;
       }
     }
 
-    // ==================== FEATURE 4: CARE & REMINDERS ====================
+    // ==================== CARE & REMINDERS ====================
     let morningMedEnabled = localStorage.getItem('orbit_med_morning_enabled') !== '0';
     let morningMedTime = localStorage.getItem('orbit_med_morning_time') || '08:30';
     let nightMedEnabled = localStorage.getItem('orbit_med_night_enabled') !== '0';
@@ -1326,13 +1373,13 @@
         localStorage.setItem('orbit_med_morning_enabled', isEnabled ? '1' : '0');
         const [h, m] = morningMedTime.split(':').map(Number);
         sendCommand('REMINDER_CONFIG', `morning:${isEnabled ? '1' : '0'}:${h * 100 + m}`);
-        flashStatus(isEnabled ? 'Morning Reminder: ON' : 'Morning Reminder: OFF');
+        flashStatus(isEnabled ? 'Morning Alert ON' : 'Morning Alert OFF');
       } else {
         nightMedEnabled = isEnabled;
         localStorage.setItem('orbit_med_night_enabled', isEnabled ? '1' : '0');
         const [h, m] = nightMedTime.split(':').map(Number);
         sendCommand('REMINDER_CONFIG', `night:${isEnabled ? '1' : '0'}:${h * 100 + m}`);
-        flashStatus(isEnabled ? 'Night Reminder: ON' : 'Night Reminder: OFF');
+        flashStatus(isEnabled ? 'Evening Alert ON' : 'Evening Alert OFF');
       }
     }
 
@@ -1344,7 +1391,7 @@
         label.textContent = 'Morning Medicine Reminder Time';
         input.value = morningMedTime;
       } else {
-        label.textContent = 'Night Medicine Reminder Time';
+        label.textContent = 'Evening Medicine Reminder Time';
         input.value = nightMedTime;
       }
       document.getElementById('modal-med-time').classList.remove('hidden');
@@ -1370,7 +1417,7 @@
         sendCommand('REMINDER_CONFIG', `night:${nightMedEnabled ? '1' : '0'}:${h * 100 + m}`);
       }
       closeModal('modal-med-time');
-      flashStatus('Reminder Time Saved');
+      flashStatus('Schedule Saved');
     }
 
     function testMedicationAlert(slot) {
@@ -1379,27 +1426,27 @@
       } else {
         sendCommand('ALERT', 'med|Night Medication|Dad, time for your night medicines 💊');
       }
-      flashStatus('Testing Reminder on TV...');
+      flashStatus('Testing on TV...');
     }
 
     function toggleParasAllDay(isEnabled) {
       parasAllDay = isEnabled;
       localStorage.setItem('orbit_paras_allday', isEnabled ? '1' : '0');
       sendCommand('PARAS_ALL_DAY', isEnabled ? '1' : '0');
-      flashStatus(isEnabled ? 'Default Paras TV: Active 24/7' : 'Default Paras TV: Off');
+      flashStatus(isEnabled ? 'Default Paras TV: Active' : 'Default Paras TV: Off');
     }
 
     function toggleNightGuard(isEnabled) {
       nightGuard = isEnabled;
       localStorage.setItem('orbit_night_guard', isEnabled ? '1' : '0');
       sendCommand('NIGHT_GUARD', isEnabled ? '1' : '0');
-      flashStatus(isEnabled ? 'Night Volume Guard: ON' : 'Night Volume Guard: OFF');
+      flashStatus(isEnabled ? 'Night Guard: ON' : 'Night Guard: OFF');
     }
 
     function sendQuickAlert(text) {
       sendCommand('NOTIFY', text);
       closeModal('modal-alert');
-      flashStatus('Alert Sent to TV');
+      flashStatus('Sent to TV');
     }
 
     function sendCustomAlert() {
@@ -1409,7 +1456,7 @@
       sendCommand('NOTIFY', text);
       input.value = '';
       closeModal('modal-alert');
-      flashStatus('Alert Sent to TV');
+      flashStatus('Sent to TV');
     }
 
     // ==================== SSE STATUS LISTENER ====================
@@ -1471,11 +1518,11 @@
       if (!el) return;
       const prev = el.textContent;
       el.textContent = msg;
-      el.className = isError ? 'text-xs font-semibold text-red-400' : 'text-xs font-semibold text-purple-400';
+      el.className = isError ? 'text-xs font-bold text-rose-400' : 'text-xs font-bold text-amber-400';
       setTimeout(() => {
         el.textContent = prev;
-        el.className = 'text-xs font-semibold text-slate-200';
-      }, 2500);
+        el.className = 'text-xs font-bold text-white truncate leading-tight';
+      }, 2200);
     }
 
     // Initialization
