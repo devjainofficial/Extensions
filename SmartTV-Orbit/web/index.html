@@ -439,9 +439,9 @@
       </div>
 
       <div id="remote-deck" class="remote-deck space-y-3 transition-all duration-300">
-      <!-- FATHER'S DEVOTIONAL SWITCHES (PARAS & JINVANI) -->
+      <!-- 4 TOP CHANNELS (PARAS, JINVANI, HINDI NEWS, STAR PLUS) -->
       <div class="grid grid-cols-2 gap-2 w-full">
-        <!-- Paras TV Card -->
+        <!-- 1. Paras TV Card -->
         <button onclick="sendQuickChannel('paras')" class="bg-[#141d2e] hover:bg-[#1a253a] border border-[#233554] rounded-2xl p-2.5 flex items-center gap-2.5 active:scale-97 transition shadow-md">
           <img src="img/paras_tv.jpg" alt="Paras TV" class="w-9 h-9 rounded-xl object-cover border border-amber-400/30 shrink-0">
           <div class="text-left min-w-0 flex-1">
@@ -451,7 +451,7 @@
           <span class="w-1.5 h-1.5 rounded-full bg-emerald-400 shrink-0"></span>
         </button>
 
-        <!-- Jinvani Channel Card -->
+        <!-- 2. Jinvani Channel Card -->
         <button onclick="sendQuickChannel('jinvani')" class="bg-[#2a1317] hover:bg-[#38191e] border border-[#542129] rounded-2xl p-2.5 flex items-center gap-2.5 active:scale-97 transition shadow-md">
           <img src="img/jinvani.jpg" alt="Jinvani" class="w-9 h-9 rounded-xl object-cover border border-orange-400/30 shrink-0">
           <div class="text-left min-w-0 flex-1">
@@ -460,7 +460,28 @@
           </div>
           <span class="w-1.5 h-1.5 rounded-full bg-emerald-400 shrink-0"></span>
         </button>
-      </div>
+
+        <!-- 3. Hindi News Card (Aaj Tak Live) -->
+        <button onclick="sendQuickChannel('news')" class="bg-[#271217] hover:bg-[#35191f] border border-[#5c242e] rounded-2xl p-2.5 flex items-center gap-2.5 active:scale-97 transition shadow-md">
+          <div class="w-9 h-9 rounded-xl bg-gradient-to-br from-rose-600 to-rose-900 border border-rose-400/30 flex items-center justify-center shrink-0 shadow-inner">
+            <i class="fa-solid fa-newspaper text-white text-sm"></i>
+          </div>
+          <div class="text-left min-w-0 flex-1">
+            <div class="text-xs font-bold text-white truncate leading-tight">हिंदी न्यूज़</div>
+            <div class="text-[9px] text-rose-300 font-semibold">आज तक लाइव</div>
+          </div>
+          <span class="w-1.5 h-1.5 rounded-full bg-emerald-400 shrink-0 animate-pulse"></span>
+        </button>
+
+        <!-- 4. Star Plus Card (Hotstar Direct) -->
+        <button onclick="sendQuickChannel('starplus')" class="bg-[#0f1d38] hover:bg-[#15274d] border border-[#1e3a73] rounded-2xl p-2.5 flex items-center gap-2.5 active:scale-97 transition shadow-md">
+          <div class="w-9 h-9 rounded-xl bg-gradient-to-br from-amber-500 via-amber-600 to-sky-900 border border-amber-400/40 flex items-center justify-center shrink-0 shadow-inner">
+            <i class="fa-solid fa-star text-amber-200 text-sm"></i>
+          </div>
+          <div class="text-left min-w-0 flex-1">
+            <div class="text-xs font-bold text-white truncate leading-tight">स्टार प्लस</div>
+            <div class="text-[9px] text-sky-300 font-semibold">हॉटस्टार</div>
+          </div>
           <span class="w-1.5 h-1.5 rounded-full bg-emerald-400 shrink-0"></span>
         </button>
       </div>
@@ -528,8 +549,83 @@
         </button>
       </div>
 
-      <!-- ==================== SECONDARY MENU NAVIGATION ==================== -->
-      <div class="secondary-dpad-container">
+      <!-- ==================== CONTROLLER MODE SELECTOR ==================== -->
+      <div class="flex items-center justify-center p-1 bg-black/40 border border-white/10 rounded-2xl w-full">
+        <button id="mode-btn-mic" onclick="setControllerMode('mic')" class="flex-1 py-1.5 rounded-xl text-xs font-bold flex items-center justify-center gap-1.5 transition bg-amber-500/20 text-amber-300 border border-amber-500/40 shadow-sm">
+          <i class="fa-solid fa-microphone text-xs"></i> बोलकर खोजें (माइक)
+        </button>
+        <button id="mode-btn-dpad" onclick="setControllerMode('dpad')" class="flex-1 py-1.5 rounded-xl text-xs font-bold flex items-center justify-center gap-1.5 transition text-slate-400 hover:text-slate-200">
+          <i class="fa-solid fa-compass text-xs"></i> नेविगेशन (D-Pad)
+        </button>
+      </div>
+
+      <!-- ==================== MODE 1: VOICE SEARCH MIC CONSOLE ==================== -->
+      <div id="deck-mic" class="space-y-2 w-full transition-all duration-200">
+        <div class="bg-[#131419] border border-white/10 rounded-3xl p-4 shadow-xl flex flex-col items-center justify-center text-center relative overflow-hidden">
+          
+          <!-- Language Selector Pill (Top Right) -->
+          <div class="w-full flex items-center justify-between pb-2 border-b border-white/5 mb-1">
+            <span class="text-[10px] uppercase font-bold text-slate-400 tracking-wider flex items-center gap-1.5">
+              <i class="fa-solid fa-wand-magic-sparkles text-amber-400 text-xs"></i> स्मार्ट आवाज़ खोज
+            </span>
+            <div class="flex items-center gap-1 bg-black/50 border border-white/10 rounded-full px-2 py-0.5 text-[10px] text-slate-300">
+              <i class="fa-solid fa-language text-amber-400 text-[10px]"></i>
+              <select id="voice-lang-select" onchange="changeVoiceLanguage(this.value)" class="bg-transparent text-white font-semibold text-[10px] focus:outline-none cursor-pointer">
+                <option value="hi-IN" selected>हिंदी (Hindi)</option>
+                <option value="en-IN">English (India)</option>
+                <option value="gu-IN">ગુજરાતી (Gujarati)</option>
+              </select>
+            </div>
+          </div>
+
+          <!-- Dynamic Audio Equalizer Bars -->
+          <div id="mic-waveform" class="flex items-center gap-1 h-5 my-1 hidden">
+            <span class="w-1 bg-amber-400 rounded-full animate-pulse h-3"></span>
+            <span class="w-1 bg-amber-400 rounded-full animate-pulse h-5 delay-75"></span>
+            <span class="w-1 bg-amber-400 rounded-full animate-pulse h-6 delay-150"></span>
+            <span class="w-1 bg-amber-400 rounded-full animate-pulse h-4 delay-100"></span>
+            <span class="w-1 bg-amber-400 rounded-full animate-pulse h-2 delay-200"></span>
+          </div>
+
+          <!-- Big Circular Mic Button with Pulsing Glow -->
+          <div class="relative my-2.5">
+            <div id="mic-pulse-ring" class="absolute -inset-2.5 rounded-full bg-rose-500/30 blur-md hidden animate-ping"></div>
+            <button 
+              id="btn-voice-mic"
+              onclick="toggleVoiceListening()" 
+              class="relative w-20 h-20 rounded-full bg-gradient-to-br from-amber-500 to-amber-600 text-black flex items-center justify-center text-3xl shadow-lg active:scale-95 transition-all duration-200 hover:shadow-amber-500/30"
+              title="माइक दबाएं और बोलें"
+            >
+              <i id="mic-main-icon" class="fa-solid fa-microphone"></i>
+            </button>
+          </div>
+
+          <!-- Status Message & Caption -->
+          <div class="mt-1 space-y-0.5">
+            <h4 id="voice-status-title" class="text-sm font-bold text-white tracking-wide">
+              माइक दबाएं और बोलें
+            </h4>
+            <p id="voice-status-desc" class="text-[11px] text-slate-400">
+              भजन, समाचार, सीरियल या यूट्यूब वीडियो बोलकर खोजें
+            </p>
+          </div>
+
+          <!-- Live Recognized Transcript Box -->
+          <div id="voice-transcript-box" class="w-full mt-2.5 p-2 rounded-xl bg-black/60 border border-white/10 text-xs text-amber-300 font-medium min-h-[36px] flex items-center justify-center hidden">
+            <span id="voice-transcript-text">सुन रहे हैं...</span>
+          </div>
+
+          <!-- Progress / Loading Banner -->
+          <div id="voice-loading-banner" class="w-full mt-2.5 p-2 rounded-xl bg-amber-950/40 border border-amber-500/30 text-xs text-amber-200 font-semibold flex items-center justify-center gap-2 hidden">
+            <i class="fa-solid fa-circle-notch fa-spin text-amber-400 text-xs"></i>
+            <span id="voice-loading-text">यूट्यूब पर खोज रहे हैं...</span>
+          </div>
+
+        </div>
+      </div>
+
+      <!-- ==================== MODE 2: SECONDARY D-PAD NAVIGATION ==================== -->
+      <div id="deck-dpad" class="secondary-dpad-container hidden w-full">
         <div class="flex items-center justify-center py-1">
           <div class="secondary-wheel">
             <!-- Secondary Directional Keys -->
@@ -787,17 +883,21 @@
 
   </main>
 
-  <!-- ==================== DOCKED 3-TAB HARDWARE NAVIGATION ==================== -->
-  <nav class="fixed bottom-0 inset-x-0 z-40 bg-[#0d0e12]/95 backdrop-blur-xl border-t border-white/10 py-2.5 px-8 flex justify-around items-center max-w-sm mx-auto shadow-2xl">
-    <button onclick="switchTab('remote')" id="tab-remote" class="nav-tab active flex flex-col items-center gap-1 text-slate-400 transition">
-      <i class="fa-solid fa-gamepad text-base"></i>
-      <span class="text-[10px] font-bold">रिमोट</span>
+  <!-- ==================== DOCKED 4-TAB HARDWARE NAVIGATION ==================== -->
+  <nav class="fixed bottom-0 inset-x-0 z-40 bg-[#0d0e12]/95 backdrop-blur-xl border-t border-white/10 py-2.5 px-3 flex justify-around items-center max-w-sm mx-auto shadow-2xl">
+    <button onclick="switchTab('remote')" id="tab-remote" class="nav-tab active flex flex-col items-center gap-1 text-slate-400 transition" title="बोलकर खोजें">
+      <i class="fa-solid fa-microphone text-base"></i>
+      <span class="text-[10px] font-bold">माइक</span>
     </button>
-    <button onclick="switchTab('apps')" id="tab-apps" class="nav-tab flex flex-col items-center gap-1 text-slate-400 transition">
+    <button onclick="switchTab('dpad')" id="tab-dpad" class="nav-tab flex flex-col items-center gap-1 text-slate-400 transition" title="नेविगेशन बटन">
+      <i class="fa-solid fa-compass text-base"></i>
+      <span class="text-[10px] font-bold">नेविगेशन</span>
+    </button>
+    <button onclick="switchTab('apps')" id="tab-apps" class="nav-tab flex flex-col items-center gap-1 text-slate-400 transition" title="ऐप्स व कास्ट">
       <i class="fa-solid fa-arrow-up-right-from-square text-base"></i>
       <span class="text-[10px] font-bold">कास्ट</span>
     </button>
-    <button onclick="switchTab('routines')" id="tab-routines" class="nav-tab flex flex-col items-center gap-1 text-slate-400 transition">
+    <button onclick="switchTab('routines')" id="tab-routines" class="nav-tab flex flex-col items-center gap-1 text-slate-400 transition" title="दैनिक दिनचर्या">
       <i class="fa-solid fa-heart-pulse text-base"></i>
       <span class="text-[10px] font-bold">दिनचर्या</span>
     </button>
@@ -1495,7 +1595,286 @@
       } else if (channel === 'jinvani') {
         sendCommand('URL', 'https://www.youtube.com/@jinvanichannelofficial/live');
         flashStatus('जिनवाणी खुल रही है...');
+      } else if (channel === 'news') {
+        sendCommand('URL', 'https://www.youtube.com/@aajtak/live');
+        flashStatus('आज तक लाइव न्यूज़ खुल रही है...');
+      } else if (channel === 'starplus') {
+        sendCommand('URL', 'https://www.hotstar.com/in/channels/star-plus');
+        flashStatus('हॉटस्टार पर स्टार प्लस खुल रहा है...');
       }
+    }
+
+    // ==================== CONTROLLER MODE (MIC vs D-PAD) ====================
+    let currentControllerMode = 'mic';
+
+    function setControllerMode(mode) {
+      currentControllerMode = mode;
+      const micDeck = document.getElementById('deck-mic');
+      const dpadDeck = document.getElementById('deck-dpad');
+      const modeBtnMic = document.getElementById('mode-btn-mic');
+      const modeBtnDpad = document.getElementById('mode-btn-dpad');
+      const tabRemote = document.getElementById('tab-remote');
+      const tabDpad = document.getElementById('tab-dpad');
+
+      if (mode === 'dpad') {
+        if (micDeck) micDeck.classList.add('hidden');
+        if (dpadDeck) dpadDeck.classList.remove('hidden');
+        
+        if (modeBtnMic) {
+          modeBtnMic.className = 'flex-1 py-1.5 rounded-xl text-xs font-bold flex items-center justify-center gap-1.5 transition text-slate-400 hover:text-slate-200';
+        }
+        if (modeBtnDpad) {
+          modeBtnDpad.className = 'flex-1 py-1.5 rounded-xl text-xs font-bold flex items-center justify-center gap-1.5 transition bg-amber-500/20 text-amber-300 border border-amber-500/40 shadow-sm';
+        }
+
+        if (tabRemote) {
+          tabRemote.classList.remove('active');
+          tabRemote.classList.add('text-slate-400');
+        }
+        if (tabDpad) {
+          tabDpad.classList.add('active');
+          tabDpad.classList.remove('text-slate-400');
+        }
+      } else {
+        if (dpadDeck) dpadDeck.classList.add('hidden');
+        if (micDeck) micDeck.classList.remove('hidden');
+
+        if (modeBtnMic) {
+          modeBtnMic.className = 'flex-1 py-1.5 rounded-xl text-xs font-bold flex items-center justify-center gap-1.5 transition bg-amber-500/20 text-amber-300 border border-amber-500/40 shadow-sm';
+        }
+        if (modeBtnDpad) {
+          modeBtnDpad.className = 'flex-1 py-1.5 rounded-xl text-xs font-bold flex items-center justify-center gap-1.5 transition text-slate-400 hover:text-slate-200';
+        }
+
+        if (tabRemote) {
+          tabRemote.classList.add('active');
+          tabRemote.classList.remove('text-slate-400');
+        }
+        if (tabDpad) {
+          tabDpad.classList.remove('active');
+          tabDpad.classList.add('text-slate-400');
+        }
+      }
+    }
+
+    // ==================== VOICE SEARCH & SPEECH RECOGNITION ====================
+    let isVoiceListening = false;
+    let currentVoiceLang = 'hi-IN';
+    let latestVoiceTranscript = '';
+    let recognitionInstance = null;
+    let voiceResetTimer = null;
+
+    function initSpeechRecognition() {
+      const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+      if (!SpeechRecognition) {
+        console.warn('[Orbit Voice] SpeechRecognition API not supported on this browser.');
+        return null;
+      }
+
+      if (recognitionInstance) return recognitionInstance;
+
+      const recognition = new SpeechRecognition();
+      recognition.continuous = false;
+      recognition.interimResults = true;
+      recognition.maxAlternatives = 1;
+      recognition.lang = currentVoiceLang;
+
+      recognition.onstart = () => {
+        isVoiceListening = true;
+        latestVoiceTranscript = '';
+        if ('vibrate' in navigator) {
+          try { navigator.vibrate(40); } catch (e) {}
+        }
+        updateVoiceListeningUI(true);
+      };
+
+      recognition.onresult = (event) => {
+        let interimTranscript = '';
+        let finalTranscript = '';
+
+        for (let i = event.resultIndex; i < event.results.length; ++i) {
+          const item = event.results[i];
+          if (item.isFinal) {
+            finalTranscript += item[0].transcript;
+          } else {
+            interimTranscript += item[0].transcript;
+          }
+        }
+
+        const currentText = (finalTranscript || interimTranscript).trim();
+        if (currentText) {
+          const box = document.getElementById('voice-transcript-box');
+          const txt = document.getElementById('voice-transcript-text');
+          if (box) box.classList.remove('hidden');
+          if (txt) txt.textContent = `"${currentText}"`;
+        }
+
+        if (finalTranscript) {
+          latestVoiceTranscript = finalTranscript.trim();
+        }
+      };
+
+      recognition.onerror = (event) => {
+        console.warn('[Orbit Voice] Speech error:', event.error);
+        isVoiceListening = false;
+        updateVoiceListeningUI(false);
+
+        if (event.error === 'not-allowed') {
+          flashStatus('माइक्रोफ़ोन अनुमति चालू करें');
+          const title = document.getElementById('voice-status-title');
+          if (title) title.textContent = 'माइक अनुमति आवश्यक है';
+        } else if (event.error === 'no-speech') {
+          flashStatus('कोई आवाज़ नहीं सुनी गई');
+        }
+      };
+
+      recognition.onend = () => {
+        isVoiceListening = false;
+        updateVoiceListeningUI(false);
+
+        const query = latestVoiceTranscript;
+        latestVoiceTranscript = '';
+        if (query) {
+          processVoiceQuery(query);
+        }
+      };
+
+      recognitionInstance = recognition;
+      return recognitionInstance;
+    }
+
+    function toggleVoiceListening() {
+      const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+      if (!SpeechRecognition) {
+        flashStatus('इस ब्राउज़र में आवाज़ समर्थित नहीं है');
+        return;
+      }
+
+      const rec = initSpeechRecognition();
+      if (!rec) return;
+
+      if (isVoiceListening) {
+        try { rec.stop(); } catch (e) {}
+      } else {
+        rec.lang = currentVoiceLang;
+        try {
+          rec.start();
+        } catch (e) {
+          try { rec.stop(); } catch (err) {}
+          setTimeout(() => {
+            try { rec.start(); } catch (err2) {
+              console.error('[Orbit Voice] Failed to start recognition:', err2);
+            }
+          }, 150);
+        }
+      }
+    }
+
+    function changeVoiceLanguage(lang) {
+      currentVoiceLang = lang || 'hi-IN';
+      const select = document.getElementById('voice-lang-select');
+      if (select && select.value !== currentVoiceLang) {
+        select.value = currentVoiceLang;
+      }
+      if (recognitionInstance) {
+        recognitionInstance.lang = currentVoiceLang;
+      }
+      const langNames = {
+        'hi-IN': 'हिंदी',
+        'en-IN': 'English',
+        'gu-IN': 'ગુજરાતી'
+      };
+      flashStatus(`भाषा: ${langNames[currentVoiceLang] || currentVoiceLang}`);
+    }
+
+    function updateVoiceListeningUI(listening) {
+      const btn = document.getElementById('btn-voice-mic');
+      const icon = document.getElementById('mic-main-icon');
+      const ring = document.getElementById('mic-pulse-ring');
+      const wave = document.getElementById('mic-waveform');
+      const title = document.getElementById('voice-status-title');
+      const desc = document.getElementById('voice-status-desc');
+      const transBox = document.getElementById('voice-transcript-box');
+      const transText = document.getElementById('voice-transcript-text');
+      const loadBanner = document.getElementById('voice-loading-banner');
+
+      if (listening) {
+        if (btn) {
+          btn.className = 'relative w-20 h-20 rounded-full bg-gradient-to-br from-rose-500 to-rose-600 text-white flex items-center justify-center text-3xl shadow-xl shadow-rose-500/40 active:scale-95 transition-all duration-200';
+        }
+        if (icon) icon.className = 'fa-solid fa-microphone-lines text-white';
+        if (ring) ring.classList.remove('hidden');
+        if (wave) wave.classList.remove('hidden');
+        if (title) title.textContent = 'सुन रहे हैं... बोलिए';
+        if (desc) desc.textContent = 'अपनी आवाज़ में जो देखना चाहते हैं बोलें';
+        if (transBox) transBox.classList.remove('hidden');
+        if (transText) transText.textContent = 'सुन रहे हैं...';
+        if (loadBanner) loadBanner.classList.add('hidden');
+      } else {
+        if (btn) {
+          btn.className = 'relative w-20 h-20 rounded-full bg-gradient-to-br from-amber-500 to-amber-600 text-black flex items-center justify-center text-3xl shadow-lg active:scale-95 transition-all duration-200 hover:shadow-amber-500/30';
+        }
+        if (icon) icon.className = 'fa-solid fa-microphone';
+        if (ring) ring.classList.add('hidden');
+        if (wave) wave.classList.add('hidden');
+      }
+    }
+
+    function processVoiceQuery(query) {
+      if (!query || !query.trim()) return;
+      const cleanQuery = query.trim();
+      const q = cleanQuery.toLowerCase();
+
+      const loadBanner = document.getElementById('voice-loading-banner');
+      const loadText = document.getElementById('voice-loading-text');
+      const title = document.getElementById('voice-status-title');
+      const desc = document.getElementById('voice-status-desc');
+      const transBox = document.getElementById('voice-transcript-box');
+      const transText = document.getElementById('voice-transcript-text');
+
+      if (transBox) transBox.classList.remove('hidden');
+      if (transText) transText.textContent = `"${cleanQuery}"`;
+
+      let targetMessage = '';
+      let targetCommand = null;
+
+      // Smart routing
+      if (q.includes('स्टार प्लस') || q.includes('star plus') || q.includes('starplus') || q.includes('स्टारप्लस') || q.includes('हॉटस्टार') || q.includes('hotstar')) {
+        targetMessage = 'हॉटस्टार पर स्टार प्लस खोल रहे हैं...';
+        targetCommand = () => sendCommand('URL', 'https://www.hotstar.com/in/channels/star-plus');
+      } else if (q.includes('आज तक') || q.includes('aaj tak') || q.includes('आजतक') || q.includes('न्यूज़') || q.includes('news') || q.includes('समाचार') || q.includes('ताज़ा खबर') || q.includes('खबरें')) {
+        targetMessage = 'आज तक लाइव न्यूज़ खोल रहे हैं...';
+        targetCommand = () => sendCommand('URL', 'https://www.youtube.com/@aajtak/live');
+      } else if (q.includes('पारस') || q.includes('paras')) {
+        targetMessage = 'पारस टीवी लाइव खोल रहे हैं...';
+        targetCommand = () => sendCommand('URL', 'https://www.youtube.com/@parasnetwork/live');
+      } else if (q.includes('जिनवाणी') || q.includes('jinvani') || q.includes('jinwani')) {
+        targetMessage = 'जिनवाणी चैनल लाइव खोल रहे हैं...';
+        targetCommand = () => sendCommand('URL', 'https://www.youtube.com/@jinvanichannelofficial/live');
+      } else {
+        targetMessage = `यूट्यूब पर खोज रहे हैं: "${cleanQuery}"...`;
+        targetCommand = () => sendCommand('URL', `https://www.youtube.com/results?search_query=${encodeURIComponent(cleanQuery)}`);
+      }
+
+      if (loadBanner) loadBanner.classList.remove('hidden');
+      if (loadText) loadText.textContent = targetMessage;
+      if (title) title.textContent = `"${cleanQuery}"`;
+      if (desc) desc.textContent = targetMessage;
+
+      flashStatus(targetMessage);
+
+      // Execute command
+      if (targetCommand) {
+        targetCommand();
+      }
+
+      // Restore UI after 4.5s
+      clearTimeout(voiceResetTimer);
+      voiceResetTimer = setTimeout(() => {
+        if (loadBanner) loadBanner.classList.add('hidden');
+        if (title) title.textContent = 'माइक दबाएं और बोलें';
+        if (desc) desc.textContent = 'भजन, समाचार, सीरियल या यूट्यूब वीडियो बोलकर खोजें';
+      }, 4500);
     }
 
     function launchHotstar() {
@@ -1520,17 +1899,51 @@
 
     // ==================== TAB SWITCHING ====================
     function switchTab(tabId) {
+      if (tabId === 'dpad') {
+        ['remote', 'apps', 'routines'].forEach(t => {
+          const view = document.getElementById(`view-${t}`);
+          if (view) {
+            if (t === 'remote') view.classList.remove('hidden');
+            else view.classList.add('hidden');
+          }
+        });
+        ['remote', 'dpad', 'apps', 'routines'].forEach(t => {
+          const tab = document.getElementById(`tab-${t}`);
+          if (tab) {
+            if (t === 'dpad') {
+              tab.classList.add('active');
+              tab.classList.remove('text-slate-400');
+            } else {
+              tab.classList.remove('active');
+              tab.classList.add('text-slate-400');
+            }
+          }
+        });
+        setControllerMode('dpad');
+        return;
+      }
+
+      if (tabId === 'remote') {
+        setControllerMode('mic');
+      }
+
       ['remote', 'apps', 'routines'].forEach(t => {
         const view = document.getElementById(`view-${t}`);
+        if (view) {
+          if (t === tabId) view.classList.remove('hidden');
+          else view.classList.add('hidden');
+        }
+      });
+      ['remote', 'dpad', 'apps', 'routines'].forEach(t => {
         const tab = document.getElementById(`tab-${t}`);
-        if (t === tabId) {
-          view.classList.remove('hidden');
-          tab.classList.add('active');
-          tab.classList.remove('text-slate-400');
-        } else {
-          view.classList.add('hidden');
-          tab.classList.remove('active');
-          tab.classList.add('text-slate-400');
+        if (tab) {
+          if (t === tabId) {
+            tab.classList.add('active');
+            tab.classList.remove('text-slate-400');
+          } else {
+            tab.classList.remove('active');
+            tab.classList.add('text-slate-400');
+          }
         }
       });
     }
@@ -2294,6 +2707,7 @@
       applyTheme(currentTheme);
       initMedicationReminders();
       initCloudStatusListener();
+      try { initSpeechRecognition(); } catch (e) {}
       setTimeout(requestTVStatus, 800);
     });
   </script>
