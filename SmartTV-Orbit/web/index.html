@@ -439,51 +439,66 @@
       </div>
 
       <div id="remote-deck" class="remote-deck space-y-3 transition-all duration-300">
-      <!-- 4 TOP CHANNELS (PARAS, JINVANI, HINDI NEWS, STAR PLUS) -->
-      <div class="grid grid-cols-2 gap-2 w-full">
-        <!-- 1. Paras TV Card -->
-        <button onclick="sendQuickChannel('paras')" class="bg-[#141d2e] hover:bg-[#1a253a] border border-[#233554] rounded-2xl p-2.5 flex items-center gap-2.5 active:scale-97 transition shadow-md">
-          <img src="img/paras_tv.jpg" alt="Paras TV" class="w-9 h-9 rounded-xl object-cover border border-amber-400/30 shrink-0">
-          <div class="text-left min-w-0 flex-1">
-            <div class="text-xs font-bold text-white truncate leading-tight">पारस टीवी</div>
-            <div class="text-[9px] text-amber-300 font-semibold">लाइव दर्शन</div>
-          </div>
-          <span class="w-1.5 h-1.5 rounded-full bg-emerald-400 shrink-0"></span>
-        </button>
+      <!-- TOP CHANNELS (ROW 1: DEVOTIONAL | ROW 2: NEWS, STAR PLUS, CRICKET) -->
+      <div class="space-y-2 w-full">
+        <!-- ROW 1: 2 Devotional Channels -->
+        <div class="grid grid-cols-2 gap-2 w-full">
+          <!-- 1. Paras TV Card -->
+          <button onclick="sendQuickChannel('paras')" class="bg-[#141d2e] hover:bg-[#1a253a] border border-[#233554] rounded-2xl p-2.5 flex items-center gap-2.5 active:scale-97 transition shadow-md">
+            <img src="img/paras_tv.jpg" alt="Paras TV" class="w-9 h-9 rounded-xl object-cover border border-amber-400/30 shrink-0">
+            <div class="text-left min-w-0 flex-1">
+              <div class="text-xs font-bold text-white truncate leading-tight">पारस टीवी</div>
+              <div class="text-[9px] text-amber-300 font-semibold">लाइव दर्शन</div>
+            </div>
+            <span class="w-1.5 h-1.5 rounded-full bg-emerald-400 shrink-0"></span>
+          </button>
 
-        <!-- 2. Jinvani Channel Card -->
-        <button onclick="sendQuickChannel('jinvani')" class="bg-[#2a1317] hover:bg-[#38191e] border border-[#542129] rounded-2xl p-2.5 flex items-center gap-2.5 active:scale-97 transition shadow-md">
-          <img src="img/jinvani.jpg" alt="Jinvani" class="w-9 h-9 rounded-xl object-cover border border-orange-400/30 shrink-0">
-          <div class="text-left min-w-0 flex-1">
-            <div class="text-xs font-bold text-white truncate leading-tight">जिनवाणी</div>
-            <div class="text-[9px] text-orange-300 font-semibold">लाइव भक्ति</div>
-          </div>
-          <span class="w-1.5 h-1.5 rounded-full bg-emerald-400 shrink-0"></span>
-        </button>
+          <!-- 2. Jinvani Channel Card -->
+          <button onclick="sendQuickChannel('jinvani')" class="bg-[#2a1317] hover:bg-[#38191e] border border-[#542129] rounded-2xl p-2.5 flex items-center gap-2.5 active:scale-97 transition shadow-md">
+            <img src="img/jinvani.jpg" alt="Jinvani" class="w-9 h-9 rounded-xl object-cover border border-orange-400/30 shrink-0">
+            <div class="text-left min-w-0 flex-1">
+              <div class="text-xs font-bold text-white truncate leading-tight">जिनवाणी</div>
+              <div class="text-[9px] text-orange-300 font-semibold">लाइव भक्ति</div>
+            </div>
+            <span class="w-1.5 h-1.5 rounded-full bg-emerald-400 shrink-0"></span>
+          </button>
+        </div>
 
-        <!-- 3. Hindi News Card (Aaj Tak Live) -->
-        <button onclick="sendQuickChannel('news')" class="bg-[#271217] hover:bg-[#35191f] border border-[#5c242e] rounded-2xl p-2.5 flex items-center gap-2.5 active:scale-97 transition shadow-md">
-          <div class="w-9 h-9 rounded-xl bg-gradient-to-br from-rose-600 to-rose-900 border border-rose-400/30 flex items-center justify-center shrink-0 shadow-inner">
-            <i class="fa-solid fa-newspaper text-white text-sm"></i>
-          </div>
-          <div class="text-left min-w-0 flex-1">
-            <div class="text-xs font-bold text-white truncate leading-tight">हिंदी न्यूज़</div>
-            <div class="text-[9px] text-rose-300 font-semibold">आज तक लाइव</div>
-          </div>
-          <span class="w-1.5 h-1.5 rounded-full bg-emerald-400 shrink-0 animate-pulse"></span>
-        </button>
+        <!-- ROW 2: 3 Entertainment & Sports Channels (News, Star Plus, Cricket Live) -->
+        <div class="grid grid-cols-3 gap-2 w-full">
+          <!-- 3. Hindi News Card (Aaj Tak Live) -->
+          <button onclick="sendQuickChannel('news')" class="bg-[#271217] hover:bg-[#35191f] border border-[#5c242e] rounded-2xl p-2 flex flex-col items-center justify-center text-center gap-1 active:scale-97 transition shadow-md">
+            <div class="w-8 h-8 rounded-xl bg-gradient-to-br from-rose-600 to-rose-900 border border-rose-400/30 flex items-center justify-center shrink-0 shadow-inner">
+              <i class="fa-solid fa-newspaper text-white text-xs"></i>
+            </div>
+            <div class="min-w-0 w-full">
+              <div class="text-[11px] font-bold text-white truncate leading-tight">हिंदी न्यूज़</div>
+              <div class="text-[9px] text-rose-300 font-semibold truncate">आज तक</div>
+            </div>
+          </button>
 
-        <!-- 4. Star Plus Card (Hotstar Direct) -->
-        <button onclick="sendQuickChannel('starplus')" class="bg-[#0f1d38] hover:bg-[#15274d] border border-[#1e3a73] rounded-2xl p-2.5 flex items-center gap-2.5 active:scale-97 transition shadow-md">
-          <div class="w-9 h-9 rounded-xl bg-gradient-to-br from-amber-500 via-amber-600 to-sky-900 border border-amber-400/40 flex items-center justify-center shrink-0 shadow-inner">
-            <i class="fa-solid fa-star text-amber-200 text-sm"></i>
-          </div>
-          <div class="text-left min-w-0 flex-1">
-            <div class="text-xs font-bold text-white truncate leading-tight">स्टार प्लस</div>
-            <div class="text-[9px] text-sky-300 font-semibold">हॉटस्टार</div>
-          </div>
-          <span class="w-1.5 h-1.5 rounded-full bg-emerald-400 shrink-0"></span>
-        </button>
+          <!-- 4. Star Plus Card (Hotstar Direct) -->
+          <button onclick="sendQuickChannel('starplus')" class="bg-[#0f1d38] hover:bg-[#15274d] border border-[#1e3a73] rounded-2xl p-2 flex flex-col items-center justify-center text-center gap-1 active:scale-97 transition shadow-md">
+            <div class="w-8 h-8 rounded-xl bg-gradient-to-br from-amber-500 via-amber-600 to-sky-900 border border-amber-400/40 flex items-center justify-center shrink-0 shadow-inner">
+              <i class="fa-solid fa-star text-amber-200 text-xs"></i>
+            </div>
+            <div class="min-w-0 w-full">
+              <div class="text-[11px] font-bold text-white truncate leading-tight">स्टार प्लस</div>
+              <div class="text-[9px] text-sky-300 font-semibold truncate">हॉटस्टार</div>
+            </div>
+          </button>
+
+          <!-- 5. Live Cricket Card (Hotstar Live Match) -->
+          <button onclick="sendQuickChannel('cricket')" class="bg-[#0b241b] hover:bg-[#113327] border border-[#19543e] rounded-2xl p-2 flex flex-col items-center justify-center text-center gap-1 active:scale-97 transition shadow-md">
+            <div class="w-8 h-8 rounded-xl bg-gradient-to-br from-emerald-500 to-teal-800 border border-emerald-400/40 flex items-center justify-center shrink-0 shadow-inner">
+              <i class="fa-solid fa-trophy text-emerald-200 text-xs"></i>
+            </div>
+            <div class="min-w-0 w-full">
+              <div class="text-[11px] font-bold text-white truncate leading-tight">लाइव क्रिकेट</div>
+              <div class="text-[9px] text-emerald-300 font-semibold truncate">हॉटस्टार मैच</div>
+            </div>
+          </button>
+        </div>
       </div>
 
       <!-- ==================== PRIMARY SOUND CONSOLE ==================== -->
@@ -491,14 +506,11 @@
         <!-- VOLUME UP -->
         <button 
           id="btn-vol-up"
-          class="vol-btn-primary"
+          class="vol-btn-primary select-none touch-none"
           title="आवाज़ बढ़ाएं"
-          onmousedown="startVolHold('up', event)"
-          onmouseup="stopVolHold(event)"
-          onmouseleave="stopVolHold(event)"
-          ontouchstart="startVolHold('up', event)"
-          ontouchend="stopVolHold(event)"
-          ontouchcancel="stopVolHold(event)"
+          onpointerdown="handleVolPointerDown('up', event)"
+          onpointerup="stopVolPointerHold(event)"
+          onpointercancel="stopVolPointerHold(event)"
           oncontextmenu="return false;"
         >
           <i class="fa-solid fa-plus text-sm text-amber-400"></i>
@@ -533,29 +545,16 @@
         <!-- VOLUME DOWN -->
         <button 
           id="btn-vol-down"
-          class="vol-btn-primary"
+          class="vol-btn-primary select-none touch-none"
           title="आवाज़ घटाएं"
-          onmousedown="startVolHold('down', event)"
-          onmouseup="stopVolHold(event)"
-          onmouseleave="stopVolHold(event)"
-          ontouchstart="startVolHold('down', event)"
-          ontouchend="stopVolHold(event)"
-          ontouchcancel="stopVolHold(event)"
+          onpointerdown="handleVolPointerDown('down', event)"
+          onpointerup="stopVolPointerHold(event)"
+          onpointercancel="stopVolPointerHold(event)"
           oncontextmenu="return false;"
         >
           <i class="fa-solid fa-minus text-sm text-amber-400"></i>
           <span class="text-xs font-black tracking-wider text-white">आवाज़ घटाएं (-)</span>
           <i class="fa-solid fa-volume-low text-xs text-amber-400/60"></i>
-        </button>
-      </div>
-
-      <!-- ==================== CONTROLLER MODE SELECTOR ==================== -->
-      <div class="flex items-center justify-center p-1 bg-black/40 border border-white/10 rounded-2xl w-full">
-        <button id="mode-btn-mic" onclick="setControllerMode('mic')" class="flex-1 py-1.5 rounded-xl text-xs font-bold flex items-center justify-center gap-1.5 transition bg-amber-500/20 text-amber-300 border border-amber-500/40 shadow-sm">
-          <i class="fa-solid fa-microphone text-xs"></i> बोलकर खोजें (माइक)
-        </button>
-        <button id="mode-btn-dpad" onclick="setControllerMode('dpad')" class="flex-1 py-1.5 rounded-xl text-xs font-bold flex items-center justify-center gap-1.5 transition text-slate-400 hover:text-slate-200">
-          <i class="fa-solid fa-compass text-xs"></i> नेविगेशन (D-Pad)
         </button>
       </div>
 
@@ -1469,14 +1468,20 @@
     let holdStartTime = 0;
     let holdInitialVol = 30;
 
-    function startVolHold(dir, ev) {
+    let volHoldSafetyTimer = null;
+
+    function handleVolPointerDown(dir, ev) {
       if (ev) {
-        if (ev.type === 'touchstart') {
-          // Prevent synthetic mousedown/click and long-press callout
-          ev.preventDefault();
-        }
+        try {
+          ev.currentTarget.setPointerCapture(ev.pointerId);
+        } catch (e) {}
       }
-      if (isHoldingVol) return;
+
+      // Reset any hanging state
+      if (isHoldingVol) {
+        stopVolPointerHold(ev);
+      }
+
       isHoldingVol = true;
       holdStartTime = Date.now();
       holdInitialVol = currentVolLevel;
@@ -1488,11 +1493,19 @@
       // 1. Immediate visual step on touch
       currentVolLevel = (dir === 'up') ? Math.min(100, currentVolLevel + 1) : Math.max(0, currentVolLevel - 1);
       updateVolQuickDisp(currentVolLevel);
-      if (navigator.vibrate) navigator.vibrate(10);
+      if (navigator.vibrate) navigator.vibrate(12);
 
-      // 2. Start continuous fluid acceleration after 220ms (zero network traffic during hold)
+      // 2. Safety auto-release timeout (max 6s to prevent any stuck hold)
+      clearTimeout(volHoldSafetyTimer);
+      volHoldSafetyTimer = setTimeout(() => {
+        if (isHoldingVol) stopVolPointerHold();
+      }, 6000);
+
+      // 3. Start fluid hold acceleration after 240ms
+      clearTimeout(volHoldTimer);
       volHoldTimer = setTimeout(() => {
         let tickCount = 0;
+        clearInterval(volHoldInterval);
         volHoldInterval = setInterval(() => {
           if (!isHoldingVol) {
             clearInterval(volHoldInterval);
@@ -1500,12 +1513,10 @@
           }
           tickCount++;
           const elapsed = Date.now() - holdStartTime;
-
-          // Progressive speed ramping: starts smooth, glides quickly to target
           let step = 1;
-          if (elapsed > 1200) {
+          if (elapsed > 1400) {
             step = 3;
-          } else if (elapsed > 500) {
+          } else if (elapsed > 550) {
             step = 2;
           }
 
@@ -1519,43 +1530,41 @@
           if (navigator.vibrate && tickCount % 2 === 0) {
             navigator.vibrate(6);
           }
-        }, 50); // 50ms tick = ultra-fluid 20 updates/sec
-      }, 220);
+        }, 55);
+      }, 240);
     }
 
-    function stopVolHold(ev) {
-      if (ev && ev.type === 'touchend') {
-        ev.preventDefault();
-      }
+    function stopVolPointerHold(ev) {
       if (!isHoldingVol) return;
       isHoldingVol = false;
 
-      if (volHoldTimer) {
-        clearTimeout(volHoldTimer);
-        volHoldTimer = null;
-      }
-      if (volHoldInterval) {
-        clearInterval(volHoldInterval);
-        volHoldInterval = null;
-      }
+      clearTimeout(volHoldTimer);
+      volHoldTimer = null;
+      clearInterval(volHoldInterval);
+      volHoldInterval = null;
+      clearTimeout(volHoldSafetyTimer);
+      volHoldSafetyTimer = null;
 
       const btnUp = document.getElementById('btn-vol-up');
       const btnDown = document.getElementById('btn-vol-down');
       if (btnUp) btnUp.classList.remove('holding');
       if (btnDown) btnDown.classList.remove('holding');
 
-      // CRITICAL: When finished holding, instantly jump TV to that volume in a single command
-      // e.g. jumped from 35 to 85 -> sends ONE single VOL:85 command
-      if (currentVolLevel !== holdInitialVol) {
-        sendCommand('vol', currentVolLevel.toString(), true);
-        flashStatus(`आवाज़: ${currentVolLevel}%`);
-      }
+      // Send single instant command with final target volume level
+      sendCommand('vol', currentVolLevel.toString());
+      flashStatus(`आवाज़: ${currentVolLevel}%`);
     }
 
-    // Global release catchers to handle finger slips outside button
-    window.addEventListener('mouseup', () => { if (isHoldingVol) stopVolHold(); });
-    window.addEventListener('touchend', () => { if (isHoldingVol) stopVolHold(); });
-    window.addEventListener('touchcancel', () => { if (isHoldingVol) stopVolHold(); });
+    // Compatibility aliases
+    function startVolHold(dir, ev) { handleVolPointerDown(dir, ev); }
+    function stopVolHold(ev) { stopVolPointerHold(ev); }
+
+    // Global safety release listeners
+    window.addEventListener('pointerup', () => { if (isHoldingVol) stopVolPointerHold(); });
+    window.addEventListener('pointercancel', () => { if (isHoldingVol) stopVolPointerHold(); });
+    window.addEventListener('mouseup', () => { if (isHoldingVol) stopVolPointerHold(); });
+    window.addEventListener('touchend', () => { if (isHoldingVol) stopVolPointerHold(); });
+    window.addEventListener('touchcancel', () => { if (isHoldingVol) stopVolPointerHold(); });
 
     function updateVolQuickDisp(vol) {
       if (typeof vol === 'number') {
@@ -1599,8 +1608,11 @@
         sendCommand('URL', 'https://www.youtube.com/@aajtak/live');
         flashStatus('आज तक लाइव न्यूज़ खुल रही है...');
       } else if (channel === 'starplus') {
-        sendCommand('URL', 'https://www.hotstar.com/in/channels/star-plus');
+        sendCommand('URL', 'https://www.hotstar.com/in/channels/starplus');
         flashStatus('हॉटस्टार पर स्टार प्लस खुल रहा है...');
+      } else if (channel === 'cricket') {
+        sendCommand('URL', 'https://www.hotstar.com/in/sports/cricket');
+        flashStatus('हॉटस्टार पर लाइव क्रिकेट खुल रहा है...');
       }
     }
 
@@ -1611,21 +1623,12 @@
       currentControllerMode = mode;
       const micDeck = document.getElementById('deck-mic');
       const dpadDeck = document.getElementById('deck-dpad');
-      const modeBtnMic = document.getElementById('mode-btn-mic');
-      const modeBtnDpad = document.getElementById('mode-btn-dpad');
       const tabRemote = document.getElementById('tab-remote');
       const tabDpad = document.getElementById('tab-dpad');
 
       if (mode === 'dpad') {
         if (micDeck) micDeck.classList.add('hidden');
         if (dpadDeck) dpadDeck.classList.remove('hidden');
-        
-        if (modeBtnMic) {
-          modeBtnMic.className = 'flex-1 py-1.5 rounded-xl text-xs font-bold flex items-center justify-center gap-1.5 transition text-slate-400 hover:text-slate-200';
-        }
-        if (modeBtnDpad) {
-          modeBtnDpad.className = 'flex-1 py-1.5 rounded-xl text-xs font-bold flex items-center justify-center gap-1.5 transition bg-amber-500/20 text-amber-300 border border-amber-500/40 shadow-sm';
-        }
 
         if (tabRemote) {
           tabRemote.classList.remove('active');
@@ -1638,13 +1641,6 @@
       } else {
         if (dpadDeck) dpadDeck.classList.add('hidden');
         if (micDeck) micDeck.classList.remove('hidden');
-
-        if (modeBtnMic) {
-          modeBtnMic.className = 'flex-1 py-1.5 rounded-xl text-xs font-bold flex items-center justify-center gap-1.5 transition bg-amber-500/20 text-amber-300 border border-amber-500/40 shadow-sm';
-        }
-        if (modeBtnDpad) {
-          modeBtnDpad.className = 'flex-1 py-1.5 rounded-xl text-xs font-bold flex items-center justify-center gap-1.5 transition text-slate-400 hover:text-slate-200';
-        }
 
         if (tabRemote) {
           tabRemote.classList.add('active');
@@ -1839,18 +1835,21 @@
       let targetCommand = null;
 
       // Smart routing
-      if (q.includes('स्टार प्लस') || q.includes('star plus') || q.includes('starplus') || q.includes('स्टारप्लस') || q.includes('हॉटस्टार') || q.includes('hotstar')) {
+      if (q.includes('क्रिकेट') || q.includes('cricket') || q.includes('मैच') || q.includes('match') || q.includes('लाइव क्रिकेट') || q.includes('live match')) {
+        targetMessage = 'हॉटस्टार पर लाइव क्रिकेट खोल रहे हैं...';
+        targetCommand = () => sendQuickChannel('cricket');
+      } else if (q.includes('स्टार प्लस') || q.includes('star plus') || q.includes('starplus') || q.includes('स्टारप्लस') || q.includes('हॉटस्टार') || q.includes('hotstar')) {
         targetMessage = 'हॉटस्टार पर स्टार प्लस खोल रहे हैं...';
-        targetCommand = () => sendCommand('URL', 'https://www.hotstar.com/in/channels/star-plus');
+        targetCommand = () => sendQuickChannel('starplus');
       } else if (q.includes('आज तक') || q.includes('aaj tak') || q.includes('आजतक') || q.includes('न्यूज़') || q.includes('news') || q.includes('समाचार') || q.includes('ताज़ा खबर') || q.includes('खबरें')) {
         targetMessage = 'आज तक लाइव न्यूज़ खोल रहे हैं...';
-        targetCommand = () => sendCommand('URL', 'https://www.youtube.com/@aajtak/live');
+        targetCommand = () => sendQuickChannel('news');
       } else if (q.includes('पारस') || q.includes('paras')) {
         targetMessage = 'पारस टीवी लाइव खोल रहे हैं...';
-        targetCommand = () => sendCommand('URL', 'https://www.youtube.com/@parasnetwork/live');
+        targetCommand = () => sendQuickChannel('paras');
       } else if (q.includes('जिनवाणी') || q.includes('jinvani') || q.includes('jinwani')) {
         targetMessage = 'जिनवाणी चैनल लाइव खोल रहे हैं...';
-        targetCommand = () => sendCommand('URL', 'https://www.youtube.com/@jinvanichannelofficial/live');
+        targetCommand = () => sendQuickChannel('jinvani');
       } else {
         targetMessage = `यूट्यूब पर खोज रहे हैं: "${cleanQuery}"...`;
         targetCommand = () => sendCommand('URL', `https://www.youtube.com/results?search_query=${encodeURIComponent(cleanQuery)}`);

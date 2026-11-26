@@ -299,16 +299,26 @@ while true; do
                 # Check URL destination
                 case "$URL" in
                     *hotstar.com*|*hotstar:*)
-                        am start -a android.intent.action.VIEW -d "$URL" in.startv.hotstar < /dev/null || \
+                        # Normalize star-plus url without hyphen for Android TV deep linking
+                        HOTSTAR_URL=$(echo "$URL" | sed 's/star-plus/starplus/g')
+                        am start -a android.intent.action.VIEW -d "$HOTSTAR_URL" in.startv.hotstar < /dev/null || \
                         am start -a android.intent.action.MAIN -c android.intent.category.LEANBACK_LAUNCHER in.startv.hotstar < /dev/null
+                        sleep 2.5
+                        # Auto-confirm profile if "Who's watching?" profile picker is presented
+                        input keyevent 23 < /dev/null
+                        case "$HOTSTAR_URL" in
+                            *starplus*|*sports*|*cricket*)
+                                sleep 1.5
+                                input keyevent 23 < /dev/null
+                                ;;
+                        esac
                         ;;
                     *)
                         am start -a android.intent.action.VIEW -d "$URL" -p com.google.android.youtube.tv < /dev/null
                         case "$URL" in
                             *search_query=*)
-                                sleep 3.5
-                                input keyevent 20 < /dev/null
-                                sleep 0.8
+                                sleep 3.0
+                                # Directly play the top searched result (do not jump down a row)
                                 input keyevent 23 < /dev/null
                                 ;;
                         esac
