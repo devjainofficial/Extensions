@@ -2665,8 +2665,30 @@
     if ('serviceWorker' in navigator) {
       window.addEventListener('load', () => {
         navigator.serviceWorker.register('./sw.js')
-          .then(reg => console.log('[Orbit PWA] SW registered:', reg.scope))
+          .then(reg => {
+            console.log('[Orbit PWA] SW registered:', reg.scope);
+            reg.update();
+            reg.onupdatefound = () => {
+              const installing = reg.installing;
+              if (installing) {
+                installing.onstatechange = () => {
+                  if (installing.state === 'installed' && navigator.serviceWorker.controller) {
+                    console.log('[Orbit PWA] New version ready, refreshing...');
+                    window.location.reload();
+                  }
+                };
+              }
+            };
+          })
           .catch(err => console.error('[Orbit PWA] SW failed:', err));
+
+        let refreshing = false;
+        navigator.serviceWorker.addEventListener('controllerchange', () => {
+          if (!refreshing) {
+            refreshing = true;
+            window.location.reload();
+          }
+        });
       });
     }
 
