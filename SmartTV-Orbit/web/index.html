@@ -466,25 +466,25 @@
 
         <!-- ROW 2: 3 Entertainment & Sports Channels (News, Star Plus, Cricket Live) -->
         <div class="grid grid-cols-3 gap-2 w-full">
-          <!-- 3. Hindi News Card (Aaj Tak Live) -->
+          <!-- 3. Hindi News Card (Random MP & National News) -->
           <button onclick="sendQuickChannel('news')" class="bg-[#271217] hover:bg-[#35191f] border border-[#5c242e] rounded-2xl p-2 flex flex-col items-center justify-center text-center gap-1 active:scale-97 transition shadow-md">
             <div class="w-8 h-8 rounded-xl bg-gradient-to-br from-rose-600 to-rose-900 border border-rose-400/30 flex items-center justify-center shrink-0 shadow-inner">
               <i class="fa-solid fa-newspaper text-white text-xs"></i>
             </div>
             <div class="min-w-0 w-full">
               <div class="text-[11px] font-bold text-white truncate leading-tight">हिंदी न्यूज़</div>
-              <div class="text-[9px] text-rose-300 font-semibold truncate">आज तक</div>
+              <div class="text-[9px] text-rose-300 font-semibold truncate">एमपी व देश</div>
             </div>
           </button>
 
-          <!-- 4. Star Plus Card (Hotstar Direct) -->
+          <!-- 4. Star Plus Card (Hotstar Random Serial) -->
           <button onclick="sendQuickChannel('starplus')" class="bg-[#0f1d38] hover:bg-[#15274d] border border-[#1e3a73] rounded-2xl p-2 flex flex-col items-center justify-center text-center gap-1 active:scale-97 transition shadow-md">
             <div class="w-8 h-8 rounded-xl bg-gradient-to-br from-amber-500 via-amber-600 to-sky-900 border border-amber-400/40 flex items-center justify-center shrink-0 shadow-inner">
               <i class="fa-solid fa-star text-amber-200 text-xs"></i>
             </div>
             <div class="min-w-0 w-full">
               <div class="text-[11px] font-bold text-white truncate leading-tight">स्टार प्लस</div>
-              <div class="text-[9px] text-sky-300 font-semibold truncate">हॉटस्टार</div>
+              <div class="text-[9px] text-sky-300 font-semibold truncate">सीरियल</div>
             </div>
           </button>
 
@@ -1751,6 +1751,29 @@
       }
     }
 
+    // ==================== HINDI & MP REGIONAL NEWS CHANNELS ====================
+    const HINDI_NEWS_CHANNELS = [
+      { name: 'आज तक न्यूज़', sub: 'देश का नंबर 1 न्यूज़ चैनल', url: 'https://www.youtube.com/@aajtak/live' },
+      { name: 'NDTV मध्य प्रदेश - छत्तीसगढ़', sub: 'एमपी की विश्वसनीय ग्राउंड रिपोर्ट', url: 'https://www.youtube.com/@ndtvmpcg/live' },
+      { name: 'ज़ी MP-छत्तीसगढ़', sub: 'मध्य प्रदेश की ताज़ा हलचल व खबरें', url: 'https://www.youtube.com/@ZeeMPCG/live' },
+      { name: 'News18 MP-छत्तीसगढ़', sub: 'एमपी-सीजी का सबसे बड़ा न्यूज़ नेटवर्क', url: 'https://www.youtube.com/@News18MPChhattisgarh/live' },
+      { name: 'बंसल न्यूज़ (MP-CG)', sub: 'मध्य प्रदेश का सबसे लोकप्रिय रीजनल चैनल', url: 'https://www.youtube.com/@BansalNewsMPCG/live' },
+      { name: 'ABP न्यूज़', sub: 'लाइव राष्ट्रीय व प्रादेशिक समाचार', url: 'https://www.youtube.com/@ABPNews/live' },
+      { name: 'NDTV इंडिया', sub: 'प्राइम टाइम व राष्ट्रीय विशेष बुलेटिन', url: 'https://www.youtube.com/@ndtvindia/live' },
+      { name: 'इंडिया टीवी', sub: 'लाइव राष्ट्रीय हिंदी समाचार', url: 'https://www.youtube.com/@indiatv/live' },
+      { name: 'दूरदर्शन (DD) न्यूज़', sub: 'आधिकारिक राष्ट्रीय समाचार चैनल', url: 'https://www.youtube.com/@ddnews/live' }
+    ];
+
+    let lastNewsIndex = -1;
+    function getRandomNewsChannel() {
+      let idx = Math.floor(Math.random() * HINDI_NEWS_CHANNELS.length);
+      if (idx === lastNewsIndex && HINDI_NEWS_CHANNELS.length > 1) {
+        idx = (idx + 1) % HINDI_NEWS_CHANNELS.length;
+      }
+      lastNewsIndex = idx;
+      return HINDI_NEWS_CHANNELS[idx];
+    }
+
     function sendQuickChannel(channel) {
       if (channel === 'paras') {
         showActionLoader('पारस टीवी', 'यूट्यूब पर लाइव दर्शन शुरू हो रहा है...');
@@ -1761,13 +1784,14 @@
         sendCommand('URL', 'https://www.youtube.com/@jinvanichannelofficial/live');
         flashStatus('जिनवाणी खुल रही है...');
       } else if (channel === 'news') {
-        showActionLoader('आज तक लाइव न्यूज़', 'लाइव बुलेटिन लोड हो रहा है...');
-        sendCommand('URL', 'https://www.youtube.com/@aajtak/live');
-        flashStatus('आज तक लाइव न्यूज़ खुल रही है...');
+        const news = getRandomNewsChannel();
+        showActionLoader(news.name, `${news.sub} शुरू हो रहा है...`);
+        sendCommand('URL', news.url);
+        flashStatus(`${news.name} खुल रहा है...`);
       } else if (channel === 'starplus') {
-        showActionLoader('स्टार प्लस', 'हॉटस्टार पर शो लोड हो रहा है...');
+        showActionLoader('स्टार प्लस', 'पसंदीदा सीरियल चुना जा रहा है...');
         sendCommand('URL', 'https://www.hotstar.com/in/channels/starplus');
-        flashStatus('हॉटस्टार पर स्टार प्लस खुल रहा है...');
+        flashStatus('स्टार प्लस सीरियल लोड हो रहा है...');
       } else if (channel === 'cricket') {
         showActionLoader('लाइव क्रिकेट', 'हॉटस्टार लाइव मैच लोड हो रहा है...');
         sendCommand('URL', 'https://www.hotstar.com/in/sports/cricket');

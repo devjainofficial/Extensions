@@ -307,7 +307,32 @@ while true; do
                         # Auto-confirm profile if "Who's watching?" profile picker is presented
                         input keyevent 23 < /dev/null
                         case "$HOTSTAR_URL" in
-                            *starplus*|*sports*|*cricket*)
+                            *starplus*)
+                                sleep 1.5
+                                # Pick random serial: 0 to 2 rows down, 1 to 5 columns right (never stays on top one)
+                                R_DOWN=$((RANDOM % 3))
+                                R_RIGHT=$((RANDOM % 5 + 1))
+                                echo "[Orbit Routine] Star Plus: Random serial selector (down: $R_DOWN, right: $R_RIGHT)..."
+                                r_i=0
+                                while [ $r_i -lt $R_DOWN ]; do
+                                    input keyevent 20 < /dev/null
+                                    sleep 0.25
+                                    r_i=$((r_i + 1))
+                                done
+                                r_j=0
+                                while [ $r_j -lt $R_RIGHT ]; do
+                                    input keyevent 22 < /dev/null
+                                    sleep 0.25
+                                    r_j=$((r_j + 1))
+                                done
+                                sleep 0.4
+                                # Open selected serial
+                                input keyevent 23 < /dev/null
+                                sleep 1.5
+                                # Play latest episode
+                                input keyevent 23 < /dev/null
+                                ;;
+                            *sports*|*cricket*)
                                 sleep 1.5
                                 input keyevent 23 < /dev/null
                                 ;;
