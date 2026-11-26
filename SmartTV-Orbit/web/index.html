@@ -1,9 +1,9 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="hi">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-  <title>SmartTV Orbit | Precision Remote</title>
+  <title>स्मार्ट टीवी रिमोट | SmartTV Orbit</title>
   
   <!-- PWA & Mobile Meta -->
   <link rel="manifest" href="manifest.json">
@@ -353,8 +353,8 @@
     <div class="w-13 h-13 rounded-2xl bg-[#1c1d24] text-amber-400 flex items-center justify-center text-xl mb-3 border border-white/10 shadow-xl">
       <i class="fa-solid fa-lock"></i>
     </div>
-    <h2 class="text-sm font-bold text-white tracking-wide uppercase">SmartTV Remote</h2>
-    <p class="text-xs text-slate-400 mb-6" id="lock-subtitle">Enter 4-Digit Security PIN</p>
+    <h2 class="text-sm font-bold text-white tracking-wide uppercase">स्मार्ट टीवी रिमोट</h2>
+    <p class="text-xs text-slate-400 mb-6" id="lock-subtitle">4-अंकों का सुरक्षा पिन दर्ज करें</p>
 
     <!-- PIN Dots -->
     <div class="flex items-center gap-3 mb-6" id="pin-dots">
@@ -366,7 +366,7 @@
 
     <!-- Error message -->
     <div id="lock-error" class="text-xs font-semibold text-rose-400 h-5 mb-3 opacity-0 transition-opacity">
-      Incorrect PIN
+      गलत पिन, पुनः प्रयास करें
     </div>
 
     <!-- Tactile Keypad -->
@@ -385,7 +385,7 @@
       <button onclick="backspacePin()" class="hardware-key h-13 text-sm text-slate-300"><i class="fa-solid fa-delete-left"></i></button>
     </div>
 
-    <div class="text-[11px] text-slate-500 font-medium">Authorized devices stay unlocked</div>
+    <div class="text-[11px] text-slate-500 font-medium">अधिकृत डिवाइस अनलॉक रहते हैं</div>
   </div>
 
   <!-- ==================== UNIFIED HARDWARE CONTROL HEADER ==================== -->
@@ -393,29 +393,29 @@
     <div class="bg-[#131419] border border-white/10 rounded-2xl p-2.5 flex items-center justify-between shadow-lg">
       
       <!-- Power Switch -->
-      <button id="power-btn" onclick="sendCommand('key', '26')" title="Power Toggle" class="w-10 h-10 rounded-xl bg-[#1c1d24] border border-white/10 flex items-center justify-center text-rose-500 hover:text-rose-400 active:scale-95 transition shadow-sm shrink-0">
+      <button id="power-btn" onclick="sendCommand('key', '26')" title="टीवी चालू / बंद" class="w-10 h-10 rounded-xl bg-[#1c1d24] border border-white/10 flex items-center justify-center text-rose-500 hover:text-rose-400 active:scale-95 transition shadow-sm shrink-0">
         <i class="fa-solid fa-power-off text-sm"></i>
       </button>
 
       <!-- Center Status & Wi-Fi HUD -->
       <div class="flex-1 mx-2.5 min-w-0 text-left">
-        <div onclick="requestTVStatus()" title="Tap to refresh TV status" class="flex items-center gap-1.5 cursor-pointer active:opacity-75 transition">
+        <div onclick="requestTVStatus()" title="स्थिति ताज़ा करने के लिए दबाएं" class="flex items-center gap-1.5 cursor-pointer active:opacity-75 transition">
           <span id="conn-dot" class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse shrink-0"></span>
-          <span id="conn-status" class="text-xs font-bold text-white truncate leading-tight">TV Awake</span>
+          <span id="conn-status" class="text-xs font-bold text-white truncate leading-tight">टीवी चालू है</span>
         </div>
-        <div onclick="openWifiModal()" title="Tap to scan & connect TV Wi-Fi" class="flex items-center gap-1.5 mt-0.5 text-[10px] text-slate-400 cursor-pointer hover:text-sky-300 active:opacity-75 transition group">
+        <div onclick="openWifiModal()" title="टीवी वाई-फ़ाई जोड़ने के लिए दबाएं" class="flex items-center gap-1.5 mt-0.5 text-[10px] text-slate-400 cursor-pointer hover:text-sky-300 active:opacity-75 transition group">
           <i id="wifi-icon" class="fa-solid fa-wifi text-[9px] text-sky-400"></i>
-          <span id="wifi-ssid-disp" class="truncate font-medium text-slate-300 group-hover:underline">Checking Wi-Fi...</span>
-          <span id="wifi-signal-badge" class="shrink-0 text-[9px] text-emerald-400 font-semibold">• Good</span>
+          <span id="wifi-ssid-disp" class="truncate font-medium text-slate-300 group-hover:underline">वाई-फ़ाई जांच रहे हैं...</span>
+          <span id="wifi-signal-badge" class="shrink-0 text-[9px] text-emerald-400 font-semibold">• अच्छा</span>
         </div>
       </div>
 
       <!-- Action Cluster: Alert & Settings -->
       <div class="flex items-center gap-1.5 shrink-0">
-        <button onclick="openAlertModal()" title="Send Message to TV Screen" class="w-9 h-9 rounded-xl bg-[#1c1d24] border border-white/10 flex items-center justify-center text-slate-300 hover:text-amber-400 active:scale-95 transition">
+        <button onclick="openAlertModal()" title="टीवी पर संदेश भेजें" class="w-9 h-9 rounded-xl bg-[#1c1d24] border border-white/10 flex items-center justify-center text-slate-300 hover:text-amber-400 active:scale-95 transition">
           <i class="fa-regular fa-bell text-xs"></i>
         </button>
-        <button onclick="openSettingsModal()" title="Settings & Tools" class="w-9 h-9 rounded-xl bg-[#1c1d24] border border-white/10 flex items-center justify-center text-slate-300 hover:text-white active:scale-95 transition">
+        <button onclick="openSettingsModal()" title="सेटिंग्स व टूल्स" class="w-9 h-9 rounded-xl bg-[#1c1d24] border border-white/10 flex items-center justify-center text-slate-300 hover:text-white active:scale-95 transition">
           <i class="fa-solid fa-sliders text-xs"></i>
         </button>
       </div>
@@ -433,9 +433,9 @@
       <div id="standby-wake-banner" onclick="sendCommand('key', '26')" class="cursor-pointer bg-rose-950/40 border border-rose-500/30 rounded-xl px-3 py-2 flex items-center justify-between text-[11px] text-rose-200 hidden active:scale-98 transition shadow-lg">
         <span class="flex items-center gap-2 font-medium">
           <i class="fa-solid fa-moon text-rose-400 text-xs animate-pulse"></i>
-          <span>TV in Standby • Tap any key to wake</span>
+          <span>टीवी स्टैंडबाय में है • चालू करने के लिए दबाएं</span>
         </span>
-        <span class="text-[9px] bg-rose-500/25 border border-rose-500/30 px-2 py-0.5 rounded-full font-bold uppercase tracking-wider text-rose-200">Wake TV</span>
+        <span class="text-[9px] bg-rose-500/25 border border-rose-500/30 px-2 py-0.5 rounded-full font-bold uppercase tracking-wider text-rose-200">टीवी चालू करें</span>
       </div>
 
       <div id="remote-deck" class="remote-deck space-y-3 transition-all duration-300">
@@ -445,8 +445,8 @@
         <button onclick="sendQuickChannel('paras')" class="bg-[#141d2e] hover:bg-[#1a253a] border border-[#233554] rounded-2xl p-2.5 flex items-center gap-2.5 active:scale-97 transition shadow-md">
           <img src="img/paras_tv.jpg" alt="Paras TV" class="w-9 h-9 rounded-xl object-cover border border-amber-400/30 shrink-0">
           <div class="text-left min-w-0 flex-1">
-            <div class="text-xs font-bold text-white truncate leading-tight">Paras TV</div>
-            <div class="text-[9px] text-amber-300 font-semibold">24/7 Live</div>
+            <div class="text-xs font-bold text-white truncate leading-tight">पारस टीवी</div>
+            <div class="text-[9px] text-amber-300 font-semibold">लाइव दर्शन</div>
           </div>
           <span class="w-1.5 h-1.5 rounded-full bg-emerald-400 shrink-0"></span>
         </button>
@@ -455,9 +455,12 @@
         <button onclick="sendQuickChannel('jinvani')" class="bg-[#2a1317] hover:bg-[#38191e] border border-[#542129] rounded-2xl p-2.5 flex items-center gap-2.5 active:scale-97 transition shadow-md">
           <img src="img/jinvani.jpg" alt="Jinvani" class="w-9 h-9 rounded-xl object-cover border border-orange-400/30 shrink-0">
           <div class="text-left min-w-0 flex-1">
-            <div class="text-xs font-bold text-white truncate leading-tight">Jinvani</div>
-            <div class="text-[9px] text-orange-300 font-semibold">Morning Live</div>
+            <div class="text-xs font-bold text-white truncate leading-tight">जिनवाणी</div>
+            <div class="text-[9px] text-orange-300 font-semibold">लाइव भक्ति</div>
           </div>
+          <span class="w-1.5 h-1.5 rounded-full bg-emerald-400 shrink-0"></span>
+        </button>
+      </div>
           <span class="w-1.5 h-1.5 rounded-full bg-emerald-400 shrink-0"></span>
         </button>
       </div>
@@ -468,7 +471,7 @@
         <button 
           id="btn-vol-up"
           class="vol-btn-primary"
-          title="Volume Up"
+          title="आवाज़ बढ़ाएं"
           onmousedown="startVolHold('up', event)"
           onmouseup="stopVolHold(event)"
           onmouseleave="stopVolHold(event)"
@@ -478,7 +481,7 @@
           oncontextmenu="return false;"
         >
           <i class="fa-solid fa-plus text-sm text-amber-400"></i>
-          <span class="text-xs font-black tracking-wider text-white">VOLUME UP</span>
+          <span class="text-xs font-black tracking-wider text-white">आवाज़ बढ़ाएं (+)</span>
           <i class="fa-solid fa-volume-high text-xs text-amber-400/60"></i>
         </button>
 
@@ -487,7 +490,7 @@
           <!-- Mute Toggle -->
           <button onclick="sendCommand('mute', '1')" id="btn-smart-mute" class="py-1.5 px-3 rounded-xl bg-[#1c1d24] hover:bg-[#252731] border border-white/10 text-slate-300 hover:text-amber-400 flex items-center gap-1.5 text-xs font-semibold active:scale-95 transition">
             <i id="mute-icon" class="fa-solid fa-volume-high text-xs text-slate-300"></i>
-            <span id="mute-label">Mute</span>
+            <span id="mute-label">म्यूट</span>
           </button>
 
           <!-- Large Volume Gauge with Smooth Bar -->
@@ -500,7 +503,7 @@
           </div>
 
           <!-- Reset to 30 -->
-          <button onclick="sendCommand('vol', '30')" title="Reset Volume to 30" class="py-1.5 px-3 rounded-xl bg-[#1c1d24] hover:bg-[#252731] border border-white/10 text-slate-300 hover:text-emerald-400 flex items-center gap-1.5 text-xs font-semibold active:scale-95 transition">
+          <button onclick="sendCommand('vol', '30')" title="सामान्य 30 पर रीसेट करें" class="py-1.5 px-3 rounded-xl bg-[#1c1d24] hover:bg-[#252731] border border-white/10 text-slate-300 hover:text-emerald-400 flex items-center gap-1.5 text-xs font-semibold active:scale-95 transition">
             <i class="fa-solid fa-rotate-left text-[10px] text-emerald-400"></i>
             <span class="font-bold text-emerald-400">30</span>
           </button>
@@ -510,7 +513,7 @@
         <button 
           id="btn-vol-down"
           class="vol-btn-primary"
-          title="Volume Down"
+          title="आवाज़ घटाएं"
           onmousedown="startVolHold('down', event)"
           onmouseup="stopVolHold(event)"
           onmouseleave="stopVolHold(event)"
@@ -520,7 +523,7 @@
           oncontextmenu="return false;"
         >
           <i class="fa-solid fa-minus text-sm text-amber-400"></i>
-          <span class="text-xs font-black tracking-wider text-white">VOLUME DOWN</span>
+          <span class="text-xs font-black tracking-wider text-white">आवाज़ घटाएं (-)</span>
           <i class="fa-solid fa-volume-low text-xs text-amber-400/60"></i>
         </button>
       </div>
@@ -530,38 +533,38 @@
         <div class="flex items-center justify-center py-1">
           <div class="secondary-wheel">
             <!-- Secondary Directional Keys -->
-            <button onclick="sendCommand('key', '19')" class="sec-dpad-btn up" title="Menu Up">
+            <button onclick="sendCommand('key', '19')" class="sec-dpad-btn up" title="ऊपर">
               <i class="fa-solid fa-chevron-up text-base"></i>
             </button>
-            <button onclick="sendCommand('key', '22')" class="sec-dpad-btn right" title="Menu Right">
+            <button onclick="sendCommand('key', '22')" class="sec-dpad-btn right" title="दाएँ">
               <i class="fa-solid fa-chevron-right text-base"></i>
             </button>
-            <button onclick="sendCommand('key', '20')" class="sec-dpad-btn down" title="Menu Down">
+            <button onclick="sendCommand('key', '20')" class="sec-dpad-btn down" title="नीचे">
               <i class="fa-solid fa-chevron-down text-base"></i>
             </button>
-            <button onclick="sendCommand('key', '21')" class="sec-dpad-btn left" title="Menu Left">
+            <button onclick="sendCommand('key', '21')" class="sec-dpad-btn left" title="बाएँ">
               <i class="fa-solid fa-chevron-left text-base"></i>
             </button>
 
             <!-- Center OK Button -->
-            <button onclick="sendCommand('key', '23')" class="sec-dpad-center" title="OK / Select">
-              OK
+            <button onclick="sendCommand('key', '23')" class="sec-dpad-center" title="ओके">
+              ओके
             </button>
           </div>
         </div>
 
         <!-- ESSENTIAL NAVIGATION ROW -->
         <div class="grid grid-cols-4 gap-2 w-full pt-1">
-          <button onclick="sendCommand('key', '4')" title="Back" class="hardware-key h-10 text-slate-200">
+          <button onclick="sendCommand('key', '4')" title="वापस" class="hardware-key h-10 text-slate-200">
             <i class="fa-solid fa-arrow-left text-xs"></i>
           </button>
-          <button onclick="sendCommand('key', '3')" title="Home" class="hardware-key h-10 text-slate-200">
+          <button onclick="sendCommand('key', '3')" title="होम" class="hardware-key h-10 text-slate-200">
             <i class="fa-solid fa-house text-xs"></i>
           </button>
-          <button onclick="sendCommand('key', '85')" title="Play / Pause" class="hardware-key h-10 text-slate-200">
+          <button onclick="sendCommand('key', '85')" title="रोकें / चलाएं" class="hardware-key h-10 text-slate-200">
             <i class="fa-solid fa-play text-xs"></i>
           </button>
-          <button onclick="sendCommand('key', '82')" title="Menu / Options" class="hardware-key h-10 text-slate-200">
+          <button onclick="sendCommand('key', '82')" title="मेन्यू" class="hardware-key h-10 text-slate-200">
             <i class="fa-solid fa-bars text-xs"></i>
           </button>
         </div>
@@ -572,19 +575,19 @@
         <!-- YouTube TV -->
         <button onclick="sendCommand('launch_app', 'com.google.android.youtube.tv')" class="bg-[#1c1d24] hover:bg-[#252731] border border-white/10 rounded-xl py-2 px-2 flex items-center justify-center gap-1.5 active:scale-95 transition shadow-sm">
           <i class="fa-brands fa-youtube text-red-500 text-sm"></i>
-          <span class="text-xs font-bold text-white tracking-tight">YouTube</span>
+          <span class="text-xs font-bold text-white tracking-tight">यूट्यूब</span>
         </button>
 
         <!-- JioHotstar -->
         <button onclick="launchHotstar()" class="bg-[#101c36] hover:bg-[#16274b] border border-[#1e3a73]/60 rounded-xl py-2 px-2 flex items-center justify-center gap-1.5 active:scale-95 transition shadow-sm">
           <span class="text-sky-400 text-xs font-black">★</span>
-          <span class="text-xs font-bold text-sky-100 tracking-tight">Hotstar</span>
+          <span class="text-xs font-bold text-sky-100 tracking-tight">हॉटस्टार</span>
         </button>
 
         <!-- Live Cricket -->
         <button onclick="launchCricketLive()" class="bg-[#0f291c] hover:bg-[#153a27] border border-[#1b5237]/60 rounded-xl py-2 px-2 flex items-center justify-center gap-1.5 active:scale-95 transition shadow-sm">
           <i class="fa-solid fa-baseball text-emerald-400 text-xs"></i>
-          <span class="text-xs font-bold text-emerald-100 tracking-tight">Cricket</span>
+          <span class="text-xs font-bold text-emerald-100 tracking-tight">क्रिकेट</span>
         </button>
       </div>
 
@@ -593,10 +596,10 @@
         <button onclick="toggleScreenPeek()" class="w-full py-2 px-3 rounded-xl bg-[#131419] hover:bg-[#1c1d24] border border-white/10 text-xs text-slate-300 flex items-center justify-between active:scale-98 transition">
           <span class="flex items-center gap-2">
             <i class="fa-solid fa-camera text-slate-400 text-xs"></i>
-            <span class="font-semibold text-slate-300">TV Screen Preview</span>
+            <span class="font-semibold text-slate-300">टीवी स्क्रीन देखें</span>
           </span>
           <span id="peek-toggle-label" class="text-[10px] text-amber-400 font-bold flex items-center gap-1">
-            <span>View</span> <i class="fa-solid fa-chevron-down text-[8px]"></i>
+            <span>देखें</span> <i class="fa-solid fa-chevron-down text-[8px]"></i>
           </span>
         </button>
 
@@ -604,20 +607,20 @@
         <div id="remote-peek-box" class="w-full aspect-video bg-black rounded-2xl flex items-center justify-center border border-white/10 overflow-hidden relative mt-2 hidden shadow-2xl">
           <div id="remote-peek-loading" class="text-xs text-amber-400 hidden flex flex-col items-center gap-2">
             <i class="fa-solid fa-circle-notch fa-spin text-lg"></i>
-            <span class="font-medium">Capturing live TV display...</span>
+            <span class="font-medium">टीवी स्क्रीन लोड हो रही है...</span>
           </div>
           <img id="remote-peek-img" class="w-full h-full object-contain hidden" alt="TV Screen Snapshot">
           
           <div id="remote-peek-footer" class="absolute bottom-0 inset-x-0 bg-black/90 backdrop-blur-sm px-3 py-1.5 flex items-center justify-between text-[10px] text-slate-300 hidden border-t border-white/10">
             <span id="remote-peek-time" class="flex items-center gap-1">
-              <i class="fa-regular fa-clock text-[9px]"></i> Just now
+              <i class="fa-regular fa-clock text-[9px]"></i> अभी
             </span>
             <div class="flex items-center gap-2.5">
               <button onclick="requestScreenshot()" class="text-amber-400 hover:text-white font-semibold flex items-center gap-1">
-                <i class="fa-solid fa-rotate-right text-[9px]"></i> Refresh
+                <i class="fa-solid fa-rotate-right text-[9px]"></i> ताज़ा करें
               </button>
               <button onclick="openPeekFullscreen()" class="text-slate-300 hover:text-white font-semibold flex items-center gap-1">
-                <i class="fa-solid fa-expand text-[9px]"></i> Full
+                <i class="fa-solid fa-expand text-[9px]"></i> बड़ा करें
               </button>
               <button onclick="closeScreenPeek()" class="text-slate-400 hover:text-white">
                 <i class="fa-solid fa-xmark"></i>
@@ -639,53 +642,53 @@
               <i class="fa-solid fa-arrow-up-right-from-square"></i>
             </span>
             <div>
-              <h3 class="text-xs font-bold text-white">Push to TV</h3>
-              <p class="text-[10px] text-slate-400">Cast any video link directly to father's TV</p>
+              <h3 class="text-xs font-bold text-white">टीवी पर चलाएं</h3>
+              <p class="text-[10px] text-slate-400">कोई भी यूट्यूब वीडियो लिंक सीधे टीवी पर चलाएं</p>
             </div>
           </div>
-          <span class="text-[9px] text-emerald-400 bg-emerald-950/60 border border-emerald-800/80 px-2 py-0.5 rounded-full font-semibold">Ready</span>
+          <span class="text-[9px] text-emerald-400 bg-emerald-950/60 border border-emerald-800/80 px-2 py-0.5 rounded-full font-semibold">तैयार</span>
         </div>
 
         <!-- Input & Action -->
         <div class="space-y-2">
           <div class="flex gap-2">
-            <input type="url" id="cast-url-input" placeholder="Paste YouTube link (https://youtu.be/...)" class="flex-1 bg-black/60 border border-white/15 rounded-xl px-3 py-2 text-xs text-white focus:outline-none focus:border-amber-400">
+            <input type="url" id="cast-url-input" placeholder="यूट्यूब लिंक पेस्ट करें (https://youtu.be/...)" class="flex-1 bg-black/60 border border-white/15 rounded-xl px-3 py-2 text-xs text-white focus:outline-none focus:border-amber-400">
             <button onclick="castUrlToTV()" class="bg-amber-500 hover:bg-amber-400 text-black text-xs font-bold px-4 rounded-xl flex items-center justify-center gap-1.5 active:scale-95 transition shadow-sm">
-              <i class="fa-solid fa-play text-[9px]"></i> Cast
+              <i class="fa-solid fa-play text-[9px]"></i> चलाएं
             </button>
           </div>
           <button onclick="pasteAndCast()" class="w-full py-2 px-3 rounded-xl bg-[#1c1d24] hover:bg-[#252731] border border-white/10 text-xs font-semibold text-slate-200 flex items-center justify-center gap-2 active:scale-95 transition">
-            <i class="fa-regular fa-clipboard text-amber-400"></i> Paste from Clipboard & Cast
+            <i class="fa-regular fa-clipboard text-amber-400"></i> क्लिपबोर्ड से पेस्ट करके चलाएं
           </button>
         </div>
 
         <!-- Quick Presets -->
         <div class="space-y-1.5 pt-1">
-          <span class="text-[10px] font-semibold text-slate-400 uppercase tracking-wider block">1-Tap Direct Streams</span>
+          <span class="text-[10px] font-semibold text-slate-400 uppercase tracking-wider block">1-टैप सीधे लाइव स्ट्रीम</span>
           <div class="grid grid-cols-2 gap-2">
             <button onclick="castPreset('paras')" class="p-2 rounded-xl bg-black/40 border border-white/10 hover:border-amber-400/40 text-left text-xs text-white transition active:scale-95 flex items-center gap-2">
               <img src="img/paras_tv.jpg" class="w-6 h-6 rounded-lg object-cover">
-              <span class="truncate font-semibold text-[11px]">Paras TV Live</span>
+              <span class="truncate font-semibold text-[11px]">पारस टीवी लाइव</span>
             </button>
             <button onclick="castPreset('jinvani')" class="p-2 rounded-xl bg-black/40 border border-white/10 hover:border-orange-400/40 text-left text-xs text-white transition active:scale-95 flex items-center gap-2">
               <img src="img/jinvani.jpg" class="w-6 h-6 rounded-lg object-cover">
-              <span class="truncate font-semibold text-[11px]">Jinvani Live</span>
+              <span class="truncate font-semibold text-[11px]">जिनवाणी लाइव</span>
             </button>
             <button onclick="castPreset('bhaktamar')" class="p-2 rounded-xl bg-black/40 border border-white/10 hover:border-amber-400/40 text-left text-xs text-white transition active:scale-95 flex items-center gap-2">
               <i class="fa-solid fa-hands-praying text-amber-400 text-xs"></i>
-              <span class="truncate font-semibold text-[11px]">Bhaktamar Stotra</span>
+              <span class="truncate font-semibold text-[11px]">भक्तामर स्तोत्र</span>
             </button>
             <button onclick="castPreset('navkar')" class="p-2 rounded-xl bg-black/40 border border-white/10 hover:border-amber-400/40 text-left text-xs text-white transition active:scale-95 flex items-center gap-2">
               <i class="fa-solid fa-om text-amber-400 text-xs"></i>
-              <span class="truncate font-semibold text-[11px]">Navkar Mantra</span>
+              <span class="truncate font-semibold text-[11px]">णमोकार मंत्र</span>
             </button>
             <button onclick="castPreset('cricket')" class="p-2 rounded-xl bg-black/40 border border-white/10 hover:border-emerald-400/40 text-left text-xs text-white transition active:scale-95 flex items-center gap-2">
               <i class="fa-solid fa-baseball text-emerald-400 text-xs"></i>
-              <span class="truncate font-semibold text-[11px]">Live Cricket</span>
+              <span class="truncate font-semibold text-[11px]">लाइव क्रिकेट</span>
             </button>
             <button onclick="castPreset('news')" class="p-2 rounded-xl bg-black/40 border border-white/10 hover:border-rose-400/40 text-left text-xs text-white transition active:scale-95 flex items-center gap-2">
               <i class="fa-solid fa-newspaper text-rose-400 text-xs"></i>
-              <span class="truncate font-semibold text-[11px]">Aaj Tak News</span>
+              <span class="truncate font-semibold text-[11px]">आज तक समाचार</span>
             </button>
           </div>
         </div>
@@ -702,8 +705,8 @@
               <i class="fa-solid fa-pills"></i>
             </span>
             <div>
-              <h3 class="text-xs font-bold text-white">Daily Medication Reminders</h3>
-              <p class="text-[10px] text-slate-400">Gentle chime and banner on TV screen</p>
+              <h3 class="text-xs font-bold text-white">दवा के दैनिक रिमाइंडर</h3>
+              <p class="text-[10px] text-slate-400">टीवी स्क्रीन पर सौम्य घंटी व सूचना</p>
             </div>
           </div>
         </div>
@@ -712,14 +715,14 @@
           <!-- Morning Slot -->
           <div class="p-2.5 rounded-xl bg-black/40 border border-white/10 flex items-center justify-between">
             <div>
-              <div class="text-xs font-bold text-white">Morning Medicine</div>
-              <div class="text-[10px] text-slate-400">Scheduled: <b id="morning-med-display" class="text-emerald-400 font-semibold">08:30 AM</b></div>
+              <div class="text-xs font-bold text-white">सुबह की दवा</div>
+              <div class="text-[10px] text-slate-400">समय: <b id="morning-med-display" class="text-emerald-400 font-semibold">08:30 AM</b></div>
             </div>
             <div class="flex items-center gap-2">
-              <button onclick="testMedicationAlert('morning')" title="Test Reminder" class="text-[10px] font-semibold text-emerald-400 bg-emerald-950/60 border border-emerald-800 px-2 py-1 rounded-lg active:scale-95 transition">
-                Test
+              <button onclick="testMedicationAlert('morning')" title="रिमाइंडर जांचें" class="text-[10px] font-semibold text-emerald-400 bg-emerald-950/60 border border-emerald-800 px-2 py-1 rounded-lg active:scale-95 transition">
+                जांचें
               </button>
-              <button onclick="openMedicationTimeModal('morning')" title="Edit Time" class="text-[10px] font-semibold text-slate-300 bg-white/10 px-2 py-1 rounded-lg active:scale-95 transition">
+              <button onclick="openMedicationTimeModal('morning')" title="समय बदलें" class="text-[10px] font-semibold text-slate-300 bg-white/10 px-2 py-1 rounded-lg active:scale-95 transition">
                 <i class="fa-solid fa-pen text-[9px]"></i>
               </button>
               <label class="relative inline-flex items-center cursor-pointer">
@@ -732,14 +735,14 @@
           <!-- Evening Slot -->
           <div class="p-2.5 rounded-xl bg-black/40 border border-white/10 flex items-center justify-between">
             <div>
-              <div class="text-xs font-bold text-white">Evening Medicine</div>
-              <div class="text-[10px] text-slate-400">Scheduled: <b id="night-med-display" class="text-emerald-400 font-semibold">08:30 PM</b></div>
+              <div class="text-xs font-bold text-white">रात की दवा</div>
+              <div class="text-[10px] text-slate-400">समय: <b id="night-med-display" class="text-emerald-400 font-semibold">08:30 PM</b></div>
             </div>
             <div class="flex items-center gap-2">
-              <button onclick="testMedicationAlert('night')" title="Test Reminder" class="text-[10px] font-semibold text-emerald-400 bg-emerald-950/60 border border-emerald-800 px-2 py-1 rounded-lg active:scale-95 transition">
-                Test
+              <button onclick="testMedicationAlert('night')" title="रिमाइंडर जांचें" class="text-[10px] font-semibold text-emerald-400 bg-emerald-950/60 border border-emerald-800 px-2 py-1 rounded-lg active:scale-95 transition">
+                जांचें
               </button>
-              <button onclick="openMedicationTimeModal('night')" title="Edit Time" class="text-[10px] font-semibold text-slate-300 bg-white/10 px-2 py-1 rounded-lg active:scale-95 transition">
+              <button onclick="openMedicationTimeModal('night')" title="समय बदलें" class="text-[10px] font-semibold text-slate-300 bg-white/10 px-2 py-1 rounded-lg active:scale-95 transition">
                 <i class="fa-solid fa-pen text-[9px]"></i>
               </button>
               <label class="relative inline-flex items-center cursor-pointer">
@@ -753,13 +756,13 @@
 
       <!-- Power & Comfort Automations -->
       <div class="bg-[#131419] border border-white/10 rounded-2xl p-4 shadow-lg space-y-2.5">
-        <h3 class="text-xs font-bold text-white">Comfort & Power Rules</h3>
+        <h3 class="text-xs font-bold text-white">आराम व पावर नियम</h3>
         
         <!-- Default Paras TV Wake -->
         <div class="flex items-center justify-between p-2.5 bg-black/40 rounded-xl border border-white/10">
           <div>
-            <div class="text-xs font-bold text-white">Startup on Paras TV</div>
-            <div class="text-[10px] text-slate-400">Always start directly on Paras TV Live</div>
+            <div class="text-xs font-bold text-white">हमेशा पारस टीवी पर शुरू हो</div>
+            <div class="text-[10px] text-slate-400">टीवी चालू होते ही सीधे पारस टीवी लाइव खुले</div>
           </div>
           <label class="relative inline-flex items-center cursor-pointer">
             <input type="checkbox" id="paras-allday-toggle" checked onchange="toggleParasAllDay(this.checked)" class="sr-only peer">
@@ -770,8 +773,8 @@
         <!-- Night Volume Guard -->
         <div class="flex items-center justify-between p-2.5 bg-black/40 rounded-xl border border-white/10">
           <div>
-            <div class="text-xs font-bold text-white">Night Volume Guard</div>
-            <div class="text-[10px] text-slate-400">Cap sound at 18% (9:30 PM – 6:00 AM)</div>
+            <div class="text-xs font-bold text-white">रात का साइलेंट साउंड गार्ड</div>
+            <div class="text-[10px] text-slate-400">रात 9:30 से सुबह 6:00 तक आवाज़ 18% पर सीमित</div>
           </div>
           <label class="relative inline-flex items-center cursor-pointer">
             <input type="checkbox" id="night-guard-toggle" checked onchange="toggleNightGuard(this.checked)" class="sr-only peer">
@@ -788,15 +791,15 @@
   <nav class="fixed bottom-0 inset-x-0 z-40 bg-[#0d0e12]/95 backdrop-blur-xl border-t border-white/10 py-2.5 px-8 flex justify-around items-center max-w-sm mx-auto shadow-2xl">
     <button onclick="switchTab('remote')" id="tab-remote" class="nav-tab active flex flex-col items-center gap-1 text-slate-400 transition">
       <i class="fa-solid fa-gamepad text-base"></i>
-      <span class="text-[10px] font-bold">Remote</span>
+      <span class="text-[10px] font-bold">रिमोट</span>
     </button>
     <button onclick="switchTab('apps')" id="tab-apps" class="nav-tab flex flex-col items-center gap-1 text-slate-400 transition">
       <i class="fa-solid fa-arrow-up-right-from-square text-base"></i>
-      <span class="text-[10px] font-bold">Cast</span>
+      <span class="text-[10px] font-bold">कास्ट</span>
     </button>
     <button onclick="switchTab('routines')" id="tab-routines" class="nav-tab flex flex-col items-center gap-1 text-slate-400 transition">
       <i class="fa-solid fa-heart-pulse text-base"></i>
-      <span class="text-[10px] font-bold">Care</span>
+      <span class="text-[10px] font-bold">दिनचर्या</span>
     </button>
   </nav>
 
@@ -805,7 +808,7 @@
     <div class="bg-[#131419] rounded-3xl p-5 w-full max-w-sm space-y-4 border border-white/10 shadow-2xl">
       <div class="flex items-center justify-between border-b border-white/10 pb-3">
         <h3 class="text-xs font-bold text-white uppercase tracking-wider flex items-center gap-2">
-          <i class="fa-solid fa-sliders text-amber-400"></i> Settings & Diagnostics
+          <i class="fa-solid fa-sliders text-amber-400"></i> सेटिंग्स व टूल्स
         </h3>
         <button onclick="closeModal('modal-settings')" class="text-slate-400 hover:text-white">
           <i class="fa-solid fa-xmark text-sm"></i>
@@ -816,24 +819,24 @@
         <!-- TV Network Diagnostics Info -->
         <div class="p-3 rounded-2xl bg-black/50 border border-white/10 space-y-2">
           <div class="flex items-center justify-between text-xs font-bold text-white border-b border-white/10 pb-2">
-            <span class="flex items-center gap-2"><i class="fa-solid fa-network-wired text-sky-400"></i> TV Network Details</span>
-            <span id="diag-status-pill" class="text-[10px] px-2 py-0.5 rounded-full font-bold bg-emerald-950/80 text-emerald-400 border border-emerald-800">Online</span>
+            <span class="flex items-center gap-2"><i class="fa-solid fa-network-wired text-sky-400"></i> टीवी नेटवर्क विवरण</span>
+            <span id="diag-status-pill" class="text-[10px] px-2 py-0.5 rounded-full font-bold bg-emerald-950/80 text-emerald-400 border border-emerald-800">ऑनलाइन</span>
           </div>
           <div class="grid grid-cols-2 gap-2 text-[11px]">
             <div>
-              <span class="text-slate-400 block text-[9px] uppercase font-semibold">Wi-Fi Network</span>
-              <span id="diag-wifi" class="font-bold text-white truncate block">Checking...</span>
+              <span class="text-slate-400 block text-[9px] uppercase font-semibold">वाई-फ़ाई नेटवर्क</span>
+              <span id="diag-wifi" class="font-bold text-white truncate block">जांच रहे हैं...</span>
             </div>
             <div>
-              <span class="text-slate-400 block text-[9px] uppercase font-semibold">Signal Quality</span>
-              <span id="diag-rssi" class="font-bold text-emerald-400">Checking...</span>
+              <span class="text-slate-400 block text-[9px] uppercase font-semibold">सिग्नल स्तर</span>
+              <span id="diag-rssi" class="font-bold text-emerald-400">जांच रहे हैं...</span>
             </div>
             <div>
-              <span class="text-slate-400 block text-[9px] uppercase font-semibold">TV IP Address</span>
+              <span class="text-slate-400 block text-[9px] uppercase font-semibold">टीवी IP पता</span>
               <span class="font-bold text-slate-300">10.218.252.142</span>
             </div>
             <div>
-              <span class="text-slate-400 block text-[9px] uppercase font-semibold">Foreground App</span>
+              <span class="text-slate-400 block text-[9px] uppercase font-semibold">चालू ऐप</span>
               <span id="diag-app" class="font-bold text-amber-300 truncate block">YouTube TV</span>
             </div>
           </div>
@@ -841,38 +844,38 @@
 
         <!-- TV Wi-Fi Manager -->
         <button onclick="closeModal('modal-settings'); openWifiModal();" class="w-full p-3 rounded-xl bg-sky-950/30 border border-sky-500/20 text-sky-200 font-semibold flex items-center justify-between hover:bg-sky-900/30 active:scale-98 transition">
-          <span class="flex items-center gap-2.5"><i class="fa-solid fa-wifi text-sky-400"></i> TV Wi-Fi Networks & Scan</span>
+          <span class="flex items-center gap-2.5"><i class="fa-solid fa-wifi text-sky-400"></i> टीवी वाई-फ़ाई नेटवर्क खोजें</span>
           <i class="fa-solid fa-chevron-right text-[10px] text-sky-400"></i>
         </button>
 
         <!-- TV Keyboard Input -->
         <button onclick="closeModal('modal-settings'); openKeyboardModal();" class="w-full p-3 rounded-xl bg-[#1c1d24] border border-white/10 text-white font-semibold flex items-center justify-between hover:bg-[#252731] active:scale-98 transition">
-          <span class="flex items-center gap-2.5"><i class="fa-solid fa-keyboard text-sky-400"></i> TV Text & Search</span>
+          <span class="flex items-center gap-2.5"><i class="fa-solid fa-keyboard text-sky-400"></i> टीवी पर टाइप करें</span>
           <i class="fa-solid fa-chevron-right text-[10px] text-slate-400"></i>
         </button>
 
         <!-- Switch Hardware Finish (Theme) -->
         <button onclick="closeModal('modal-settings'); openThemeModal();" class="w-full p-3 rounded-xl bg-[#1c1d24] border border-white/10 text-white font-semibold flex items-center justify-between hover:bg-[#252731] active:scale-98 transition">
-          <span class="flex items-center gap-2.5"><i class="fa-solid fa-palette text-amber-400"></i> Hardware Theme</span>
+          <span class="flex items-center gap-2.5"><i class="fa-solid fa-palette text-amber-400"></i> रिमोट थीम (कलर)</span>
           <i class="fa-solid fa-chevron-right text-[10px] text-slate-400"></i>
         </button>
 
         <!-- Install PWA -->
         <button onclick="promptInstallApp()" class="w-full p-3 rounded-xl bg-[#1a2333] border border-sky-500/30 text-sky-200 font-semibold flex items-center justify-between hover:bg-[#223047] active:scale-98 transition">
-          <span class="flex items-center gap-2.5"><i class="fa-solid fa-mobile-screen-button text-sky-400"></i> Install Remote on Phone</span>
+          <span class="flex items-center gap-2.5"><i class="fa-solid fa-mobile-screen-button text-sky-400"></i> फोन पर ऐप इनस्टॉल करें</span>
           <span class="text-[9px] bg-sky-500/20 px-2 py-0.5 rounded-full font-bold">PWA</span>
         </button>
 
         <!-- Lock Remote -->
         <button onclick="closeModal('modal-settings'); lockRemote();" class="w-full p-3 rounded-xl bg-rose-950/30 border border-rose-500/20 text-rose-300 font-semibold flex items-center justify-between hover:bg-rose-900/30 active:scale-98 transition">
-          <span class="flex items-center gap-2.5"><i class="fa-solid fa-lock text-rose-400"></i> Lock Remote Keypad</span>
+          <span class="flex items-center gap-2.5"><i class="fa-solid fa-lock text-rose-400"></i> रिमोट कीपैड लॉक करें</span>
           <i class="fa-solid fa-arrow-right-from-bracket text-[10px] text-rose-400"></i>
         </button>
       </div>
 
       <div class="pt-1">
         <button onclick="closeModal('modal-settings')" class="w-full py-2.5 bg-[#1c1d24] hover:bg-[#252731] text-white font-semibold text-xs rounded-xl border border-white/10">
-          Close
+          बंद करें
         </button>
       </div>
     </div>
@@ -885,12 +888,12 @@
       <div class="flex items-center justify-between border-b border-white/10 pb-3 shrink-0">
         <div>
           <h3 class="text-xs font-bold text-white uppercase tracking-wider flex items-center gap-2">
-            <i class="fa-solid fa-wifi text-sky-400"></i> TV Wi-Fi Manager
+            <i class="fa-solid fa-wifi text-sky-400"></i> टीवी वाई-फ़ाई मैनेजर
           </h3>
-          <p class="text-[10px] text-slate-400 mt-0.5">Scan & connect TV to wireless networks</p>
+          <p class="text-[10px] text-slate-400 mt-0.5">टीवी को वायरलेस नेटवर्क से खोजें व जोड़ें</p>
         </div>
         <div class="flex items-center gap-2">
-          <button id="wifi-refresh-btn" onclick="triggerWifiScan()" title="Rescan Networks" class="w-8 h-8 rounded-xl bg-[#1c1d24] border border-white/10 flex items-center justify-center text-slate-300 hover:text-sky-400 active:scale-95 transition">
+          <button id="wifi-refresh-btn" onclick="triggerWifiScan()" title="पुनः स्कैन करें" class="w-8 h-8 rounded-xl bg-[#1c1d24] border border-white/10 flex items-center justify-center text-slate-300 hover:text-sky-400 active:scale-95 transition">
             <i class="fa-solid fa-rotate text-xs"></i>
           </button>
           <button onclick="closeModal('modal-wifi')" class="w-8 h-8 rounded-xl bg-[#1c1d24] border border-white/10 flex items-center justify-center text-slate-400 hover:text-white transition">
@@ -902,8 +905,8 @@
       <!-- Current Connected Network Card -->
       <div class="p-3 rounded-2xl bg-black/50 border border-white/10 shrink-0">
         <div class="flex items-center justify-between mb-1.5">
-          <span class="text-[9px] uppercase font-bold tracking-wider text-slate-400">Active TV Network</span>
-          <span id="wifi-active-status-pill" class="text-[9px] px-2 py-0.5 rounded-full font-bold bg-emerald-950/80 text-emerald-400 border border-emerald-800">Connected</span>
+          <span class="text-[9px] uppercase font-bold tracking-wider text-slate-400">सक्रिय टीवी नेटवर्क</span>
+          <span id="wifi-active-status-pill" class="text-[9px] px-2 py-0.5 rounded-full font-bold bg-emerald-950/80 text-emerald-400 border border-emerald-800">कनेक्टेड</span>
         </div>
         <div class="flex items-center justify-between">
           <div class="flex items-center gap-2.5 min-w-0">
@@ -911,8 +914,8 @@
               <i class="fa-solid fa-wifi text-xs"></i>
             </div>
             <div class="min-w-0">
-              <span id="wifi-active-ssid" class="font-bold text-white text-xs block truncate">Checking...</span>
-              <span id="wifi-active-details" class="text-[10px] text-slate-400 block truncate">Signal: -- dBm</span>
+              <span id="wifi-active-ssid" class="font-bold text-white text-xs block truncate">जांच रहे हैं...</span>
+              <span id="wifi-active-details" class="text-[10px] text-slate-400 block truncate">सिग्नल: -- dBm</span>
             </div>
           </div>
         </div>
@@ -920,20 +923,20 @@
 
       <!-- Scanner Status / Banner -->
       <div id="wifi-status-banner" class="hidden py-2 px-3 rounded-xl text-xs font-semibold flex items-center justify-between transition shrink-0">
-        <span id="wifi-status-banner-text">Connecting...</span>
+        <span id="wifi-status-banner-text">कनेक्ट हो रहा है...</span>
       </div>
 
       <!-- Networks Section -->
       <div class="flex-1 overflow-y-auto space-y-2 min-h-[140px] pr-1">
         <div class="flex items-center justify-between text-[10px] uppercase font-bold tracking-wider text-slate-400 px-1">
-          <span>Available Networks</span>
+          <span>उपलब्ध नेटवर्क</span>
           <span id="wifi-scan-count"></span>
         </div>
 
         <!-- Scanning State Indicator -->
         <div id="wifi-scanning-state" class="py-8 flex flex-col items-center justify-center space-y-2 text-slate-400">
           <i class="fa-solid fa-circle-notch fa-spin text-xl text-sky-400"></i>
-          <span class="text-xs font-medium">Scanning TV Wi-Fi frequencies...</span>
+          <span class="text-xs font-medium">टीवी वाई-फ़ाई स्कैन हो रहा है...</span>
         </div>
 
         <!-- Dynamic Network List -->
@@ -944,8 +947,8 @@
 
       <!-- Footer Info -->
       <div class="border-t border-white/10 pt-2.5 text-[10px] text-slate-400 flex items-center justify-between shrink-0">
-        <span>Dual-Band 2.4 / 5 GHz</span>
-        <button onclick="requestTVStatus()" class="hover:text-sky-400 transition">Check TV Status</button>
+        <span>ड्यूल-बैंड 2.4 / 5 GHz</span>
+        <button onclick="requestTVStatus()" class="hover:text-sky-400 transition">स्थिति जांचें</button>
       </div>
     </div>
   </div>
@@ -955,7 +958,7 @@
     <div class="bg-[#131419] rounded-3xl p-5 w-full max-w-sm space-y-4 border border-white/10 shadow-2xl">
       <div class="flex items-center justify-between border-b border-white/10 pb-3">
         <h3 class="text-xs font-bold text-white uppercase tracking-wider flex items-center gap-2">
-          <i class="fa-solid fa-bell text-amber-400"></i> Show Message on TV Screen
+          <i class="fa-solid fa-bell text-amber-400"></i> टीवी स्क्रीन पर संदेश भेजें
         </h3>
         <button onclick="closeModal('modal-alert')" class="text-slate-400 hover:text-white">
           <i class="fa-solid fa-xmark text-sm"></i>
@@ -963,29 +966,29 @@
       </div>
 
       <div class="space-y-1.5">
-        <span class="text-[10px] font-semibold text-slate-400 uppercase tracking-wider">Quick Messages</span>
+        <span class="text-[10px] font-semibold text-slate-400 uppercase tracking-wider">त्वरित संदेश</span>
         <div class="grid grid-cols-2 gap-2">
-          <button onclick="sendQuickAlert('🍲 Papa, Dinner is ready!')" class="p-2.5 rounded-xl bg-black/40 border border-white/10 hover:border-amber-400/40 text-left text-xs text-white transition active:scale-95 flex items-center gap-2">
-            <i class="fa-solid fa-utensils text-amber-400 text-xs"></i> <span class="truncate">Dinner is ready!</span>
+          <button onclick="sendQuickAlert('🍲 पापा जी, खाना तैयार है, आ जाइए!')" class="p-2.5 rounded-xl bg-black/40 border border-white/10 hover:border-amber-400/40 text-left text-xs text-white transition active:scale-95 flex items-center gap-2">
+            <i class="fa-solid fa-utensils text-amber-400 text-xs"></i> <span class="truncate">खाना तैयार है!</span>
           </button>
-          <button onclick="sendQuickAlert('💊 Papa, please take medicine!')" class="p-2.5 rounded-xl bg-black/40 border border-white/10 hover:border-amber-400/40 text-left text-xs text-white transition active:scale-95 flex items-center gap-2">
-            <i class="fa-solid fa-pills text-emerald-400 text-xs"></i> <span class="truncate">Take medicine!</span>
+          <button onclick="sendQuickAlert('💊 पापा जी, दवा लेने का समय हो गया!')" class="p-2.5 rounded-xl bg-black/40 border border-white/10 hover:border-amber-400/40 text-left text-xs text-white transition active:scale-95 flex items-center gap-2">
+            <i class="fa-solid fa-pills text-emerald-400 text-xs"></i> <span class="truncate">दवा का समय!</span>
           </button>
-          <button onclick="sendQuickAlert('🥛 Papa, please drink warm water')" class="p-2.5 rounded-xl bg-black/40 border border-white/10 hover:border-amber-400/40 text-left text-xs text-white transition active:scale-95 flex items-center gap-2">
-            <i class="fa-solid fa-glass-water text-sky-400 text-xs"></i> <span class="truncate">Drink water</span>
+          <button onclick="sendQuickAlert('🥛 पापा जी, गुनगुना पानी पी लीजिए!')" class="p-2.5 rounded-xl bg-black/40 border border-white/10 hover:border-amber-400/40 text-left text-xs text-white transition active:scale-95 flex items-center gap-2">
+            <i class="fa-solid fa-glass-water text-sky-400 text-xs"></i> <span class="truncate">पानी पी लीजिए</span>
           </button>
-          <button onclick="sendQuickAlert('📞 Call Dev on phone when free')" class="p-2.5 rounded-xl bg-black/40 border border-white/10 hover:border-amber-400/40 text-left text-xs text-white transition active:scale-95 flex items-center gap-2">
-            <i class="fa-solid fa-phone text-indigo-400 text-xs"></i> <span class="truncate">Call on phone</span>
+          <button onclick="sendQuickAlert('📞 समय मिलने पर मुझे फोन करें!')" class="p-2.5 rounded-xl bg-black/40 border border-white/10 hover:border-amber-400/40 text-left text-xs text-white transition active:scale-95 flex items-center gap-2">
+            <i class="fa-solid fa-phone text-indigo-400 text-xs"></i> <span class="truncate">मुझे फोन करें</span>
           </button>
         </div>
       </div>
 
       <div class="space-y-2 pt-1">
-        <span class="text-[10px] font-semibold text-slate-400 uppercase tracking-wider">Custom Message</span>
-        <textarea id="custom-alert-input" rows="2" placeholder="Type message to display on TV..." class="w-full bg-black/60 border border-white/15 rounded-xl px-3 py-2 text-xs text-white focus:outline-none focus:border-amber-400 resize-none"></textarea>
+        <span class="text-[10px] font-semibold text-slate-400 uppercase tracking-wider">अपना संदेश लिखें</span>
+        <textarea id="custom-alert-input" rows="2" placeholder="टीवी स्क्रीन पर दिखाने के लिए संदेश लिखें..." class="w-full bg-black/60 border border-white/15 rounded-xl px-3 py-2 text-xs text-white focus:outline-none focus:border-amber-400 resize-none"></textarea>
         
         <button onclick="sendCustomAlert()" class="w-full py-2.5 bg-amber-500 hover:bg-amber-400 text-black font-bold text-xs rounded-xl shadow-md flex items-center justify-center gap-2 active:scale-95 transition">
-          <i class="fa-solid fa-paper-plane text-xs"></i> Send to TV
+          <i class="fa-solid fa-paper-plane text-xs"></i> टीवी पर भेजें
         </button>
       </div>
     </div>
@@ -996,7 +999,7 @@
     <div class="bg-[#131419] rounded-3xl p-5 w-full max-w-sm space-y-4 border border-white/10 shadow-2xl">
       <div class="flex items-center justify-between border-b border-white/10 pb-3">
         <h3 class="text-xs font-bold text-white uppercase tracking-wider flex items-center gap-2">
-          <i class="fa-solid fa-keyboard text-sky-400"></i> Type on TV
+          <i class="fa-solid fa-keyboard text-sky-400"></i> टीवी पर टाइप करें
         </h3>
         <button onclick="closeModal('modal-keyboard')" class="text-slate-400 hover:text-white">
           <i class="fa-solid fa-xmark text-sm"></i>
@@ -1004,12 +1007,12 @@
       </div>
 
       <div class="space-y-2">
-        <input type="text" id="type-input" placeholder="Type search query or text..." class="w-full bg-black/60 border border-white/15 rounded-xl px-3 py-2.5 text-xs text-white focus:outline-none focus:border-sky-400">
+        <input type="text" id="type-input" placeholder="खोज या टेक्स्ट यहाँ टाइप करें..." class="w-full bg-black/60 border border-white/15 rounded-xl px-3 py-2.5 text-xs text-white focus:outline-none focus:border-sky-400">
         <div class="flex gap-2">
           <button onclick="sendTypedText()" class="flex-1 py-2.5 bg-sky-500 hover:bg-sky-400 text-black font-bold text-xs rounded-xl shadow-md flex items-center justify-center gap-1.5 active:scale-95 transition">
-            <i class="fa-solid fa-paper-plane text-xs"></i> Send to TV
+            <i class="fa-solid fa-paper-plane text-xs"></i> टीवी पर भेजें
           </button>
-          <button onclick="sendCommand('key', '66')" title="Press Enter" class="px-4 py-2.5 bg-[#1c1d24] hover:bg-[#252731] text-slate-200 font-semibold text-xs rounded-xl border border-white/10">
+          <button onclick="sendCommand('key', '66')" title="एंटर" class="px-4 py-2.5 bg-[#1c1d24] hover:bg-[#252731] text-slate-200 font-semibold text-xs rounded-xl border border-white/10">
             Enter
           </button>
         </div>
@@ -1022,7 +1025,7 @@
     <div class="bg-[#131419] rounded-3xl p-5 w-full max-w-sm space-y-4 border border-white/10 shadow-2xl max-h-[85vh] flex flex-col">
       <div class="flex items-center justify-between border-b border-white/10 pb-3">
         <h3 class="text-xs font-bold text-white uppercase tracking-wider flex items-center gap-2">
-          <i class="fa-solid fa-palette text-amber-400"></i> Hardware Theme
+          <i class="fa-solid fa-palette text-amber-400"></i> रिमोट थीम (कलर)
         </h3>
         <button onclick="closeModal('modal-theme')" class="text-slate-400 hover:text-white">
           <i class="fa-solid fa-xmark text-sm"></i>
@@ -1037,7 +1040,7 @@
     <div class="bg-[#131419] rounded-3xl p-5 w-full max-w-sm space-y-4 border border-white/10 shadow-2xl">
       <div class="flex items-center justify-between border-b border-white/10 pb-3">
         <h3 class="text-xs font-bold text-white uppercase tracking-wider flex items-center gap-2">
-          <i class="fa-solid fa-clock text-emerald-400"></i> Set Medicine Time
+          <i class="fa-solid fa-clock text-emerald-400"></i> दवा का समय चुनें
         </h3>
         <button onclick="closeModal('modal-med-time')" class="text-slate-400 hover:text-white">
           <i class="fa-solid fa-xmark text-sm"></i>
@@ -1048,18 +1051,18 @@
 
       <div class="space-y-3 text-xs">
         <div>
-          <label class="block text-slate-300 font-semibold mb-1.5" id="med-slot-label">Reminder Time</label>
+          <label class="block text-slate-300 font-semibold mb-1.5" id="med-slot-label">रिमाइंडर का समय</label>
           <input type="time" id="med-slot-time-input" class="w-full bg-black/60 border border-white/15 rounded-xl px-3 py-2 text-white text-sm focus:outline-none focus:border-emerald-400">
         </div>
-        <p class="text-[11px] text-slate-400 leading-relaxed">When father's TV is turned on at this scheduled time, a gentle chime sounds and an on-screen banner appears for 12 seconds.</p>
+        <p class="text-[11px] text-slate-400 leading-relaxed">निर्धारित समय पर टीवी चालू रहने पर एक सौम्य घंटी बजेगी और स्क्रीन पर 12 सेकंड के लिए दवा का रिमाइंडर दिखेगा।</p>
       </div>
 
       <div class="pt-2 flex gap-2">
         <button onclick="closeModal('modal-med-time')" class="flex-1 py-2.5 bg-[#1c1d24] hover:bg-[#252731] text-white font-semibold text-xs rounded-xl border border-white/10">
-          Cancel
+          रद्द करें
         </button>
         <button onclick="saveMedicationTime()" class="flex-1 py-2.5 bg-emerald-600 hover:bg-emerald-500 text-white font-semibold text-xs rounded-xl shadow-md active:scale-95 transition">
-          Save Time
+          समय सेव करें
         </button>
       </div>
     </div>
@@ -1355,15 +1358,16 @@
         }
         attempt++;
       }
-      if (!silent) flashStatus('Offline', true);
+      if (!silent) flashStatus('ऑफ़लाइन', true);
     }
 
-    // ==================== SILKY-SMOOTH SOUND VOLUME CONTROLLER ====================
+    // ==================== ULTRA-RESPONSIVE CONTINUOUS VOLUME CONTROLLER ====================
     let volHoldTimer = null;
     let volHoldInterval = null;
     let isHoldingVol = false;
     let currentVolLevel = 30;
-    let lastDispatchedVol = 30;
+    let holdStartTime = 0;
+    let holdInitialVol = 30;
 
     function startVolHold(dir, ev) {
       if (ev) {
@@ -1374,24 +1378,49 @@
       }
       if (isHoldingVol) return;
       isHoldingVol = true;
+      holdStartTime = Date.now();
+      holdInitialVol = currentVolLevel;
 
       const btnId = dir === 'up' ? 'btn-vol-up' : 'btn-vol-down';
       const btn = document.getElementById(btnId);
       if (btn) btn.classList.add('holding');
 
-      // 1. Immediate step on first touch
-      stepVolume(dir);
+      // 1. Immediate visual step on touch
+      currentVolLevel = (dir === 'up') ? Math.min(100, currentVolLevel + 1) : Math.max(0, currentVolLevel - 1);
+      updateVolQuickDisp(currentVolLevel);
+      if (navigator.vibrate) navigator.vibrate(10);
 
-      // 2. Smooth continuous repeating after 280ms, paced at 180ms
+      // 2. Start continuous fluid acceleration after 220ms (zero network traffic during hold)
       volHoldTimer = setTimeout(() => {
+        let tickCount = 0;
         volHoldInterval = setInterval(() => {
           if (!isHoldingVol) {
             clearInterval(volHoldInterval);
             return;
           }
-          stepVolume(dir);
-        }, 180);
-      }, 280);
+          tickCount++;
+          const elapsed = Date.now() - holdStartTime;
+
+          // Progressive speed ramping: starts smooth, glides quickly to target
+          let step = 1;
+          if (elapsed > 1200) {
+            step = 3;
+          } else if (elapsed > 500) {
+            step = 2;
+          }
+
+          if (dir === 'up') {
+            currentVolLevel = Math.min(100, currentVolLevel + step);
+          } else {
+            currentVolLevel = Math.max(0, currentVolLevel - step);
+          }
+          updateVolQuickDisp(currentVolLevel);
+
+          if (navigator.vibrate && tickCount % 2 === 0) {
+            navigator.vibrate(6);
+          }
+        }, 50); // 50ms tick = ultra-fluid 20 updates/sec
+      }, 220);
     }
 
     function stopVolHold(ev) {
@@ -1415,10 +1444,11 @@
       if (btnUp) btnUp.classList.remove('holding');
       if (btnDown) btnDown.classList.remove('holding');
 
-      // Final synchronization on release: ensure TV matches current level exactly
-      if (currentVolLevel !== lastDispatchedVol) {
+      // CRITICAL: When finished holding, instantly jump TV to that volume in a single command
+      // e.g. jumped from 35 to 85 -> sends ONE single VOL:85 command
+      if (currentVolLevel !== holdInitialVol) {
         sendCommand('vol', currentVolLevel.toString(), true);
-        lastDispatchedVol = currentVolLevel;
+        flashStatus(`आवाज़: ${currentVolLevel}%`);
       }
     }
 
@@ -1426,17 +1456,6 @@
     window.addEventListener('mouseup', () => { if (isHoldingVol) stopVolHold(); });
     window.addEventListener('touchend', () => { if (isHoldingVol) stopVolHold(); });
     window.addEventListener('touchcancel', () => { if (isHoldingVol) stopVolHold(); });
-
-    function stepVolume(dir) {
-      if (dir === 'up') {
-        currentVolLevel = Math.min(100, currentVolLevel + 1);
-      } else {
-        currentVolLevel = Math.max(0, currentVolLevel - 1);
-      }
-      updateVolQuickDisp(currentVolLevel);
-      sendCommand(dir === 'up' ? 'vol_up' : 'vol_down', '1', true);
-      lastDispatchedVol = currentVolLevel;
-    }
 
     function updateVolQuickDisp(vol) {
       if (typeof vol === 'number') {
@@ -1457,13 +1476,13 @@
       if (currentVolLevel === 0) {
         if (muteIcon) muteIcon.className = 'fa-solid fa-volume-xmark text-xs text-rose-400';
         if (muteLabel) {
-          muteLabel.textContent = 'Unmute';
+          muteLabel.textContent = 'आवाज़ चालू';
           muteLabel.className = 'text-rose-400 font-bold';
         }
       } else {
         if (muteIcon) muteIcon.className = 'fa-solid fa-volume-high text-xs text-slate-300';
         if (muteLabel) {
-          muteLabel.textContent = 'Mute';
+          muteLabel.textContent = 'म्यूट';
           muteLabel.className = '';
         }
       }
@@ -1472,21 +1491,21 @@
     function sendQuickChannel(channel) {
       if (channel === 'paras') {
         sendCommand('URL', 'https://www.youtube.com/@parasnetwork/live');
-        flashStatus('Opening Paras TV...');
+        flashStatus('पारस टीवी खुल रहा है...');
       } else if (channel === 'jinvani') {
         sendCommand('URL', 'https://www.youtube.com/@jinvanichannelofficial/live');
-        flashStatus('Opening Jinvani...');
+        flashStatus('जिनवाणी खुल रही है...');
       }
     }
 
     function launchHotstar() {
       sendCommand('LAUNCH_APP', 'in.startv.hotstar');
-      flashStatus('Opening Hotstar...');
+      flashStatus('हॉटस्टार खुल रहा है...');
     }
 
     function launchCricketLive() {
       sendCommand('CRICKET', 'live');
-      flashStatus('Opening Cricket...');
+      flashStatus('क्रिकेट खुल रहा है...');
     }
 
     function sendTypedText() {
@@ -1496,7 +1515,7 @@
       sendCommand('TYPE', text);
       input.value = '';
       closeModal('modal-keyboard');
-      flashStatus('Typed on TV');
+      flashStatus('टीवी पर भेजा गया');
     }
 
     // ==================== TAB SWITCHING ====================
@@ -1521,7 +1540,7 @@
 
     function requestTVStatus() {
       sendCommand('STATUS', 'now');
-      flashStatus('Refreshing...');
+      flashStatus('ताज़ा हो रहा है...');
     }
 
     function requestScreenshot() {
@@ -1539,7 +1558,7 @@
       if (peekFooter) peekFooter.classList.add('hidden');
 
       sendCommand('SCREEN', 'now');
-      flashStatus('Snapping Screen...');
+      flashStatus('स्क्रीन कैप्चर हो रही है...');
 
       setTimeout(async () => {
         try {
@@ -1587,7 +1606,7 @@
           if (peekLoad) peekLoad.classList.add('hidden');
           peekImg.classList.remove('hidden');
           if (peekFooter) peekFooter.classList.remove('hidden');
-          if (peekTime) peekTime.innerHTML = `<i class="fa-regular fa-clock text-[9px]"></i> Captured ${timeStr}`;
+          if (peekTime) peekTime.innerHTML = `<i class="fa-regular fa-clock text-[9px]"></i> कैप्चर किया ${timeStr}`;
         };
       }
     }
@@ -1636,7 +1655,7 @@
         if (standbyBanner) standbyBanner.classList.add('hidden');
         if (connDot && connStatus) {
           connDot.className = 'w-2 h-2 rounded-full bg-emerald-400 animate-pulse shrink-0';
-          connStatus.textContent = `TV Awake • ${status.app || 'Online'}`;
+          connStatus.textContent = `टीवी चालू है • ${status.app || 'ऑनलाइन'}`;
         }
       } else if (isDreaming) {
         if (remoteView) remoteView.classList.remove('tv-sleeping');
@@ -1646,7 +1665,7 @@
         if (standbyBanner) standbyBanner.classList.add('hidden');
         if (connDot && connStatus) {
           connDot.className = 'w-2 h-2 rounded-full bg-sky-400 shrink-0';
-          connStatus.textContent = 'TV Ambient';
+          connStatus.textContent = 'टीवी एम्बिएंट';
         }
       } else {
         // TV is in Standby / Off
@@ -1657,11 +1676,11 @@
         if (standbyBanner) standbyBanner.classList.remove('hidden');
         if (connDot && connStatus) {
           connDot.className = 'w-2 h-2 rounded-full bg-amber-400 shrink-0';
-          connStatus.textContent = 'TV in Standby';
+          connStatus.textContent = 'टीवी बंद (स्टैंडबाय)';
         }
       }
 
-      if (status.volume !== undefined) {
+      if (status.volume !== undefined && !isHoldingVol) {
         updateVolQuickDisp(status.volume);
       }
 
@@ -1679,29 +1698,29 @@
       if (diagWifi) diagWifi.textContent = wifiSSID;
       if (diagApp) diagApp.textContent = status.app || 'None';
       if (diagPill) {
-        diagPill.textContent = isAwake ? 'Awake' : (isDreaming ? 'Ambient' : 'Standby');
+        diagPill.textContent = isAwake ? 'चालू' : (isDreaming ? 'एम्बिएंट' : 'स्टैंडबाय');
         diagPill.className = isAwake ? 'text-[10px] px-2 py-0.5 rounded-full font-bold bg-emerald-950/80 text-emerald-400 border border-emerald-800' : 'text-[10px] px-2 py-0.5 rounded-full font-bold bg-amber-950/80 text-amber-400 border border-amber-800';
       }
 
       if (wifiSSID === 'Disconnected' || !wifiSSID) {
         if (wifiBadge) {
-          wifiBadge.textContent = '• Offline';
+          wifiBadge.textContent = '• ऑफ़लाइन';
           wifiBadge.className = 'shrink-0 text-[9px] text-rose-400 font-semibold';
         }
         if (wifiIcon) wifiIcon.className = 'fa-solid fa-wifi-slash text-[9px] text-rose-400';
         if (diagRssi) {
-          diagRssi.textContent = 'Disconnected';
+          diagRssi.textContent = 'डिस्कनेक्टेड';
           diagRssi.className = 'font-bold text-rose-400';
         }
       } else {
-        let signalLabel = '• Strong';
+        let signalLabel = '• बेहतरीन';
         let signalColor = 'text-emerald-400';
         const rssi = parseInt(status.rssi, 10);
         if (!isNaN(rssi) && rssi < 0) {
-          if (rssi >= -60) signalLabel = `• Strong (${rssi} dBm)`;
-          else if (rssi >= -72) signalLabel = `• Good (${rssi} dBm)`;
-          else if (rssi >= -82) { signalLabel = `• Fair (${rssi} dBm)`; signalColor = 'text-amber-400'; }
-          else { signalLabel = `• Weak (${rssi} dBm)`; signalColor = 'text-rose-400'; }
+          if (rssi >= -60) signalLabel = `• बेहतरीन (${rssi} dBm)`;
+          else if (rssi >= -72) signalLabel = `• अच्छा (${rssi} dBm)`;
+          else if (rssi >= -82) { signalLabel = `• सामान्य (${rssi} dBm)`; signalColor = 'text-amber-400'; }
+          else { signalLabel = `• कमजोर (${rssi} dBm)`; signalColor = 'text-rose-400'; }
         }
         if (wifiBadge) {
           wifiBadge.textContent = signalLabel;
