@@ -324,7 +324,10 @@ while true; do
                         esac
                         ;;
                 esac
-                sleep 3
+                # Immediate cloud broadcast: playback initiated and achieved on TV
+                $CURL $CURL_OPTS -d "{\"type\":\"action_done\",\"url\":\"$URL\",\"status\":\"playing\"}" "$STATUS_TOPIC" < /dev/null 2>&1 &
+                $CURL $CURL_OPTS_BACKUP -d "{\"type\":\"action_done\",\"url\":\"$URL\",\"status\":\"playing\"}" "$STATUS_TOPIC_BACKUP" < /dev/null 2>&1 &
+                sleep 2
                 publish_tv_status
                 ;;
             LAUNCH_APP:*)

@@ -668,7 +668,7 @@
       <!-- QUICK APP LAUNCHERS -->
       <div class="grid grid-cols-3 gap-2 w-full pt-0.5">
         <!-- YouTube TV -->
-        <button onclick="sendCommand('launch_app', 'com.google.android.youtube.tv')" class="bg-[#1c1d24] hover:bg-[#252731] border border-white/10 rounded-xl py-2 px-2 flex items-center justify-center gap-1.5 active:scale-95 transition shadow-sm">
+        <button onclick="launchYouTube()" class="bg-[#1c1d24] hover:bg-[#252731] border border-white/10 rounded-xl py-2 px-2 flex items-center justify-center gap-1.5 active:scale-95 transition shadow-sm">
           <i class="fa-brands fa-youtube text-red-500 text-sm"></i>
           <span class="text-xs font-bold text-white tracking-tight">यूट्यूब</span>
         </button>
@@ -901,6 +901,42 @@
       <span class="text-[10px] font-bold">दिनचर्या</span>
     </button>
   </nav>
+
+  <!-- ==================== LIVE ACTION PLAYBACK LOADER HUD ==================== -->
+  <div id="modal-action-loader" class="fixed inset-0 z-50 bg-black/85 backdrop-blur-md hidden items-center justify-center p-4 transition-all duration-300">
+    <div class="bg-[#131419] border border-amber-500/30 rounded-3xl p-6 w-full max-w-xs shadow-2xl flex flex-col items-center text-center relative overflow-hidden">
+      <!-- Ambient Glow Behind Icon -->
+      <div id="loader-glow" class="absolute -top-10 -left-10 w-32 h-32 bg-amber-500/20 rounded-full blur-2xl pointer-events-none transition-all duration-500"></div>
+
+      <!-- Center Animated Spinner & Icon -->
+      <div class="relative my-2 flex items-center justify-center">
+        <div id="loader-spinner" class="w-16 h-16 rounded-full border-3 border-amber-500/20 border-t-amber-400 animate-spin transition-all duration-300"></div>
+        <div id="loader-icon-container" class="absolute inset-0 flex items-center justify-center text-amber-400 text-xl transition-all duration-300">
+          <i id="loader-icon" class="fa-solid fa-tv"></i>
+        </div>
+      </div>
+
+      <!-- Main Action Title: e.g. "अनुपमा" लगाया जा रहा है... -->
+      <h3 id="loader-action-title" class="text-base font-bold text-white tracking-wide mt-3 leading-snug">
+        अनुपमा लगाया जा रहा है...
+      </h3>
+
+      <!-- Dynamic Subtitle / Progression Step -->
+      <p id="loader-action-step" class="text-xs text-amber-300/80 font-medium mt-1 transition-all duration-300">
+        टीवी पर खोज रहे हैं...
+      </p>
+
+      <!-- Liquid Progress Track -->
+      <div class="w-full bg-slate-800 h-1.5 rounded-full mt-4 overflow-hidden border border-white/5">
+        <div id="loader-action-bar" class="bg-gradient-to-r from-amber-500 to-amber-300 h-full rounded-full transition-all duration-300 ease-out" style="width: 25%;"></div>
+      </div>
+
+      <!-- Dismiss Button -->
+      <button onclick="dismissActionLoader()" class="mt-4 text-[11px] text-slate-500 hover:text-slate-300 transition py-1 px-3 rounded-lg hover:bg-white/5">
+        रद्द करें
+      </button>
+    </div>
+  </div>
 
   <!-- ==================== MODAL: SETTINGS & TOOLS ==================== -->
   <div id="modal-settings" class="fixed inset-0 z-50 bg-black/85 backdrop-blur-sm hidden items-center justify-center p-4">
@@ -1327,6 +1363,124 @@
       }
     }
 
+    // ==================== LIVE ACTION PLAYBACK LOADER HUD ====================
+    let activeActionName = '';
+    let actionLoaderTimers = [];
+
+    function clearActionLoaderTimers() {
+      actionLoaderTimers.forEach(t => clearTimeout(t));
+      actionLoaderTimers = [];
+    }
+
+    function showActionLoader(name, initialStep = 'टीवी पर खोज रहे हैं...') {
+      clearActionLoaderTimers();
+      activeActionName = name || 'वीडियो';
+
+      const overlay = document.getElementById('modal-action-loader');
+      const titleEl = document.getElementById('loader-action-title');
+      const stepEl = document.getElementById('loader-action-step');
+      const barEl = document.getElementById('loader-action-bar');
+      const spinnerEl = document.getElementById('loader-spinner');
+      const iconEl = document.getElementById('loader-icon');
+      const glowEl = document.getElementById('loader-glow');
+      if (!overlay) return;
+
+      if (titleEl) titleEl.textContent = `${activeActionName} लगाया जा रहा है...`;
+      if (stepEl) {
+        stepEl.textContent = initialStep;
+        stepEl.className = 'text-xs text-amber-300/80 font-medium mt-1 transition-all duration-300';
+      }
+      if (barEl) {
+        barEl.className = 'bg-gradient-to-r from-amber-500 to-amber-300 h-full rounded-full transition-all duration-300 ease-out';
+        barEl.style.width = '25%';
+      }
+      if (spinnerEl) {
+        spinnerEl.className = 'w-16 h-16 rounded-full border-3 border-amber-500/20 border-t-amber-400 animate-spin transition-all duration-300';
+      }
+      if (iconEl) {
+        iconEl.className = 'fa-solid fa-tv';
+        if (iconEl.parentElement) {
+          iconEl.parentElement.className = 'absolute inset-0 flex items-center justify-center text-amber-400 text-xl transition-all duration-300';
+        }
+      }
+      if (glowEl) {
+        glowEl.className = 'absolute -top-10 -left-10 w-32 h-32 bg-amber-500/20 rounded-full blur-2xl pointer-events-none transition-all duration-500';
+      }
+
+      overlay.classList.remove('hidden');
+      overlay.classList.add('flex');
+
+      // Staged animated progression while TV searches and opens
+      actionLoaderTimers.push(setTimeout(() => {
+        if (stepEl) stepEl.textContent = 'वीडियो चुना जा रहा है...';
+        if (barEl) barEl.style.width = '60%';
+      }, 1600));
+
+      actionLoaderTimers.push(setTimeout(() => {
+        if (stepEl) stepEl.textContent = 'टीवी पर चालू हो रहा है...';
+        if (barEl) barEl.style.width = '88%';
+      }, 3200));
+
+      // Auto-complete fallback after 6.5s if network event is delayed
+      actionLoaderTimers.push(setTimeout(() => {
+        completeActionLoader();
+      }, 6500));
+    }
+
+    function completeActionLoader(customSuccessMsg) {
+      clearActionLoaderTimers();
+      const overlay = document.getElementById('modal-action-loader');
+      const titleEl = document.getElementById('loader-action-title');
+      const stepEl = document.getElementById('loader-action-step');
+      const barEl = document.getElementById('loader-action-bar');
+      const spinnerEl = document.getElementById('loader-spinner');
+      const iconEl = document.getElementById('loader-icon');
+      const glowEl = document.getElementById('loader-glow');
+      if (!overlay || overlay.classList.contains('hidden')) return;
+
+      if (titleEl) titleEl.textContent = customSuccessMsg || `${activeActionName} चालू हो गया! ✓`;
+      if (stepEl) {
+        stepEl.textContent = 'टीवी पर सफलतापूर्वक शुरू हुआ';
+        stepEl.className = 'text-xs text-emerald-400 font-semibold mt-1 transition-all duration-300';
+      }
+      if (barEl) {
+        barEl.className = 'bg-emerald-400 h-full rounded-full transition-all duration-300 ease-out';
+        barEl.style.width = '100%';
+      }
+      if (spinnerEl) {
+        spinnerEl.className = 'w-16 h-16 rounded-full border-3 border-emerald-500/40 bg-emerald-500/10 transition-all duration-300';
+      }
+      if (iconEl) {
+        iconEl.className = 'fa-solid fa-check text-2xl text-emerald-400';
+        if (iconEl.parentElement) {
+          iconEl.parentElement.className = 'absolute inset-0 flex items-center justify-center text-emerald-400 transition-all duration-300';
+        }
+      }
+      if (glowEl) {
+        glowEl.className = 'absolute -top-10 -left-10 w-32 h-32 bg-emerald-500/30 rounded-full blur-2xl pointer-events-none transition-all duration-500';
+      }
+
+      if (navigator.vibrate) {
+        try { navigator.vibrate([25, 40, 50]); } catch (e) {}
+      }
+
+      // Automatically dismiss HUD after 1.4s of celebrating success
+      actionLoaderTimers.push(setTimeout(dismissActionLoader, 1400));
+    }
+
+    function dismissActionLoader() {
+      clearActionLoaderTimers();
+      const overlay = document.getElementById('modal-action-loader');
+      if (overlay) {
+        overlay.classList.add('hidden');
+        overlay.classList.remove('flex');
+      }
+    }
+
+    function handleTVActionDone(data) {
+      completeActionLoader();
+    }
+
     // ==================== SECURITY & AUTH (PIN 2309) ====================
     const PIN_SALT = 'orbit_salt_';
     const PIN_HASH = '3d58628bb1ff2780ec4cccf0999667466d12728c8c69b6f2d6ac61b863c99302';
@@ -1599,18 +1753,23 @@
 
     function sendQuickChannel(channel) {
       if (channel === 'paras') {
+        showActionLoader('पारस टीवी', 'यूट्यूब पर लाइव दर्शन शुरू हो रहा है...');
         sendCommand('URL', 'https://www.youtube.com/@parasnetwork/live');
         flashStatus('पारस टीवी खुल रहा है...');
       } else if (channel === 'jinvani') {
+        showActionLoader('जिनवाणी चैनल', 'यूट्यूब पर लाइव भक्ति शुरू हो रही है...');
         sendCommand('URL', 'https://www.youtube.com/@jinvanichannelofficial/live');
         flashStatus('जिनवाणी खुल रही है...');
       } else if (channel === 'news') {
+        showActionLoader('आज तक लाइव न्यूज़', 'लाइव बुलेटिन लोड हो रहा है...');
         sendCommand('URL', 'https://www.youtube.com/@aajtak/live');
         flashStatus('आज तक लाइव न्यूज़ खुल रही है...');
       } else if (channel === 'starplus') {
+        showActionLoader('स्टार प्लस', 'हॉटस्टार पर शो लोड हो रहा है...');
         sendCommand('URL', 'https://www.hotstar.com/in/channels/starplus');
         flashStatus('हॉटस्टार पर स्टार प्लस खुल रहा है...');
       } else if (channel === 'cricket') {
+        showActionLoader('लाइव क्रिकेट', 'हॉटस्टार लाइव मैच लोड हो रहा है...');
         sendCommand('URL', 'https://www.hotstar.com/in/sports/cricket');
         flashStatus('हॉटस्टार पर लाइव क्रिकेट खुल रहा है...');
       }
@@ -1852,6 +2011,7 @@
         targetCommand = () => sendQuickChannel('jinvani');
       } else {
         targetMessage = `यूट्यूब पर खोज रहे हैं: "${cleanQuery}"...`;
+        showActionLoader(`"${cleanQuery}"`, 'टीवी पर खोज कर वीडियो शुरू कर रहे हैं...');
         targetCommand = () => sendCommand('URL', `https://www.youtube.com/results?search_query=${encodeURIComponent(cleanQuery)}`);
       }
 
@@ -1876,14 +2036,20 @@
       }, 4500);
     }
 
+    function launchYouTube() {
+      showActionLoader('यूट्यूब', 'यूट्यूब ऐप खोला जा रहा है...');
+      sendCommand('LAUNCH_APP', 'com.google.android.youtube.tv');
+      flashStatus('यूट्यूब खुल रहा है...');
+    }
+
     function launchHotstar() {
+      showActionLoader('हॉटस्टार', 'हॉटस्टार ऐप खोला जा रहा है...');
       sendCommand('LAUNCH_APP', 'in.startv.hotstar');
       flashStatus('हॉटस्टार खुल रहा है...');
     }
 
     function launchCricketLive() {
-      sendCommand('CRICKET', 'live');
-      flashStatus('क्रिकेट खुल रहा है...');
+      sendQuickChannel('cricket');
     }
 
     function sendTypedText() {
@@ -2354,9 +2520,13 @@
                   } catch(e) {
                     statusObj = JSON.parse(item.message.replace(/([{,]\s*)([a-zA-Z0-9_]+)\s*:/g, '$1"$2":'));
                   }
-                  if (statusObj && (statusObj.type === 'tv_status' || statusObj.power !== undefined)) {
-                    updateLiveTVStatus(statusObj);
-                    return;
+                  if (statusObj) {
+                    if (statusObj.type === 'action_done') {
+                      handleTVActionDone(statusObj);
+                    } else if (statusObj.type === 'tv_status' || statusObj.power !== undefined) {
+                      updateLiveTVStatus(statusObj);
+                      return;
+                    }
                   }
                 }
               } catch(e) {}
@@ -2400,6 +2570,8 @@
                       renderWifiScanResults(statusObj.networks);
                     } else if (statusObj.type === 'wifi_connect_result') {
                       handleWifiConnectResult(statusObj);
+                    } else if (statusObj.type === 'action_done') {
+                      handleTVActionDone(statusObj);
                     } else if (statusObj.type === 'tv_status' || statusObj.power !== undefined) {
                       updateLiveTVStatus(statusObj);
                     }
