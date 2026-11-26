@@ -246,11 +246,11 @@ while true; do
         case "$LINE" in
             KEY:24|VOL_UP|VOL_UP:*)
                 cmd media_session volume --show --stream 3 --adj raise < /dev/null 2>&1
-                publish_tv_status
+                (sleep 0.4 && publish_tv_status) &
                 ;;
             KEY:25|VOL_DOWN|VOL_DOWN:*)
                 cmd media_session volume --show --stream 3 --adj lower < /dev/null 2>&1
-                publish_tv_status
+                (sleep 0.4 && publish_tv_status) &
                 ;;
             KEY:164|MUTE|MUTE:*)
                 CUR_VOL=$(dumpsys audio 2>/dev/null | grep -A 6 'STREAM_MUSIC:' | grep 'streamVolume:' | head -n 1 | cut -d: -f2 | tr -d ' \r\n')
@@ -261,7 +261,7 @@ while true; do
                     RESTORE_VOL="${PREV_MUTE_VOL:-30}"
                     cmd media_session volume --show --stream 3 --set "$RESTORE_VOL" < /dev/null 2>&1
                 fi
-                publish_tv_status
+                (sleep 0.4 && publish_tv_status) &
                 ;;
             KEY:85|PLAY_PAUSE|PLAY_PAUSE:*)
                 input keyevent 85 < /dev/null
@@ -284,7 +284,7 @@ while true; do
             VOL:*)
                 VOL_LEVEL="${LINE#VOL:}"
                 cmd media_session volume --show --stream 3 --set "$VOL_LEVEL" < /dev/null 2>&1
-                publish_tv_status
+                (sleep 0.4 && publish_tv_status) &
                 ;;
             TYPE:*)
                 TEXT="${LINE#TYPE:}"

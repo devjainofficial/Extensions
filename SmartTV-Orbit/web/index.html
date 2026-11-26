@@ -462,20 +462,13 @@
         </button>
       </div>
 
-      <!-- ==================== PRIMARY SOUND MASTER CONSOLE ==================== -->
+      <!-- ==================== PRIMARY SOUND CONSOLE ==================== -->
       <div class="primary-sound-deck">
-        <div class="flex items-center justify-between px-2 pt-1 pb-0.5 text-[10px] text-slate-400 font-bold uppercase tracking-wider">
-          <span class="flex items-center gap-1.5 text-amber-400">
-            <i class="fa-solid fa-volume-high text-xs"></i> Sound Master (Primary)
-          </span>
-          <span class="text-[9px] text-slate-500 font-normal">Tap or Hold Continuous</span>
-        </div>
-
-        <!-- VOLUME UP (▲ / +) -->
+        <!-- VOLUME UP -->
         <button 
           id="btn-vol-up"
           class="vol-btn-primary"
-          title="Press or Hold for Volume Up"
+          title="Volume Up"
           onmousedown="startVolHold('up', event)"
           onmouseup="stopVolHold(event)"
           onmouseleave="stopVolHold(event)"
@@ -484,9 +477,9 @@
           ontouchcancel="stopVolHold(event)"
           oncontextmenu="return false;"
         >
-          <i class="fa-solid fa-volume-high text-base text-amber-400"></i>
-          <span class="text-sm font-black tracking-wide">VOLUME UP (▲)</span>
-          <i class="fa-solid fa-plus text-xs text-amber-400"></i>
+          <i class="fa-solid fa-plus text-sm text-amber-400"></i>
+          <span class="text-xs font-black tracking-wider text-white">VOLUME UP</span>
+          <i class="fa-solid fa-volume-high text-xs text-amber-400/60"></i>
         </button>
 
         <!-- SOUND LEVEL READOUT & QUICK ACTIONS -->
@@ -497,34 +490,27 @@
             <span id="mute-label">Mute</span>
           </button>
 
-          <!-- Large Volume Gauge -->
-          <div class="flex flex-col items-center justify-center">
-            <div class="flex items-baseline gap-1">
-              <span id="vol-quick-disp" class="text-2xl font-black text-amber-400 tracking-tight leading-none">30%</span>
-            </div>
-            <!-- Audio Bars Meter -->
-            <div id="vol-level-meter" class="flex items-center gap-0.5 mt-1">
-              <span class="w-1.5 h-1.5 rounded-full bg-amber-400"></span>
-              <span class="w-1.5 h-2 rounded-full bg-amber-400"></span>
-              <span class="w-1.5 h-2.5 rounded-full bg-amber-400"></span>
-              <span class="w-1.5 h-3 rounded-full bg-slate-700"></span>
-              <span class="w-1.5 h-3.5 rounded-full bg-slate-700"></span>
-              <span class="w-1.5 h-4 rounded-full bg-slate-700"></span>
+          <!-- Large Volume Gauge with Smooth Bar -->
+          <div class="flex flex-col items-center justify-center min-w-[88px]">
+            <span id="vol-quick-disp" class="text-2xl font-black text-amber-400 tracking-tight leading-none">30%</span>
+            <!-- Smooth Liquid Progress Bar -->
+            <div class="w-20 h-1.5 bg-slate-800 rounded-full mt-1.5 overflow-hidden p-[1px] border border-white/5">
+              <div id="vol-progress-bar" class="h-full bg-gradient-to-r from-amber-500 to-amber-300 rounded-full transition-all duration-150 ease-out" style="width: 30%;"></div>
             </div>
           </div>
 
-          <!-- Reset to Standard 30 -->
-          <button onclick="sendCommand('vol', '30')" title="Reset to standard volume 30" class="py-1.5 px-3 rounded-xl bg-[#1c1d24] hover:bg-[#252731] border border-white/10 text-slate-300 hover:text-emerald-400 flex items-center gap-1 text-xs font-semibold active:scale-95 transition">
-            <span class="text-[9px] uppercase text-slate-400">Reset</span>
+          <!-- Reset to 30 -->
+          <button onclick="sendCommand('vol', '30')" title="Reset Volume to 30" class="py-1.5 px-3 rounded-xl bg-[#1c1d24] hover:bg-[#252731] border border-white/10 text-slate-300 hover:text-emerald-400 flex items-center gap-1.5 text-xs font-semibold active:scale-95 transition">
+            <i class="fa-solid fa-rotate-left text-[10px] text-emerald-400"></i>
             <span class="font-bold text-emerald-400">30</span>
           </button>
         </div>
 
-        <!-- VOLUME DOWN (▼ / -) -->
+        <!-- VOLUME DOWN -->
         <button 
           id="btn-vol-down"
           class="vol-btn-primary"
-          title="Press or Hold for Volume Down"
+          title="Volume Down"
           onmousedown="startVolHold('down', event)"
           onmouseup="stopVolHold(event)"
           onmouseleave="stopVolHold(event)"
@@ -533,21 +519,14 @@
           ontouchcancel="stopVolHold(event)"
           oncontextmenu="return false;"
         >
-          <i class="fa-solid fa-volume-low text-base text-amber-400"></i>
-          <span class="text-sm font-black tracking-wide">VOLUME DOWN (▼)</span>
-          <i class="fa-solid fa-minus text-xs text-amber-400"></i>
+          <i class="fa-solid fa-minus text-sm text-amber-400"></i>
+          <span class="text-xs font-black tracking-wider text-white">VOLUME DOWN</span>
+          <i class="fa-solid fa-volume-low text-xs text-amber-400/60"></i>
         </button>
       </div>
 
       <!-- ==================== SECONDARY MENU NAVIGATION ==================== -->
       <div class="secondary-dpad-container">
-        <div class="w-full flex items-center justify-between px-1 text-[9px] text-slate-400 font-bold uppercase tracking-wider">
-          <span class="flex items-center gap-1.5 text-sky-400">
-            <i class="fa-solid fa-compass text-xs"></i> Menu Navigation (Secondary)
-          </span>
-          <span class="text-[9px] text-slate-500 font-normal">D-Pad & Shortcuts</span>
-        </div>
-
         <div class="flex items-center justify-center py-1">
           <div class="secondary-wheel">
             <!-- Secondary Directional Keys -->
@@ -1337,8 +1316,8 @@
     });
 
     // ==================== CORE COMMAND DISPATCHER ====================
-    async function sendCommand(type, payload = '') {
-      if (navigator.vibrate) navigator.vibrate(18);
+    async function sendCommand(type, payload = '', silent = false) {
+      if (navigator.vibrate) navigator.vibrate(silent ? 8 : 18);
       const payloadStr = payload ? `:${payload}` : '';
       const command = `AUTH:${AUTH_TOKEN}|${type.toUpperCase()}${payloadStr}`;
 
@@ -1364,7 +1343,7 @@
             headers: { 'Title': 'SmartTV Command', 'Priority': 'urgent' }
           });
           if (res.ok) {
-            flashStatus(attempt === 0 ? 'Sent' : 'Sent (Backup)');
+            if (!silent) flashStatus(attempt === 0 ? 'Sent' : 'Sent (Backup)');
             if (attempt > 0) {
               currentRelayIndex = (currentRelayIndex + attempt) % RELAY_ENDPOINTS.length;
               NTFY_BASE = relayUrl;
@@ -1376,14 +1355,15 @@
         }
         attempt++;
       }
-      flashStatus('Offline', true);
+      if (!silent) flashStatus('Offline', true);
     }
 
-    // ==================== CONTINUOUS SOUND VOLUME CONTROLLER ====================
+    // ==================== SILKY-SMOOTH SOUND VOLUME CONTROLLER ====================
     let volHoldTimer = null;
     let volHoldInterval = null;
     let isHoldingVol = false;
     let currentVolLevel = 30;
+    let lastDispatchedVol = 30;
 
     function startVolHold(dir, ev) {
       if (ev) {
@@ -1402,19 +1382,25 @@
       // 1. Immediate step on first touch
       stepVolume(dir);
 
-      // 2. If held longer than 300ms, start rapid continuous repeating
+      // 2. Smooth continuous repeating after 280ms, paced at 180ms
       volHoldTimer = setTimeout(() => {
         volHoldInterval = setInterval(() => {
+          if (!isHoldingVol) {
+            clearInterval(volHoldInterval);
+            return;
+          }
           stepVolume(dir);
-        }, 160);
-      }, 300);
+        }, 180);
+      }, 280);
     }
 
     function stopVolHold(ev) {
       if (ev && ev.type === 'touchend') {
         ev.preventDefault();
       }
+      if (!isHoldingVol) return;
       isHoldingVol = false;
+
       if (volHoldTimer) {
         clearTimeout(volHoldTimer);
         volHoldTimer = null;
@@ -1423,22 +1409,33 @@
         clearInterval(volHoldInterval);
         volHoldInterval = null;
       }
+
       const btnUp = document.getElementById('btn-vol-up');
       const btnDown = document.getElementById('btn-vol-down');
       if (btnUp) btnUp.classList.remove('holding');
       if (btnDown) btnDown.classList.remove('holding');
+
+      // Final synchronization on release: ensure TV matches current level exactly
+      if (currentVolLevel !== lastDispatchedVol) {
+        sendCommand('vol', currentVolLevel.toString(), true);
+        lastDispatchedVol = currentVolLevel;
+      }
     }
+
+    // Global release catchers to handle finger slips outside button
+    window.addEventListener('mouseup', () => { if (isHoldingVol) stopVolHold(); });
+    window.addEventListener('touchend', () => { if (isHoldingVol) stopVolHold(); });
+    window.addEventListener('touchcancel', () => { if (isHoldingVol) stopVolHold(); });
 
     function stepVolume(dir) {
       if (dir === 'up') {
         currentVolLevel = Math.min(100, currentVolLevel + 1);
-        updateVolQuickDisp(currentVolLevel);
-        sendCommand('vol_up', '1');
       } else {
         currentVolLevel = Math.max(0, currentVolLevel - 1);
-        updateVolQuickDisp(currentVolLevel);
-        sendCommand('vol_down', '1');
       }
+      updateVolQuickDisp(currentVolLevel);
+      sendCommand(dir === 'up' ? 'vol_up' : 'vol_down', '1', true);
+      lastDispatchedVol = currentVolLevel;
     }
 
     function updateVolQuickDisp(vol) {
@@ -1448,19 +1445,10 @@
       const el = document.getElementById('vol-quick-disp');
       if (el) el.textContent = `${currentVolLevel}%`;
 
-      // Update meter bars
-      const meter = document.getElementById('vol-level-meter');
-      if (meter) {
-        const bars = meter.querySelectorAll('span');
-        const count = bars.length;
-        const activeCount = Math.round((currentVolLevel / 100) * count);
-        bars.forEach((bar, idx) => {
-          if (idx < activeCount) {
-            bar.className = 'w-1.5 h-full rounded-full bg-amber-400 transition-all';
-          } else {
-            bar.className = 'w-1.5 h-full rounded-full bg-slate-700 transition-all';
-          }
-        });
+      // Update smooth progress bar
+      const bar = document.getElementById('vol-progress-bar');
+      if (bar) {
+        bar.style.width = `${Math.min(100, Math.max(0, currentVolLevel))}%`;
       }
 
       // Update Mute Toggle Button State
