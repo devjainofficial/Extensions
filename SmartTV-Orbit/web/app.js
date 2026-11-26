@@ -7,7 +7,7 @@ const AUTH_TOKEN = 'ORBIT_SEC_2309';
 // State
 let tvStatus = {
   online: true,
-  volume: 45,
+  volume: 30,
   wakefulness: 'Awake',
   currentApp: 'YouTube'
 };

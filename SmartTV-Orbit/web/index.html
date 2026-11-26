@@ -138,6 +138,128 @@
       pointer-events: none;
     }
 
+    /* Primary Sound Console */
+    .primary-sound-deck {
+      background: var(--remote-surface);
+      border: 1px solid var(--btn-border);
+      border-radius: 22px;
+      box-shadow: 0 6px 18px -2px rgba(0, 0, 0, 0.6), inset 0 1px 0 var(--btn-highlight);
+      padding: 10px;
+      display: flex;
+      flex-direction: column;
+      gap: 7px;
+      user-select: none;
+      -webkit-user-select: none;
+      -webkit-touch-callout: none;
+    }
+
+    .vol-btn-primary {
+      width: 100%;
+      height: 54px;
+      border-radius: 16px;
+      background: var(--btn-bg);
+      border: 1px solid var(--btn-border);
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.4), inset 0 1px 0 var(--btn-highlight);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      color: #f8fafc;
+      font-weight: 700;
+      font-size: 13px;
+      letter-spacing: 0.5px;
+      cursor: pointer;
+      transition: background-color 0.1s ease, transform 0.08s ease, color 0.1s ease;
+      touch-action: manipulation;
+      user-select: none;
+      -webkit-user-select: none;
+      -webkit-touch-callout: none;
+    }
+    .vol-btn-primary:active, .vol-btn-primary.holding {
+      background: var(--btn-hover);
+      color: var(--accent);
+      transform: scale(0.97);
+      box-shadow: 0 1px 2px rgba(0, 0, 0, 0.5), inset 0 2px 4px rgba(0, 0, 0, 0.5);
+    }
+
+    .vol-center-strip {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 6px 12px;
+      background: rgba(0, 0, 0, 0.35);
+      border-radius: 14px;
+      border: 1px solid rgba(255, 255, 255, 0.05);
+    }
+
+    /* Secondary Compact D-Pad */
+    .secondary-dpad-container {
+      background: var(--remote-surface);
+      border: 1px solid var(--btn-border);
+      border-radius: 22px;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.4), inset 0 1px 0 var(--btn-highlight);
+      padding: 10px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 8px;
+    }
+    .secondary-wheel {
+      position: relative;
+      width: 154px;
+      height: 154px;
+      border-radius: 50%;
+      background: var(--dpad-ring);
+      border: 1px solid var(--btn-border);
+      box-shadow: 0 6px 14px rgba(0, 0, 0, 0.5), inset 0 1px 0 var(--btn-highlight);
+    }
+    .sec-dpad-btn {
+      position: absolute;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #94a3b8;
+      cursor: pointer;
+      transition: color 0.08s ease, transform 0.06s ease;
+    }
+    .sec-dpad-btn:active {
+      color: var(--dpad-active);
+    }
+    .sec-dpad-btn.up { top: 6px; left: 0; right: 0; height: 42px; }
+    .sec-dpad-btn.down { bottom: 6px; left: 0; right: 0; height: 42px; }
+    .sec-dpad-btn.left { left: 6px; top: 0; bottom: 0; width: 42px; }
+    .sec-dpad-btn.right { right: 6px; top: 0; bottom: 0; width: 42px; }
+
+    .sec-dpad-btn.up:active { transform: translateY(-2px); }
+    .sec-dpad-btn.down:active { transform: translateY(2px); }
+    .sec-dpad-btn.left:active { transform: translateX(-2px); }
+    .sec-dpad-btn.right:active { transform: translateX(2px); }
+
+    .sec-dpad-center {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      width: 64px;
+      height: 64px;
+      border-radius: 50%;
+      background: var(--dpad-center);
+      border: 1px solid var(--btn-border);
+      box-shadow: 0 3px 6px rgba(0, 0, 0, 0.5), inset 0 1px 0 rgba(255, 255, 255, 0.15);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #f8fafc;
+      font-weight: 700;
+      font-size: 13px;
+      cursor: pointer;
+      transition: transform 0.06s ease, color 0.08s ease;
+    }
+    .sec-dpad-center:active {
+      transform: translate(-50%, -50%) scale(0.93);
+      color: var(--dpad-active);
+    }
+
     /* Physical Volume Rocker Container */
     .volume-rocker {
       background: var(--btn-bg);
@@ -340,68 +462,130 @@
         </button>
       </div>
 
-      <!-- PRECISION DIRECTIONAL CLICKPAD -->
-      <div class="py-1 flex items-center justify-center">
-        <div class="clickpad-wheel">
-          <div class="concentric-ring"></div>
-          
-          <!-- Directional Keys -->
-          <button onclick="sendCommand('key', '19')" class="clickpad-btn up" title="Up">
-            <i class="fa-solid fa-chevron-up text-base"></i>
-          </button>
-          <button onclick="sendCommand('key', '22')" class="clickpad-btn right" title="Right">
-            <i class="fa-solid fa-chevron-right text-base"></i>
-          </button>
-          <button onclick="sendCommand('key', '20')" class="clickpad-btn down" title="Down">
-            <i class="fa-solid fa-chevron-down text-base"></i>
-          </button>
-          <button onclick="sendCommand('key', '21')" class="clickpad-btn left" title="Left">
-            <i class="fa-solid fa-chevron-left text-base"></i>
-          </button>
-
-          <!-- Center OK Button -->
-          <button onclick="sendCommand('key', '23')" class="clickpad-center" title="OK / Select">
-            OK
-          </button>
+      <!-- ==================== PRIMARY SOUND MASTER CONSOLE ==================== -->
+      <div class="primary-sound-deck">
+        <div class="flex items-center justify-between px-2 pt-1 pb-0.5 text-[10px] text-slate-400 font-bold uppercase tracking-wider">
+          <span class="flex items-center gap-1.5 text-amber-400">
+            <i class="fa-solid fa-volume-high text-xs"></i> Sound Master (Primary)
+          </span>
+          <span class="text-[9px] text-slate-500 font-normal">Tap or Hold Continuous</span>
         </div>
-      </div>
 
-      <!-- ESSENTIAL NAVIGATION ROW -->
-      <div class="grid grid-cols-4 gap-2 w-full">
-        <button onclick="sendCommand('key', '4')" title="Back" class="hardware-key h-11 text-slate-200">
-          <i class="fa-solid fa-arrow-left text-xs"></i>
+        <!-- VOLUME UP (▲ / +) -->
+        <button 
+          id="btn-vol-up"
+          class="vol-btn-primary"
+          title="Press or Hold for Volume Up"
+          onmousedown="startVolHold('up', event)"
+          onmouseup="stopVolHold(event)"
+          onmouseleave="stopVolHold(event)"
+          ontouchstart="startVolHold('up', event)"
+          ontouchend="stopVolHold(event)"
+          ontouchcancel="stopVolHold(event)"
+          oncontextmenu="return false;"
+        >
+          <i class="fa-solid fa-volume-high text-base text-amber-400"></i>
+          <span class="text-sm font-black tracking-wide">VOLUME UP (▲)</span>
+          <i class="fa-solid fa-plus text-xs text-amber-400"></i>
         </button>
-        <button onclick="sendCommand('key', '3')" title="Home" class="hardware-key h-11 text-slate-200">
-          <i class="fa-solid fa-house text-xs"></i>
-        </button>
-        <button onclick="sendCommand('key', '85')" title="Play / Pause" class="hardware-key h-11 text-slate-200">
-          <i class="fa-solid fa-play text-xs"></i>
-        </button>
-        <button onclick="sendCommand('key', '82')" title="Menu / Options" class="hardware-key h-11 text-slate-200">
-          <i class="fa-solid fa-bars text-xs"></i>
-        </button>
-      </div>
 
-      <!-- INTEGRATED TACTILE VOLUME ROCKER & SMART MUTE -->
-      <div class="flex items-center gap-2 w-full">
-        <!-- Rocker (- | Readout | +) -->
-        <div class="volume-rocker flex-1">
-          <button onclick="sendCommand('vol_down', '1')" class="rocker-btn" title="Volume Down">
-            <i class="fa-solid fa-minus text-xs"></i>
+        <!-- SOUND LEVEL READOUT & QUICK ACTIONS -->
+        <div class="vol-center-strip">
+          <!-- Mute Toggle -->
+          <button onclick="sendCommand('mute', '1')" id="btn-smart-mute" class="py-1.5 px-3 rounded-xl bg-[#1c1d24] hover:bg-[#252731] border border-white/10 text-slate-300 hover:text-amber-400 flex items-center gap-1.5 text-xs font-semibold active:scale-95 transition">
+            <i id="mute-icon" class="fa-solid fa-volume-high text-xs text-slate-300"></i>
+            <span id="mute-label">Mute</span>
           </button>
-          <div class="rocker-readout">
-            <span class="text-[9px] text-slate-400 font-semibold leading-none uppercase">Vol</span>
-            <span id="vol-quick-disp" class="text-xs font-bold text-amber-400 leading-tight">20%</span>
+
+          <!-- Large Volume Gauge -->
+          <div class="flex flex-col items-center justify-center">
+            <div class="flex items-baseline gap-1">
+              <span id="vol-quick-disp" class="text-2xl font-black text-amber-400 tracking-tight leading-none">30%</span>
+            </div>
+            <!-- Audio Bars Meter -->
+            <div id="vol-level-meter" class="flex items-center gap-0.5 mt-1">
+              <span class="w-1.5 h-1.5 rounded-full bg-amber-400"></span>
+              <span class="w-1.5 h-2 rounded-full bg-amber-400"></span>
+              <span class="w-1.5 h-2.5 rounded-full bg-amber-400"></span>
+              <span class="w-1.5 h-3 rounded-full bg-slate-700"></span>
+              <span class="w-1.5 h-3.5 rounded-full bg-slate-700"></span>
+              <span class="w-1.5 h-4 rounded-full bg-slate-700"></span>
+            </div>
           </div>
-          <button onclick="sendCommand('vol_up', '1')" class="rocker-btn" title="Volume Up">
-            <i class="fa-solid fa-plus text-xs"></i>
+
+          <!-- Reset to Standard 30 -->
+          <button onclick="sendCommand('vol', '30')" title="Reset to standard volume 30" class="py-1.5 px-3 rounded-xl bg-[#1c1d24] hover:bg-[#252731] border border-white/10 text-slate-300 hover:text-emerald-400 flex items-center gap-1 text-xs font-semibold active:scale-95 transition">
+            <span class="text-[9px] uppercase text-slate-400">Reset</span>
+            <span class="font-bold text-emerald-400">30</span>
           </button>
         </div>
 
-        <!-- Smart Mute / Restore -->
-        <button onclick="sendCommand('mute', '1')" title="Mute / Restore" class="hardware-key h-12 w-12 text-slate-300 hover:text-amber-400 shrink-0">
-          <i id="mute-icon" class="fa-solid fa-volume-xmark text-sm"></i>
+        <!-- VOLUME DOWN (▼ / -) -->
+        <button 
+          id="btn-vol-down"
+          class="vol-btn-primary"
+          title="Press or Hold for Volume Down"
+          onmousedown="startVolHold('down', event)"
+          onmouseup="stopVolHold(event)"
+          onmouseleave="stopVolHold(event)"
+          ontouchstart="startVolHold('down', event)"
+          ontouchend="stopVolHold(event)"
+          ontouchcancel="stopVolHold(event)"
+          oncontextmenu="return false;"
+        >
+          <i class="fa-solid fa-volume-low text-base text-amber-400"></i>
+          <span class="text-sm font-black tracking-wide">VOLUME DOWN (▼)</span>
+          <i class="fa-solid fa-minus text-xs text-amber-400"></i>
         </button>
+      </div>
+
+      <!-- ==================== SECONDARY MENU NAVIGATION ==================== -->
+      <div class="secondary-dpad-container">
+        <div class="w-full flex items-center justify-between px-1 text-[9px] text-slate-400 font-bold uppercase tracking-wider">
+          <span class="flex items-center gap-1.5 text-sky-400">
+            <i class="fa-solid fa-compass text-xs"></i> Menu Navigation (Secondary)
+          </span>
+          <span class="text-[9px] text-slate-500 font-normal">D-Pad & Shortcuts</span>
+        </div>
+
+        <div class="flex items-center justify-center py-1">
+          <div class="secondary-wheel">
+            <!-- Secondary Directional Keys -->
+            <button onclick="sendCommand('key', '19')" class="sec-dpad-btn up" title="Menu Up">
+              <i class="fa-solid fa-chevron-up text-base"></i>
+            </button>
+            <button onclick="sendCommand('key', '22')" class="sec-dpad-btn right" title="Menu Right">
+              <i class="fa-solid fa-chevron-right text-base"></i>
+            </button>
+            <button onclick="sendCommand('key', '20')" class="sec-dpad-btn down" title="Menu Down">
+              <i class="fa-solid fa-chevron-down text-base"></i>
+            </button>
+            <button onclick="sendCommand('key', '21')" class="sec-dpad-btn left" title="Menu Left">
+              <i class="fa-solid fa-chevron-left text-base"></i>
+            </button>
+
+            <!-- Center OK Button -->
+            <button onclick="sendCommand('key', '23')" class="sec-dpad-center" title="OK / Select">
+              OK
+            </button>
+          </div>
+        </div>
+
+        <!-- ESSENTIAL NAVIGATION ROW -->
+        <div class="grid grid-cols-4 gap-2 w-full pt-1">
+          <button onclick="sendCommand('key', '4')" title="Back" class="hardware-key h-10 text-slate-200">
+            <i class="fa-solid fa-arrow-left text-xs"></i>
+          </button>
+          <button onclick="sendCommand('key', '3')" title="Home" class="hardware-key h-10 text-slate-200">
+            <i class="fa-solid fa-house text-xs"></i>
+          </button>
+          <button onclick="sendCommand('key', '85')" title="Play / Pause" class="hardware-key h-10 text-slate-200">
+            <i class="fa-solid fa-play text-xs"></i>
+          </button>
+          <button onclick="sendCommand('key', '82')" title="Menu / Options" class="hardware-key h-10 text-slate-200">
+            <i class="fa-solid fa-bars text-xs"></i>
+          </button>
+        </div>
       </div>
 
       <!-- QUICK APP LAUNCHERS -->
@@ -1195,6 +1379,108 @@
       flashStatus('Offline', true);
     }
 
+    // ==================== CONTINUOUS SOUND VOLUME CONTROLLER ====================
+    let volHoldTimer = null;
+    let volHoldInterval = null;
+    let isHoldingVol = false;
+    let currentVolLevel = 30;
+
+    function startVolHold(dir, ev) {
+      if (ev) {
+        if (ev.type === 'touchstart') {
+          // Prevent synthetic mousedown/click and long-press callout
+          ev.preventDefault();
+        }
+      }
+      if (isHoldingVol) return;
+      isHoldingVol = true;
+
+      const btnId = dir === 'up' ? 'btn-vol-up' : 'btn-vol-down';
+      const btn = document.getElementById(btnId);
+      if (btn) btn.classList.add('holding');
+
+      // 1. Immediate step on first touch
+      stepVolume(dir);
+
+      // 2. If held longer than 300ms, start rapid continuous repeating
+      volHoldTimer = setTimeout(() => {
+        volHoldInterval = setInterval(() => {
+          stepVolume(dir);
+        }, 160);
+      }, 300);
+    }
+
+    function stopVolHold(ev) {
+      if (ev && ev.type === 'touchend') {
+        ev.preventDefault();
+      }
+      isHoldingVol = false;
+      if (volHoldTimer) {
+        clearTimeout(volHoldTimer);
+        volHoldTimer = null;
+      }
+      if (volHoldInterval) {
+        clearInterval(volHoldInterval);
+        volHoldInterval = null;
+      }
+      const btnUp = document.getElementById('btn-vol-up');
+      const btnDown = document.getElementById('btn-vol-down');
+      if (btnUp) btnUp.classList.remove('holding');
+      if (btnDown) btnDown.classList.remove('holding');
+    }
+
+    function stepVolume(dir) {
+      if (dir === 'up') {
+        currentVolLevel = Math.min(100, currentVolLevel + 1);
+        updateVolQuickDisp(currentVolLevel);
+        sendCommand('vol_up', '1');
+      } else {
+        currentVolLevel = Math.max(0, currentVolLevel - 1);
+        updateVolQuickDisp(currentVolLevel);
+        sendCommand('vol_down', '1');
+      }
+    }
+
+    function updateVolQuickDisp(vol) {
+      if (typeof vol === 'number') {
+        currentVolLevel = vol;
+      }
+      const el = document.getElementById('vol-quick-disp');
+      if (el) el.textContent = `${currentVolLevel}%`;
+
+      // Update meter bars
+      const meter = document.getElementById('vol-level-meter');
+      if (meter) {
+        const bars = meter.querySelectorAll('span');
+        const count = bars.length;
+        const activeCount = Math.round((currentVolLevel / 100) * count);
+        bars.forEach((bar, idx) => {
+          if (idx < activeCount) {
+            bar.className = 'w-1.5 h-full rounded-full bg-amber-400 transition-all';
+          } else {
+            bar.className = 'w-1.5 h-full rounded-full bg-slate-700 transition-all';
+          }
+        });
+      }
+
+      // Update Mute Toggle Button State
+      const muteIcon = document.getElementById('mute-icon');
+      const muteLabel = document.getElementById('mute-label');
+      if (currentVolLevel === 0) {
+        if (muteIcon) muteIcon.className = 'fa-solid fa-volume-xmark text-xs text-rose-400';
+        if (muteLabel) {
+          muteLabel.textContent = 'Unmute';
+          muteLabel.className = 'text-rose-400 font-bold';
+        }
+      } else {
+        if (muteIcon) muteIcon.className = 'fa-solid fa-volume-high text-xs text-slate-300';
+        if (muteLabel) {
+          muteLabel.textContent = 'Mute';
+          muteLabel.className = '';
+        }
+      }
+    }
+
     function sendQuickChannel(channel) {
       if (channel === 'paras') {
         sendCommand('URL', 'https://www.youtube.com/@parasnetwork/live');
@@ -1387,9 +1673,8 @@
         }
       }
 
-      const quickVol = document.getElementById('vol-quick-disp');
-      if (quickVol && status.volume !== undefined) {
-        quickVol.textContent = `${status.volume}%`;
+      if (status.volume !== undefined) {
+        updateVolQuickDisp(status.volume);
       }
 
       // Live Wi-Fi Connection & Signal Strength

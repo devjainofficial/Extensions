@@ -86,7 +86,7 @@ publish_tv_status() {
     esac
 
     VOL=$(dumpsys audio 2>/dev/null | grep -A 6 'STREAM_MUSIC:' | grep 'streamVolume:' | head -n 1 | cut -d: -f2 | tr -d ' \r\n')
-    [ -z "$VOL" ] && VOL="20"
+    [ -z "$VOL" ] && VOL="30"
 
     # Extract active WiFi SSID and signal
     WIFI_RAW=$(cmd wifi status 2>/dev/null | grep 'Wifi is connected to' | head -n 1)
@@ -130,9 +130,9 @@ monitor_wake() {
             echo "[Orbit Agent] TV Turned ON (Transition: $PREV_WAKE -> Awake | TCL: $TCL_POWER)"
             echo "[Orbit Agent] Current TV time: $HOUR:$MIN ($HM)"
             
-            # Default startup sound to 20
-            echo "[Orbit Routine] Setting default TV sound to 20 on wake..."
-            cmd media_session volume --stream 3 --set 20 < /dev/null 2>&1
+            # Default startup sound to 30 on TV power on
+            echo "[Orbit Routine] Setting default TV sound to 30 on wake..."
+            cmd media_session volume --stream 3 --set 30 < /dev/null 2>&1
             
             # Feature 3: Night Volume Guard check on wake (9:30 PM = 2130, 6:00 AM = 600)
             if [ "$NIGHT_GUARD" = "1" ]; then
@@ -169,9 +169,9 @@ monitor_wake() {
                 am start -a android.intent.action.VIEW -d "https://www.youtube.com/@parasnetwork/live" -p com.google.android.youtube.tv < /dev/null
             fi
 
-            # Reinforce volume 20 right after opening channel
+            # Reinforce volume 30 right after opening initial channel on wake
             sleep 3
-            cmd media_session volume --stream 3 --set 20 < /dev/null 2>&1
+            cmd media_session volume --stream 3 --set 30 < /dev/null 2>&1
 
             # Publish fresh status after waking
             sleep 4
@@ -258,7 +258,7 @@ while true; do
                     PREV_MUTE_VOL="$CUR_VOL"
                     cmd media_session volume --show --stream 3 --set 0 < /dev/null 2>&1
                 else
-                    RESTORE_VOL="${PREV_MUTE_VOL:-20}"
+                    RESTORE_VOL="${PREV_MUTE_VOL:-30}"
                     cmd media_session volume --show --stream 3 --set "$RESTORE_VOL" < /dev/null 2>&1
                 fi
                 publish_tv_status
@@ -293,9 +293,8 @@ while true; do
             URL:*)
                 URL="${LINE#URL:}"
                 echo "[Orbit Cloud] Push-to-TV Opening URL: $URL"
-                # Ensure TV is awake and volume is audible (minimum 20)
+                # Ensure TV is awake (preserves current volume)
                 input keyevent 224 < /dev/null
-                cmd media_session volume --stream 3 --set 20 < /dev/null 2>&1
                 
                 # Check URL destination
                 case "$URL" in
@@ -330,7 +329,6 @@ while true; do
             CRICKET:*|HOTSTAR_CRICKET:*)
                 echo "[Orbit Cloud] Launching Hotstar Live Cricket..."
                 input keyevent 224 < /dev/null
-                cmd media_session volume --stream 3 --set 20 < /dev/null 2>&1
                 am start -a android.intent.action.VIEW -d "hotstar://sports" in.startv.hotstar < /dev/null || \
                 am start -a android.intent.action.VIEW -d "https://www.hotstar.com/in/sports/cricket" in.startv.hotstar < /dev/null || \
                 am start -a android.intent.action.MAIN -c android.intent.category.LEANBACK_LAUNCHER in.startv.hotstar < /dev/null

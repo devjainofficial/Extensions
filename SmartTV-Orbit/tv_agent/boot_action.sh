@@ -41,10 +41,10 @@ if [ "$ADB_OK" = "1" ]; then
     adb_cmd "if ! ps -ef | grep -v grep | grep -q 'tv_agent.sh'; then nohup /data/local/tmp/tv_agent.sh > /data/local/tmp/tv_agent.log 2>&1 & fi" >> "$LOG" 2>&1
 fi
 
-# 4. Set startup volume to 20
-echo "[Orbit Boot] Setting default startup volume to 20..." >> "$LOG"
+# 4. Set startup volume to 30
+echo "[Orbit Boot] Setting default startup volume to 30..." >> "$LOG"
 if [ "$ADB_OK" = "1" ]; then
-    adb_cmd "cmd media_session volume --stream 3 --set 20 < /dev/null 2>&1" >> "$LOG" 2>&1
+    adb_cmd "cmd media_session volume --stream 3 --set 30 < /dev/null 2>&1" >> "$LOG" 2>&1
 fi
 
 # 5. Wait for internet connection (check for up to 15 seconds)
@@ -68,12 +68,12 @@ done
 if [ "$CONNECTED" = "1" ]; then
     echo "[Orbit Boot] Internet ready - launching Paras TV Live stream..." >> "$LOG"
     if [ "$ADB_OK" = "1" ]; then
-        adb_cmd "cmd media_session volume --stream 3 --set 20 < /dev/null 2>&1"
+        adb_cmd "cmd media_session volume --stream 3 --set 30 < /dev/null 2>&1"
         adb_cmd "am force-stop com.google.android.youtube.tv < /dev/null 2>&1"
         sleep 1
         adb_cmd "am start -a android.intent.action.VIEW -d 'https://www.youtube.com/@parasnetwork/live' -p com.google.android.youtube.tv < /dev/null" >> "$LOG" 2>&1
         sleep 3
-        adb_cmd "cmd media_session volume --stream 3 --set 20 < /dev/null 2>&1"
+        adb_cmd "cmd media_session volume --stream 3 --set 30 < /dev/null 2>&1"
     else
         am start -a android.intent.action.VIEW -d "https://www.youtube.com/@parasnetwork/live" -p com.google.android.youtube.tv < /dev/null >> "$LOG" 2>&1
     fi
