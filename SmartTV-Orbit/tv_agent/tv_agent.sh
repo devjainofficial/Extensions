@@ -161,11 +161,13 @@ monitor_wake() {
                 echo "[Orbit Routine] Launching Morning Jinvani Channel Live ($JINVANI_START-$JINVANI_END)..."
                 am force-stop com.google.android.youtube.tv < /dev/null 2>&1
                 sleep 1
-                am start -a android.intent.action.VIEW -d "https://www.youtube.com/@jinvanichannelofficial/live" -p com.google.android.youtube.tv < /dev/null
+                am start -a android.intent.action.VIEW -d "https://www.youtube.com/watch?v=9RHUshUYFmU" com.google.android.youtube.tv/com.google.android.apps.youtube.tv.activity.ShellActivity < /dev/null || \
+                am start -a android.intent.action.VIEW -d "https://www.youtube.com/watch?v=9RHUshUYFmU" -p com.google.android.youtube.tv < /dev/null
             elif [ "$PARAS_ENABLED" = "1" ]; then
                 echo "[Orbit Routine] Launching Default Paras TV Live (Direct stream)..."
                 am force-stop com.google.android.youtube.tv < /dev/null 2>&1
                 sleep 1
+                am start -a android.intent.action.VIEW -d "https://www.youtube.com/@parasnetwork/live" com.google.android.youtube.tv/com.google.android.apps.youtube.tv.activity.ShellActivity < /dev/null || \
                 am start -a android.intent.action.VIEW -d "https://www.youtube.com/@parasnetwork/live" -p com.google.android.youtube.tv < /dev/null
             fi
 
@@ -338,7 +340,13 @@ while true; do
                                 ;;
                         esac
                         ;;
+                    *jinvanichannelofficial*|*jinvani*)
+                        echo "[Orbit Cloud] Opening Official Jinvani 24x7 Live Stream..."
+                        am start -a android.intent.action.VIEW -d "https://www.youtube.com/watch?v=9RHUshUYFmU" com.google.android.youtube.tv/com.google.android.apps.youtube.tv.activity.ShellActivity < /dev/null || \
+                        am start -a android.intent.action.VIEW -d "https://www.youtube.com/watch?v=9RHUshUYFmU" -p com.google.android.youtube.tv < /dev/null
+                        ;;
                     *)
+                        am start -a android.intent.action.VIEW -d "$URL" com.google.android.youtube.tv/com.google.android.apps.youtube.tv.activity.ShellActivity < /dev/null || \
                         am start -a android.intent.action.VIEW -d "$URL" -p com.google.android.youtube.tv < /dev/null
                         case "$URL" in
                             *search_query=*)
