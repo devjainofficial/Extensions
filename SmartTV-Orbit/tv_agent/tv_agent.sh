@@ -340,8 +340,8 @@ while true; do
                                 ;;
                         esac
                         ;;
-                    *jinvanichannelofficial*|*jinvani*)
-                        echo "[Orbit Cloud] Opening Official Jinvani 24x7 Live Stream..."
+                    *jinvanichannelofficial*|*jinvani*|*9RHUshUYFmU*)
+                        echo "[Orbit Cloud] Opening Official Jinvani Live Stream (9RHUshUYFmU)..."
                         am start -a android.intent.action.VIEW -d "https://www.youtube.com/watch?v=9RHUshUYFmU" com.google.android.youtube.tv/com.google.android.apps.youtube.tv.activity.ShellActivity < /dev/null || \
                         am start -a android.intent.action.VIEW -d "https://www.youtube.com/watch?v=9RHUshUYFmU" -p com.google.android.youtube.tv < /dev/null
                         ;;
